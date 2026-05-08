@@ -31,3 +31,7 @@ coverage/
 
 # TypeScript
 *.tsbuildinfo
+
+# Eval run outputs (keep .gitkeep and signoffs)
+runs/*.jsonl
+!runs/signoffs.jsonl

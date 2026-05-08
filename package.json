@@ -3,9 +3,10 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r run build",
-    "dev:web": "pnpm --filter web dev",
-    "dev:worker": "pnpm --filter worker dev",
-    "test": "pnpm -r run test"
+    "test": "pnpm -r run test",
+    "eval:dev": "pnpm --filter worker eval:dev",
+    "eval:holdout": "pnpm --filter worker eval:holdout",
+    "signoff": "pnpm --filter worker signoff"
   },
   "devDependencies": {
     "typescript": "5.6.3",

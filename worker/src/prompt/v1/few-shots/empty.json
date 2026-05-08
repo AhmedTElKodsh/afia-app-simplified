@@ -1,0 +1,4 @@
+{
+  "imagePath": "oil-bottle-frames/1.5L_refs/empty.jpg",
+  "expected": { "remainingMl": 0, "consumedMl": 1500, "redLineYRatio": 0.96, "confidence": 0.95 }
+}

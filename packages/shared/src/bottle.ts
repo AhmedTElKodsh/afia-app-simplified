@@ -16,3 +16,5 @@ export const BOTTLE_2_5L = {
 
 export const ML_PER_CUP_QUARTER = 55;
 export const ML_PER_CUP = ML_PER_CUP_QUARTER * 4;
+export const EXACT_TOLERANCE_ML = 55;
+export const CLOSE_TOLERANCE_ML = 110;

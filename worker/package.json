@@ -3,20 +3,23 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
     "test": "vitest run",
-    "build": "wrangler deploy --dry-run --outdir=dist"
+    "build": "tsc -p tsconfig.json --noEmit",
+    "eval:dev": "tsx src/eval/run.ts --set=dev",
+    "eval:holdout": "tsx src/eval/run.ts --set=holdout",
+    "signoff": "tsx src/eval/signoff.ts",
+    "build-manifest": "tsx src/eval/build-manifest.ts"
   },
   "dependencies": {
-    "hono": "4.6.10",
-    "@afia/shared": "workspace:*"
+    "@google/generative-ai": "0.21.0",
+    "@afia/shared": "workspace:*",
+    "zod": "3.23.8",
+    "dotenv": "16.4.5"
   },
   "devDependencies": {
-    "wrangler": "4.0.0",
-    "@cloudflare/workers-types": "4.20260507.1",
-    "@cloudflare/vitest-pool-workers": "0.8.71",
+    "tsx": "4.19.2",
     "vitest": "2.1.4",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "@types/node": "22.9.0"
   }
 }
