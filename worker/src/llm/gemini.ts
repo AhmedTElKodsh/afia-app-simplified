@@ -86,10 +86,6 @@ export async function callGemini(args: CallArgs): Promise<string> {
     } as any,
   });
 
-  const fewShotText = args.fewShots
-    .map((fs, i) => `Example ${i + 1} (${fs.imagePath}): ${JSON.stringify(fs.expected)}`)
-    .join("\n");
-
   const referenceLabels = (args.referenceImages ?? [])
     .map((image, i) => `Reference image ${i + 1}: ${image.label}`)
     .join("\n");
@@ -103,7 +99,6 @@ export async function callGemini(args: CallArgs): Promise<string> {
       text: [
         args.userText,
         referenceLabels ? `\nCalibrated reference images:\n${referenceLabels}` : "",
-        fewShotText ? `\nExpected reference outputs:\n${fewShotText}` : "",
         "\nThe target image is the final image before these instructions. Return JSON only.",
       ].join("\n"),
     },

@@ -11,7 +11,7 @@ The usable oil column runs roughly from Y=0.18 (full) to Y=0.96 (empty).
    surface line).
 4. Use only visible boundary evidence. Do **not** infer oil level from label
    artwork, brand colors, expected packaging appearance, or generic bottle tint.
-5. If the boundary is visible, estimate `oilSurfaceYRatio` directly.
+5. If the boundary is visible, estimate `oilSurfaceYRatio` directly. **DO NOT simply copy the exact `y` value from the closest reference image.** You MUST interpolate. For example, if the target's liquid level is halfway between a reference at y=0.46 and a reference at y=0.57, you MUST output a unique float like 0.51 or 0.52 representing the EXACT pixel location of the meniscus in the specific target image.
 6. If the boundary is partly obscured by glare, shadow, blur, crop, tilt, or the
    label, still estimate the most defensible boundary position you can see and
    lower confidence.
@@ -29,9 +29,8 @@ The usable oil column runs roughly from Y=0.18 (full) to Y=0.96 (empty).
   "qualityFlags": <array of strings>,
   "confidence": <0..1> }
 
-**Reference mapping:** The reference images are full 1500ml, mid 750ml,
-near-empty 55ml, and empty 0ml. Use them as visual calibration anchors, but do
-not average between them unless the target boundary is actually visible.
+**Reference mapping:** The reference images are visual calibration anchors, but do
+not average between them unless the target boundary is actually visible, and NEVER copy their exact `oilSurfaceYRatio` outputs blindly.
 
 **Confidence guidance:**
 - >= 0.85 only when the bottle is fully visible and the boundary is clearly seen.
