@@ -90,7 +90,7 @@ async function callHuggingFaceQwen(args: {
   referenceImages: any[];
   targetMimeType: string;
 }) {
-  const url = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-VL-72B-Instruct";
+  const url = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-VL-72B-Instruct/v1/chat/completions";
 
   // HF Inference API has strict payload size limits (often 1MB-5MB). 
   // We can't send 7 reference images inline as base64 without blowing out the limit (413 Payload Too Large).
