@@ -32,6 +32,24 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
     data: (await readFile(resolve(repoRoot, shot.imagePath))).toString("base64"),
   })));
 
+  const hfKey = env.HF_API_KEY;
+  if (hfKey) {
+    const qwenOutput = await callHuggingFaceQwen({
+      apiKey: hfKey,
+      systemText: prompt.systemText,
+      userText: prompt.userText,
+      fewShots: prompt.fewShots,
+      imageBase64,
+      referenceImages,
+      targetMimeType: mimeType(imagePath),
+    });
+    let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
+    let parseErr: string | null = null;
+    try { parsed = parseEvidenceResponse(qwenOutput); }
+    catch (e) { parseErr = (e as Error).message; }
+    return { rawOutput: qwenOutput, parsed, parseErr, prompt };
+  }
+
   const geminiKeys = buildGeminiKeyPool(env);
   let lastError: unknown;
 
@@ -61,4 +79,84 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
   }
 
   throw lastError ?? new Error("Gemini analysis failed");
+}
+
+async function callHuggingFaceQwen(args: {
+  apiKey: string;
+  systemText: string;
+  userText: string;
+  fewShots: any[];
+  imageBase64: string;
+  referenceImages: any[];
+  targetMimeType: string;
+}) {
+  const url = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-VL-72B-Instruct";
+
+  const fewShotText = args.fewShots
+    .map((fs, i) => `Example ${i + 1}: ${JSON.stringify(fs.expected)}`)
+    .join("\n");
+  const referenceLabels = args.referenceImages
+    .map((image, i) => `Reference image ${i + 1}: ${image.label}`)
+    .join("\n");
+
+  const promptText = [
+    args.userText,
+    referenceLabels ? `\nCalibrated reference images:\n${referenceLabels}` : "",
+    fewShotText ? `\nExpected reference outputs:\n${fewShotText}` : "",
+    "\nThe target image is the final image before these instructions. Return JSON only.",
+  ].join("\n");
+
+  // Format as OpenAI-compatible chat messages
+  const messages = [
+    { role: "system", content: args.systemText },
+    {
+      role: "user",
+      content: [
+        ...args.referenceImages.map(img => ({
+          type: "image_url",
+          image_url: { url: `data:${img.mimeType};base64,${img.data}` }
+        })),
+        { type: "image_url", image_url: { url: `data:${args.targetMimeType};base64,${args.imageBase64}` } },
+        { type: "text", text: promptText }
+      ]
+    }
+  ];
+
+  const maxAttempts = 3;
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${args.apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "Qwen/Qwen2.5-VL-72B-Instruct",
+          messages,
+          max_tokens: 256,
+          temperature: 0,
+        })
+      });
+
+      if (!res.ok) {
+        if (res.status === 429 || res.status === 503) {
+          throw new Error(`HF rate limit/unavailable: ${res.status}`);
+        }
+        throw new Error(`HF error: ${res.status} ${await res.text()}`);
+      }
+
+      const data = await res.json() as any;
+      const content = data?.choices?.[0]?.message?.content;
+      if (!content) throw new Error("Empty response from HF Qwen");
+      return content;
+    } catch (e) {
+      lastError = e;
+      if (attempt < maxAttempts) {
+        await new Promise(r => setTimeout(r, 5000 * attempt));
+      }
+    }
+  }
+  throw lastError;
 }
