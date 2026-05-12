@@ -92,30 +92,20 @@ async function callHuggingFaceQwen(args: {
 }) {
   const url = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-VL-72B-Instruct";
 
-  const fewShotText = args.fewShots
-    .map((fs, i) => `Example ${i + 1}: ${JSON.stringify(fs.expected)}`)
-    .join("\n");
-  const referenceLabels = args.referenceImages
-    .map((image, i) => `Reference image ${i + 1}: ${image.label}`)
-    .join("\n");
-
+  // HF Inference API has strict payload size limits (often 1MB-5MB). 
+  // We can't send 7 reference images inline as base64 without blowing out the limit (413 Payload Too Large).
+  // For the HF fallback, we must strip the reference images from the prompt.
+  
   const promptText = [
     args.userText,
-    referenceLabels ? `\nCalibrated reference images:\n${referenceLabels}` : "",
-    fewShotText ? `\nExpected reference outputs:\n${fewShotText}` : "",
     "\nThe target image is the final image before these instructions. Return JSON only.",
   ].join("\n");
 
-  // Format as OpenAI-compatible chat messages
   const messages = [
     { role: "system", content: args.systemText },
     {
       role: "user",
       content: [
-        ...args.referenceImages.map(img => ({
-          type: "image_url",
-          image_url: { url: `data:${img.mimeType};base64,${img.data}` }
-        })),
         { type: "image_url", image_url: { url: `data:${args.targetMimeType};base64,${args.imageBase64}` } },
         { type: "text", text: promptText }
       ]
