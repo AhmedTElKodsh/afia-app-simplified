@@ -23,6 +23,10 @@ export function loadEnv(): Env {
   if (!key) throw new Error("GEMINI_API_KEY missing — set in .env or shell");
   return {
     GEMINI_API_KEY: key,
+    GEMINI_API_KEYS: process.env.GEMINI_API_KEYS,
+    GEMINI_API_KEY2: process.env.GEMINI_API_KEY2,
+    GEMINI_API_KEY3: process.env.GEMINI_API_KEY3,
+    GEMINI_API_KEY4: process.env.GEMINI_API_KEY4,
     MODEL_ID: process.env.MODEL_ID ?? "gemini-2.5-flash",
   };
 }
