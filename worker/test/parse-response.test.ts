@@ -28,36 +28,36 @@ describe("parseAnalysisResponse", () => {
 });
 
 describe("parseEvidenceResponse", () => {
-  it("parses evidence fields and derives remaining/consumed ml from fillPercent", () => {
+  it("parses evidence fields and derives remaining/consumed ml from oilSurfaceYRatio", () => {
     const r = parseEvidenceResponse(`{
       "readingPossible": true,
       "meniscusVisible": "yes",
       "oilSurfaceYRatio": 0.35,
       "nearestReferenceMl": 1125,
-      "fillPercent": 74,
       "qualityFlags": ["mild_glare"],
       "confidence": 0.72
     }`);
 
-    expect(r.remainingMl).toBe(1110);
-    expect(r.consumedMl).toBe(390);
+    expect(r.remainingMl).toBe(1173);
+    expect(r.consumedMl).toBe(327);
+    expect(r.fillPercent).toBe(78);
     expect(r.redLineYRatio).toBe(0.35);
     expect(r.qualityFlags).toEqual(["mild_glare"]);
   });
 
-  it("clamps fillPercent and known numeric evidence fields", () => {
+  it("clamps oilSurfaceYRatio and known numeric evidence fields", () => {
     const r = parseEvidenceResponse(`{
       "readingPossible": true,
       "meniscusVisible": "uncertain",
       "oilSurfaceYRatio": 2,
       "nearestReferenceMl": 2000,
-      "fillPercent": 120,
       "qualityFlags": [],
       "confidence": 4
     }`);
 
-    expect(r.remainingMl).toBe(1500);
-    expect(r.consumedMl).toBe(0);
+    expect(r.remainingMl).toBe(0);
+    expect(r.consumedMl).toBe(1500);
+    expect(r.fillPercent).toBe(0);
     expect(r.redLineYRatio).toBe(1);
     expect(r.nearestReferenceMl).toBe(1500);
     expect(r.confidence).toBe(1);

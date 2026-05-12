@@ -27,7 +27,7 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
   const buf = await readFile(imagePath);
   const imageBase64 = buf.toString("base64");
   const referenceImages = await Promise.all(prompt.fewShots.map(async (shot) => ({
-    label: `${shot.imagePath}: ${shot.expected.remainingMl}ml remaining`,
+    label: `${shot.imagePath}: y=${shot.expected.oilSurfaceYRatio}, nearest=${shot.expected.nearestReferenceMl}ml`,
     mimeType: mimeType(shot.imagePath),
     data: (await readFile(resolve(repoRoot, shot.imagePath))).toString("base64"),
   })));

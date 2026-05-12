@@ -63,7 +63,7 @@ const prompt = [
   "The reference images appear first, then the target image.",
   "Estimate the target by locating the visible oil-air boundary and comparing it to the calibrated references.",
   "Do not infer from label artwork or bottle color alone.",
-  "Return {\"readingPossible\": boolean, \"meniscusVisible\": \"yes\"|\"no\"|\"uncertain\", \"oilSurfaceYRatio\": number, \"nearestReferenceMl\": number, \"fillPercent\": number, \"qualityFlags\": string[], \"confidence\": number}.",
+  "Return {\"readingPossible\": boolean, \"meniscusVisible\": \"yes\"|\"no\"|\"uncertain\", \"oilSurfaceYRatio\": number, \"nearestReferenceMl\": number, \"qualityFlags\": string[], \"confidence\": number}.",
 ].join("\n");
 
 const rawOutput = await callGemini({

@@ -2,7 +2,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 import { loadEnv } from "../env.js";
 
 import { analyzeFixture } from "../llm/analyze.js";
@@ -20,10 +20,13 @@ const args = Object.fromEntries(
   })
 );
 const set = args.set === "holdout" ? "holdout" : "dev";
-const manifestPath = resolve(repoRoot, `worker/test/fixtures/${set}/manifest.json`);
+const manifestPath = args.manifest
+  ? resolve(repoRoot, args.manifest)
+  : resolve(repoRoot, `worker/test/fixtures/${set}/manifest.json`);
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+const runLabel = args.label ?? manifest.name ?? (args.manifest ? basename(dirname(manifestPath)).replace(/[^a-z0-9_-]/gi, "-") : set);
 
-if (set === "holdout") {
+if (set === "holdout" && !args.manifest) {
   manifest.holdoutTouches = (manifest.holdoutTouches ?? 0) + 1;
   await writeFile(manifestPath, JSON.stringify(manifest, null, 2));
   console.warn(`[seal] holdout touched, count = ${manifest.holdoutTouches}`);
@@ -34,7 +37,7 @@ const runId = randomUUID();
 const runStartedTs = new Date().toISOString();
 const outDir = resolve(repoRoot, "runs");
 await mkdir(outDir, { recursive: true });
-const outPath = resolve(outDir, `${runStartedTs.replace(/[:.]/g, "-")}_${set}_${runId.slice(0, 8)}.jsonl`);
+const outPath = resolve(outDir, `${runStartedTs.replace(/[:.]/g, "-")}_${runLabel}_${runId.slice(0, 8)}.jsonl`);
 
 let n = 0, exact = 0, close = 0;
 const perStratum = new Map<string, { n: number; exact: number }>();

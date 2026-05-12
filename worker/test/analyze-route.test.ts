@@ -6,7 +6,6 @@ const mocks = vi.hoisted(() => ({
     meniscusVisible: "yes",
     oilSurfaceYRatio: 0.42,
     nearestReferenceMl: 900,
-    fillPercent: 60,
     qualityFlags: ["mild_glare"],
     confidence: 0.8,
   })),
@@ -15,7 +14,6 @@ const mocks = vi.hoisted(() => ({
     meniscusVisible: "yes",
     oilSurfaceYRatio: 0.6,
     nearestReferenceMl: 600,
-    fillPercent: 40,
     qualityFlags: ["low_confidence"],
     confidence: 0.62,
   })),
@@ -38,7 +36,6 @@ describe("POST /api/analyze", () => {
       meniscusVisible: "yes",
       oilSurfaceYRatio: 0.42,
       nearestReferenceMl: 900,
-      fillPercent: 60,
       qualityFlags: ["mild_glare"],
       confidence: 0.8,
     }));
@@ -48,7 +45,6 @@ describe("POST /api/analyze", () => {
       meniscusVisible: "yes",
       oilSurfaceYRatio: 0.6,
       nearestReferenceMl: 600,
-      fillPercent: 40,
       qualityFlags: ["low_confidence"],
       confidence: 0.62,
     }));
@@ -93,8 +89,8 @@ describe("POST /api/analyze", () => {
 
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toMatchObject({
-      remainingMl: 900,
-      consumedMl: 600,
+      remainingMl: 1038,
+      consumedMl: 462,
       redLineYRatio: 0.42,
       confidence: 0.8,
       warnings: ["mild_glare"],
@@ -121,7 +117,6 @@ describe("POST /api/analyze", () => {
         meniscusVisible: "yes",
         oilSurfaceYRatio: 0.5,
         nearestReferenceMl: 750,
-        fillPercent: 50,
         qualityFlags: [],
         confidence: 0.7,
       }));
@@ -170,7 +165,7 @@ describe("POST /api/analyze", () => {
 
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toMatchObject({
-      remainingMl: 600,
+      remainingMl: 692,
       provider: "grok",
       rawMetadata: {
         modelId: "grok-test",

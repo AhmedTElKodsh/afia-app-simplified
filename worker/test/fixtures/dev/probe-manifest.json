@@ -1,0 +1,126 @@
+{
+  "name": "stage1-probe-v1",
+  "why": "One fixture per stratum, including the known early hard failures from the stopped dev run.",
+  "fixtures": [
+    {
+      "imageId": "../oil-bottle-augmented/275ml/aug-275ml-0078-jpeg_quality_high.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\275ml\\aug-275ml-0078-jpeg_quality_high.jpg",
+      "groundTruthMl": 275,
+      "source": "aug",
+      "fillBucket": "empty-low",
+      "frameBucket": "aug",
+      "stratum": "aug:empty-low:aug",
+      "reason": "Known severe miss in stopped run; low-fill augmented anchor."
+    },
+    {
+      "imageId": "../oil-bottle-augmented/1485ml/aug-1485ml-0172-flip_horizontal.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\1485ml\\aug-1485ml-0172-flip_horizontal.jpg",
+      "groundTruthMl": 1485,
+      "source": "aug",
+      "fillBucket": "high",
+      "frameBucket": "aug",
+      "stratum": "aug:high:aug",
+      "reason": "Known severe miss in stopped run; high-fill augmented anchor."
+    },
+    {
+      "imageId": "../oil-bottle-augmented/825ml/aug-825ml-0045-rotate_minus.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\825ml\\aug-825ml-0045-rotate_minus.jpg",
+      "groundTruthMl": 825,
+      "source": "aug",
+      "fillBucket": "mid-high",
+      "frameBucket": "aug",
+      "stratum": "aug:mid-high:aug",
+      "reason": "Known miss in stopped run; mid-high augmented anchor."
+    },
+    {
+      "imageId": "../oil-bottle-augmented/715ml/aug-715ml-0006-brightness_plus.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\715ml\\aug-715ml-0006-brightness_plus.jpg",
+      "groundTruthMl": 715,
+      "source": "aug",
+      "fillBucket": "mid-low",
+      "frameBucket": "aug",
+      "stratum": "aug:mid-low:aug",
+      "reason": "Known exact hit in stopped run; sanity-check augmented mid-low case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/275ml/275ml_t0002.50s_f0005.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\275ml\\275ml_t0002.50s_f0005.jpg",
+      "groundTruthMl": 275,
+      "source": "real",
+      "fillBucket": "empty-low",
+      "frameBucket": "early",
+      "stratum": "real:empty-low:early",
+      "reason": "Known miss in stopped run; early low-fill real case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/empty/empty_t0075.06s_f0150.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\empty\\empty_t0075.06s_f0150.jpg",
+      "groundTruthMl": 0,
+      "source": "real",
+      "fillBucket": "empty-low",
+      "frameBucket": "late",
+      "stratum": "real:empty-low:late",
+      "reason": "Known miss in stopped run; late empty real case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/1375ml/1375ml_t0002.00s_f0004.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\1375ml\\1375ml_t0002.00s_f0004.jpg",
+      "groundTruthMl": 1375,
+      "source": "real",
+      "fillBucket": "high",
+      "frameBucket": "early",
+      "stratum": "real:high:early",
+      "reason": "Known miss in stopped run; early high-fill real case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/1485ml/1485ml_t0018.54s_f0037.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\1485ml\\1485ml_t0018.54s_f0037.jpg",
+      "groundTruthMl": 1485,
+      "source": "real",
+      "fillBucket": "high",
+      "frameBucket": "late",
+      "stratum": "real:high:late",
+      "reason": "Known miss in stopped run; late high-fill real case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/880ml/880ml_t0003.50s_f0007.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\880ml\\880ml_t0003.50s_f0007.jpg",
+      "groundTruthMl": 880,
+      "source": "real",
+      "fillBucket": "mid-high",
+      "frameBucket": "early",
+      "stratum": "real:mid-high:early",
+      "reason": "Known miss in stopped run; early mid-high real case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/1210ml/1210ml_t0041.03s_f0082.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\1210ml\\1210ml_t0041.03s_f0082.jpg",
+      "groundTruthMl": 1210,
+      "source": "real",
+      "fillBucket": "mid-high",
+      "frameBucket": "late",
+      "stratum": "real:mid-high:late",
+      "reason": "Known miss in stopped run; late mid-high real case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/770ml/770ml_t0001.50s_f0003.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\770ml\\770ml_t0001.50s_f0003.jpg",
+      "groundTruthMl": 770,
+      "source": "real",
+      "fillBucket": "mid-low",
+      "frameBucket": "early",
+      "stratum": "real:mid-low:early",
+      "reason": "Known miss in stopped run; early mid-low real case."
+    },
+    {
+      "imageId": "../oil-bottle-frames/495ml/495ml_t0007.01s_f0014.jpg",
+      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\495ml\\495ml_t0007.01s_f0014.jpg",
+      "groundTruthMl": 495,
+      "source": "real",
+      "fillBucket": "mid-low",
+      "frameBucket": "late",
+      "stratum": "real:mid-low:late",
+      "reason": "Known miss in stopped run; late mid-low real case."
+    }
+  ]
+}

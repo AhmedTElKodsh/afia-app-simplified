@@ -32,7 +32,6 @@ export interface ProviderEvidence {
   meniscusVisible: "yes" | "no" | "uncertain";
   oilSurfaceYRatio: number;
   nearestReferenceMl: number;
-  fillPercent: number;
   qualityFlags: string[];
   confidence: number;
 }
@@ -128,7 +127,6 @@ export const ProviderEvidenceSchema: Schema<ProviderEvidence> = {
       meniscusVisible: enumValue(record.meniscusVisible, ["yes", "no", "uncertain"] as const, "meniscusVisible"),
       oilSurfaceYRatio: ratioValue(record.oilSurfaceYRatio, "oilSurfaceYRatio"),
       nearestReferenceMl: numberAtLeast(record.nearestReferenceMl, 0, "nearestReferenceMl"),
-      fillPercent: numberInRange(record.fillPercent, 0, 100, "fillPercent"),
       qualityFlags: stringArray(record.qualityFlags, "qualityFlags"),
       confidence: ratioValue(record.confidence, "confidence"),
     };

@@ -30,7 +30,6 @@ const mocks = vi.hoisted(() => {
       meniscusVisible: "yes",
       oilSurfaceYRatio: 0.42,
       nearestReferenceMl: 900,
-      fillPercent: 60,
       qualityFlags: ["mild_glare"],
       confidence: 0.8,
     })),
@@ -115,8 +114,8 @@ describe("Stage 1 analyze to admin review flow", () => {
 
     expect(analyze.status).toBe(200);
     expect(analyzeBody).toMatchObject({
-      remainingMl: 900,
-      consumedMl: 600,
+      remainingMl: 1038,
+      consumedMl: 462,
       provider: "gemini",
       analysisId: expect.any(String),
     });
@@ -132,7 +131,7 @@ describe("Stage 1 analyze to admin review flow", () => {
     expect(queueBody.analyses).toHaveLength(1);
     expect(queueBody.analyses[0]).toMatchObject({
       id: analyzeBody.analysisId,
-      remainingMl: 900,
+      remainingMl: 1038,
       correctionStatus: "pending_review",
     });
 

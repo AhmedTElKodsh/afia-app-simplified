@@ -1,4 +1,11 @@
 {
   "imagePath": "oil-bottle-frames/1.5L_refs/750ml.jpg",
-  "expected": { "remainingMl": 750, "consumedMl": 750, "redLineYRatio": 0.57, "confidence": 0.90 }
+  "expected": {
+    "readingPossible": true,
+    "meniscusVisible": "yes",
+    "oilSurfaceYRatio": 0.57,
+    "nearestReferenceMl": 750,
+    "qualityFlags": [],
+    "confidence": 0.9
+  }
 }

@@ -15,10 +15,10 @@ const PROMPT_VERSION = "v1";
 const DEFAULT_MODEL_ID = "gemini-2.5-flash";
 const DEFAULT_GROK_MODEL_ID = "grok-2-vision-1212";
 
-const SYSTEM_TEXT = "You estimate remaining oil in a 1.5L Afia cooking-oil bottle from one front-side image. Return strict JSON only.";
+const SYSTEM_TEXT = "You estimate remaining oil in a 1.5L Afia cooking-oil bottle from one front-side image by locating the visible oil-air boundary. Return strict JSON only.";
 const USER_TEXT = [
   "Estimate the visible oil level for the target Afia 1.5L bottle.",
-  "Return evidence JSON with readingPossible, meniscusVisible, oilSurfaceYRatio, nearestReferenceMl, fillPercent, qualityFlags, and confidence.",
+  "Return evidence JSON with readingPossible, meniscusVisible, oilSurfaceYRatio, nearestReferenceMl, qualityFlags, and confidence.",
 ].join("\n");
 
 export async function analyzeRoute(c: Context<{ Bindings: Env }>) {

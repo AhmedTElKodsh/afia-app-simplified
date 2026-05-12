@@ -7,7 +7,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export interface FewShot {
   imagePath: string;
-  expected: { remainingMl: number; consumedMl: number; redLineYRatio: number; confidence: number };
+  expected: {
+    readingPossible: boolean;
+    meniscusVisible: "yes" | "no" | "uncertain";
+    oilSurfaceYRatio: number;
+    nearestReferenceMl: number;
+    qualityFlags: string[];
+    confidence: number;
+  };
 }
 
 export interface LoadedPrompt {

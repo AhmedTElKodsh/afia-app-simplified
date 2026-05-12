@@ -1,3 +1,4 @@
+import { BOTTLE_1_5L } from "@afia/shared";
 import { z } from "zod";
 
 const Schema = z.object({
@@ -12,7 +13,6 @@ const EvidenceSchema = z.object({
   meniscusVisible: z.enum(["yes", "no", "uncertain"]),
   oilSurfaceYRatio: z.number(),
   nearestReferenceMl: z.number(),
-  fillPercent: z.number(),
   qualityFlags: z.array(z.string()),
   confidence: z.number(),
 });
@@ -31,20 +31,29 @@ export function parseAnalysisResponse(raw: string) {
 export function parseEvidenceResponse(raw: string) {
   const parsed = parseJson(raw);
   const v = EvidenceSchema.parse(parsed);
-  const fillPercent = clamp(v.fillPercent, 0, 100);
-  const remainingMl = Math.round(fillPercent * 15);
+  const oilSurfaceYRatio = clamp(v.oilSurfaceYRatio, 0, 1);
+  const normalizedFill = ratioFromOilSurface(oilSurfaceYRatio);
+  const remainingMl = Math.round(BOTTLE_1_5L.capacityMl * normalizedFill);
+  const fillPercent = Math.round(normalizedFill * 100);
+
   return {
     readingPossible: v.readingPossible,
     meniscusVisible: v.meniscusVisible,
-    oilSurfaceYRatio: clamp(v.oilSurfaceYRatio, 0, 1),
+    oilSurfaceYRatio,
     nearestReferenceMl: Math.round(clamp(v.nearestReferenceMl, 0, 1500)),
     fillPercent,
     qualityFlags: v.qualityFlags,
     confidence: clamp(v.confidence, 0, 1),
     remainingMl,
-    consumedMl: 1500 - remainingMl,
-    redLineYRatio: clamp(v.oilSurfaceYRatio, 0, 1),
+    consumedMl: BOTTLE_1_5L.capacityMl - remainingMl,
+    redLineYRatio: oilSurfaceYRatio,
   };
+}
+
+function ratioFromOilSurface(oilSurfaceYRatio: number): number {
+  const span = BOTTLE_1_5L.fillBottomY - BOTTLE_1_5L.fillTopY;
+  if (span <= 0) return 0;
+  return clamp((BOTTLE_1_5L.fillBottomY - oilSurfaceYRatio) / span, 0, 1);
 }
 
 function parseJson(raw: string) {
