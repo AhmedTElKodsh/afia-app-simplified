@@ -1,9 +1,16 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import { FloatingControls } from "../src/components/FloatingControls";
 import { ThemeProvider } from "../src/theme";
 import { I18nProvider } from "../src/i18n";
+
+afterEach(() => {
+  localStorage.clear();
+  document.documentElement.lang = "";
+  document.documentElement.dir = "";
+  document.documentElement.classList.remove("dark");
+});
 
 describe("FloatingControls", () => {
   it("toggles language en <-> ar and sets dir attribute", () => {

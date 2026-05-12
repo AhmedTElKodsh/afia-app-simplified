@@ -68,6 +68,11 @@ for (const fx of manifest.fixtures as FixtureEntry[]) {
   process.stdout.write(
     `[${n}/${manifest.fixtures.length}] ${fx.imageId} gt=${fx.groundTruthMl} pred=${rec.parsedMl ?? "ERR"} ${rec.exactBucketPass ? "✓" : "✗"}\n`
   );
+
+  // Rate limiting for Gemini free tier (5 requests per minute -> ~1 request every 13s)
+  if (n < manifest.fixtures.length) {
+    await new Promise((r) => setTimeout(r, 13000));
+  }
 }
 
 console.log(`\n=== ${set} run ${runId} ===`);

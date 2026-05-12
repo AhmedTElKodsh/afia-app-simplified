@@ -1,0 +1,17 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - button "language" [ref=e4] [cursor=pointer]: ع
+    - button "theme" [ref=e5] [cursor=pointer]: 🌙
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - paragraph [ref=e9]: Scan product
+        - heading "Afia 1.5L" [level=1] [ref=e10]
+      - generic [ref=e11]:
+        - paragraph [ref=e12]: Photograph the FRONT of the bottle
+        - paragraph [ref=e13]: Aim slightly downward from hand height. Keep the upright bottle small in frame with space around it.
+        - generic [ref=e14]:
+          - generic "1.5L bottle distance and downward phone angle guide":
+            - img
+          - generic: Phone angled down, bottle fully visible
+        - button "Capture" [disabled] [ref=e16]

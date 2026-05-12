@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bottle Outline Comparison</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a1a; font-family: sans-serif; color: white; padding: 20px; }
+  h1 { text-align: center; margin-bottom: 24px; font-size: 18px; color: #ccc; }
+  .grid { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .card {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 16px;
+    width: 260px;
+  }
+  .card h2 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-align: center; }
+  .camera-sim {
+    width: 228px;
+    height: 420px;
+    background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 50%, #3a3a3a 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .camera-sim::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 40% 30%, rgba(255,255,255,0.08), transparent 70%);
+  }
+  .camera-sim svg {
+    width: 65%;
+    height: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  .label {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+  }
+  /* For file(1).svg — black on white becomes visible by inverting */
+  .inverted-svg {
+    filter: invert(1);
+    width: 65%;
+    height: 90%;
+  }
+</style>
+</head>
+<body>
+<h1>Bottle Outline Comparison — camera simulation (dark bg)</h1>
+<div class="grid">
+
+  <!-- Card 1: Current hardcoded SVG in the code -->
+  <div class="card">
+    <h2>Current Code (hardcoded paths)</h2>
+    <div class="camera-sim">
+      <svg viewBox="0 0 100 301" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="rgba(255,255,255,0.85)" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none">
+          <path d="M 33 3 L 67 3 C 68.5 3 69 4.5 69 6 L 69 16 L 31 16 L 31 6 C 31 4.5 31.5 3 33 3 Z" vector-effect="non-scaling-stroke"/>
+          <path d="M 33 16 L 67 16 L 66 44 C 66 49 63.5 52 61 53 L 39 53 C 36.5 52 34 49 34 44 Z" vector-effect="non-scaling-stroke"/>
+          <path d="M 39 53 L 61 53 C 72 55 84 62 90 68 C 92 70 92 71 92 72 L 8 72 C 8 71 8 70 10 68 C 16 62 28 55 39 53 Z" vector-effect="non-scaling-stroke"/>
+          <path d="M 8 72 L 92 72 C 95 82 96 100 95 117 C 93 138 91 162 89 190 C 87 212 86 232 85 252 L 15 252 C 14 232 13 212 11 190 C 9 162 7 138 5 117 C 4 100 5 82 8 72 Z" vector-effect="non-scaling-stroke"/>
+          <path d="M 15 252 L 85 252 C 86 264 86 274 84 282 C 82 290 78 294 73 297 L 27 297 C 22 294 18 290 16 282 C 14 274 14 264 15 252 Z" vector-effect="non-scaling-stroke"/>
+          <path d="M 93 100 C 97 100 99 107 99 128 C 99 148 97 158 93 158 C 89 158 87 155 87 150 L 87 113 C 87 106 90 100 93 100 Z" vector-effect="non-scaling-stroke"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Hand-crafted Afia bottle spec<br>(cap + neck + shoulder + body + base + handle)</div>
+  </div>
+
+  <!-- Card 2: bottle-outline-clean2.svg stroke version (noisy) -->
+  <div class="card">
+    <h2>bottle-outline-clean2 → stroke (noisy)</h2>
+    <div class="camera-sim">
+      <object data="bottle-outline-clean2-stroke.svg" type="image/svg+xml" style="width:65%;height:90%;position:relative;z-index:1;"></object>
+    </div>
+    <div class="label">All 48 paths + inner sub-path = noise</div>
+  </div>
+
+  <!-- Card 2b: CLEAN version — outer contour only -->
+  <div class="card">
+    <h2>✅ bottle-outline-clean2 → CLEANED</h2>
+    <div class="camera-sim">
+      <object data="bottle-outline-clean2-clean.svg" type="image/svg+xml" style="width:65%;height:90%;position:relative;z-index:1;"></object>
+    </div>
+    <div class="label">Outer contour only — 46 noise paths removed, inner sub-path stripped</div>
+  </div>
+
+  <!-- Card 3: file(1).svg — show silhouette shape (inverted) -->
+  <div class="card">
+    <h2>file (1).svg — shape preview</h2>
+    <div class="camera-sim">
+      <img src="file (1).svg" class="inverted-svg" alt="bottle shape" style="object-fit:contain;"/>
+    </div>
+    <div class="label">Photo-trace SVG, CSS-inverted to white<br>Shows overall silhouette shape only</div>
+  </div>
+
+  <!-- Card 4: bottle-outline-clean2 raw (original black fill — shows shape) -->
+  <div class="card">
+    <h2>bottle-outline-clean2 — raw shape</h2>
+    <div class="camera-sim">
+      <img src="bottle-outline-clean2.svg" alt="bottle shape" style="width:65%;height:90%;object-fit:contain;filter:invert(1);position:relative;z-index:1;"/>
+    </div>
+    <div class="label">Original traced shape, CSS-inverted<br>See if silhouette matches real Afia bottle</div>
+  </div>
+
+
+  <!-- Card 5: New clean hand-crafted SVG from Adobe Express PNG -->
+  <div class="card">
+    <h2>✅ NEW — afia-bottle-clean.svg</h2>
+    <div class="camera-sim">
+      <object data="afia-bottle-clean.svg" type="image/svg+xml" style="width:65%;height:90%;position:relative;z-index:1;"></object>
+    </div>
+    <div class="label">Hand-crafted from Adobe Express PNG<br>cap + body + handle outer + inner oval</div>
+  </div>
+
+</div>
+
+<div style="margin-top:32px;padding:16px;background:#222;border-radius:8px;max-width:700px;margin-left:auto;margin-right:auto;">
+  <h2 style="font-size:14px;margin-bottom:10px;color:#aaa;">What to look for</h2>
+  <ul style="font-size:12px;color:#888;line-height:2;padding-left:16px;">
+    <li><strong style="color:#ccc;">Card 1</strong> — current app. Geometric/clean but may not match real bottle proportions.</li>
+    <li><strong style="color:#ccc;">Card 2</strong> — your traced SVG as stroke overlay. Check: is the shape right? Is it too noisy/jagged?</li>
+    <li><strong style="color:#ccc;">Card 3 & 4</strong> — raw silhouette shapes. Do they match the real Afia bottle?</li>
+  </ul>
+  <p style="font-size:12px;color:#666;margin-top:12px;">
+    If Card 2 looks good → we use it (Option A done).<br>
+    If jagged → we use your shape as reference and redraw clean geometric paths (Option B).
+  </p>
+</div>
+</body>
+</html>

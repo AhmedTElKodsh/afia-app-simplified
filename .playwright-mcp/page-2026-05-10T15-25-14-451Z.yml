@@ -1,0 +1,29 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - button "language" [ref=e4] [cursor=pointer]: ع
+    - button "theme" [ref=e5] [cursor=pointer]: 🌙
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - paragraph [ref=e9]: Analysis
+        - heading "Afia 1.5L" [level=1] [ref=e10]
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - generic [ref=e14]: "880"
+            - generic [ref=e15]: ml left
+          - slider "Oil level" [ref=e16]: "880"
+          - paragraph [ref=e20]: 2 3/4 cups used
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - img "Captured bottle" [ref=e23]
+            - generic "Detected oil level"
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - paragraph [ref=e26]: Remaining
+              - paragraph [ref=e27]: 880 ml
+            - generic [ref=e28]:
+              - paragraph [ref=e29]: Consumed
+              - paragraph [ref=e30]: 620 ml
+      - link "Retake" [ref=e31] [cursor=pointer]:
+        - /url: /scan?size=1.5L

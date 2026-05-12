@@ -1,4 +1,4 @@
-export interface AnalysisResult {
+export interface EvalAnalysisResult {
   remainingMl: number;
   consumedMl: number;
   redLineYRatio: number;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseAnalysisResponse } from "../src/eval/parse-response.js";
+import { parseAnalysisResponse, parseEvidenceResponse } from "../src/eval/parse-response.js";
 
 describe("parseAnalysisResponse", () => {
   it("parses valid JSON", () => {
@@ -24,5 +24,42 @@ describe("parseAnalysisResponse", () => {
   });
   it("throws on non-JSON", () => {
     expect(() => parseAnalysisResponse("not json")).toThrow();
+  });
+});
+
+describe("parseEvidenceResponse", () => {
+  it("parses evidence fields and derives remaining/consumed ml from fillPercent", () => {
+    const r = parseEvidenceResponse(`{
+      "readingPossible": true,
+      "meniscusVisible": "yes",
+      "oilSurfaceYRatio": 0.35,
+      "nearestReferenceMl": 1125,
+      "fillPercent": 74,
+      "qualityFlags": ["mild_glare"],
+      "confidence": 0.72
+    }`);
+
+    expect(r.remainingMl).toBe(1110);
+    expect(r.consumedMl).toBe(390);
+    expect(r.redLineYRatio).toBe(0.35);
+    expect(r.qualityFlags).toEqual(["mild_glare"]);
+  });
+
+  it("clamps fillPercent and known numeric evidence fields", () => {
+    const r = parseEvidenceResponse(`{
+      "readingPossible": true,
+      "meniscusVisible": "uncertain",
+      "oilSurfaceYRatio": 2,
+      "nearestReferenceMl": 2000,
+      "fillPercent": 120,
+      "qualityFlags": [],
+      "confidence": 4
+    }`);
+
+    expect(r.remainingMl).toBe(1500);
+    expect(r.consumedMl).toBe(0);
+    expect(r.redLineYRatio).toBe(1);
+    expect(r.nearestReferenceMl).toBe(1500);
+    expect(r.confidence).toBe(1);
   });
 });
