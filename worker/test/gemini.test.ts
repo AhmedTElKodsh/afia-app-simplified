@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const generateContent = vi.fn(async () => ({
   response: { text: () => `{"remainingMl":770,"consumedMl":730,"redLineYRatio":0.57,"confidence":0.9}` },
@@ -15,12 +15,45 @@ vi.mock("@google/generative-ai", () => {
 import { callGemini } from "../src/llm/gemini.js";
 
 describe("callGemini", () => {
+  beforeEach(() => {
+    generateContent.mockReset();
+    generateContent.mockResolvedValue({
+      response: { text: () => `{"remainingMl":770,"consumedMl":730,"redLineYRatio":0.57,"confidence":0.9}` },
+    });
+  });
+
   it("returns raw text from SDK", async () => {
     const text = await callGemini({
       apiKey: "test", modelId: "gemini-2.5-flash",
       systemText: "sys", userText: "user", fewShots: [], imageBase64: "abc",
     });
     expect(text).toContain("770");
+  });
+
+  it("retries 429 quota responses using server-provided retry delay", async () => {
+    generateContent
+      .mockRejectedValueOnce({
+        status: 429,
+        message: "Too Many Requests. Please retry in 0.01s.",
+        errorDetails: [{ "@type": "type.googleapis.com/google.rpc.RetryInfo", retryDelay: "0.01s" }],
+      })
+      .mockResolvedValueOnce({
+        response: { text: () => `{"remainingMl":770,"consumedMl":730,"redLineYRatio":0.57,"confidence":0.9}` },
+      });
+
+    const start = Date.now();
+    const text = await callGemini({
+      apiKey: "test",
+      modelId: "gemini-2.5-flash",
+      systemText: "sys",
+      userText: "user",
+      fewShots: [],
+      imageBase64: "abc",
+    });
+
+    expect(text).toContain("770");
+    expect(generateContent).toHaveBeenCalledTimes(2);
+    expect(Date.now() - start).toBeGreaterThanOrEqual(1000);
   });
 
   it("sends reference/target image parts before the final instruction text", async () => {

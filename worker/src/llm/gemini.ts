@@ -19,6 +19,41 @@ interface CallArgs {
   thinkingBudget?: number;
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function extractRetryDelayMs(error: unknown): number | null {
+  if (!error || typeof error !== "object") return null;
+  const maybeError = error as { errorDetails?: Array<Record<string, unknown>>; message?: string };
+
+  for (const detail of maybeError.errorDetails ?? []) {
+    if (detail["@type"] !== "type.googleapis.com/google.rpc.RetryInfo") continue;
+    const retryDelay = detail.retryDelay;
+    if (typeof retryDelay === "string") {
+      const match = retryDelay.match(/^(\d+)(?:\.(\d+))?s$/);
+      if (!match) continue;
+      const seconds = Number(match[1]);
+      const fractionalMs = match[2] ? Number(`0.${match[2]}`) * 1000 : 0;
+      return Math.ceil(seconds * 1000 + fractionalMs);
+    }
+  }
+
+  const message = maybeError.message ?? "";
+  const fallbackMatch = message.match(/Please retry in\s+([\d.]+)s/i);
+  if (fallbackMatch) {
+    return Math.ceil(Number(fallbackMatch[1]) * 1000);
+  }
+
+  return null;
+}
+
+function isRetryableQuotaError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const maybeError = error as { status?: number; message?: string };
+  return maybeError.status === 429 || /quota exceeded|too many requests|rate limit/i.test(maybeError.message ?? "");
+}
+
 export async function callGemini(args: CallArgs): Promise<string> {
   const client = new GoogleGenerativeAI(args.apiKey);
   const model = client.getGenerativeModel({
@@ -61,7 +96,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
     .map((image, i) => `Reference image ${i + 1}: ${image.label}`)
     .join("\n");
 
-  const result = await model.generateContent([
+  const parts = [
     ...(args.referenceImages ?? []).map((image) => ({
       inlineData: { mimeType: image.mimeType, data: image.data },
     })),
@@ -74,6 +109,21 @@ export async function callGemini(args: CallArgs): Promise<string> {
         "\nThe target image is the final image before these instructions. Return JSON only.",
       ].join("\n"),
     },
-  ]);
-  return result.response.text();
+  ];
+
+  const maxAttempts = 4;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const result = await model.generateContent(parts);
+      return result.response.text();
+    } catch (error) {
+      if (!isRetryableQuotaError(error) || attempt === maxAttempts) {
+        throw error;
+      }
+      const retryDelayMs = extractRetryDelayMs(error) ?? attempt * 15000;
+      await sleep(retryDelayMs + 1000);
+    }
+  }
+
+  throw new Error("Gemini call failed after retries");
 }
