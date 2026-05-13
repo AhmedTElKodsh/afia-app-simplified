@@ -8,10 +8,10 @@ The usable oil column runs roughly from Y=0.18 (full) to Y=0.96 (empty).
    remaining-ml levels.
 2. Inspect the target image last.
 3. Your first task is to locate the visible oil-air boundary (meniscus / liquid
-   surface line).
+   surface line). **Look for the specific visual curve where the liquid meets the air; this "meniscus" often has a distinct dark or light edge depending on lighting.**
 4. Use only visible boundary evidence. Do **not** infer oil level from label
-   artwork, brand colors, expected packaging appearance, or generic bottle tint.
-5. If the boundary is visible, estimate `oilSurfaceYRatio` directly. **DO NOT simply copy the exact `y` value from the closest reference image.** You MUST interpolate. For example, if the target's liquid level is halfway between a reference at y=0.46 and a reference at y=0.57, you MUST output a unique float like 0.51 or 0.52 representing the EXACT pixel location of the meniscus in the specific target image.
+   artwork, brand colors, expected packaging appearance, or generic bottle tint. **Be especially careful not to let the horizontal lines of the label mislead you into seeing a boundary where none exists.**
+5. If the boundary is visible, estimate `oilSurfaceYRatio` directly. **DO NOT simply copy the exact `y` value from the closest reference image.** Few-shots are examples, not a menu. You MUST interpolate. For example, if the target's liquid level is halfway between a reference at y=0.46 and a reference at y=0.57, you MUST output a unique float like 0.51 or 0.52 representing the EXACT pixel location of the meniscus in the specific target image.
 6. If the boundary is partly obscured by glare, shadow, blur, crop, tilt, or the
    label, still estimate the most defensible boundary position you can see and
    lower confidence.

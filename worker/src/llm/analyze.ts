@@ -24,7 +24,7 @@ function isQuotaLikeError(error: unknown): boolean {
 
 export async function analyzeFixture(imagePath: string, env: Env, promptVersion = "v1") {
   const prompt = await loadPrompt(promptVersion);
-  const buf = await readFile(imagePath);
+  const buf = await readFile(resolve(repoRoot, imagePath));
   const imageBase64 = buf.toString("base64");
   const referenceImages = await Promise.all(prompt.fewShots.map(async (shot) => ({
     label: `${shot.expected.nearestReferenceMl}ml reference`,
@@ -32,8 +32,39 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
     data: (await readFile(resolve(repoRoot, shot.imagePath))).toString("base64"),
   })));
 
+  let lastError: unknown;
+
+  // PRIORITY 1: OpenRouter (to test more capable models like Qwen2.5-VL or Gemini 2.0)
+  const orKey = env.OPENROUTER_API_KEY;
+  if (orKey) {
+    const modelId = env.OPENROUTER_MODEL_ID ?? "google/gemini-2.0-flash-exp:free";
+    console.log(`[analyze] Trying OpenRouter provider (model: ${modelId})...`);
+    try {
+      const orOutput = await callOpenRouter({
+        apiKey: orKey,
+        modelId,
+        systemText: prompt.systemText,
+        userText: prompt.userText,
+        fewShots: prompt.fewShots,
+        imageBase64,
+        referenceImages,
+        targetMimeType: mimeType(imagePath),
+      });
+      let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
+      let parseErr: string | null = null;
+      try { parsed = parseEvidenceResponse(orOutput); }
+      catch (e) { parseErr = (e as Error).message; }
+      return { rawOutput: orOutput, parsed, parseErr, prompt };
+    } catch (e) {
+      console.warn(`OpenRouter failed: ${(e as Error).message}`);
+      lastError = e;
+    }
+  }
+
+  // PRIORITY 2: HF Qwen
   const hfKey = env.HF_API_KEY;
   if (hfKey) {
+    console.log(`[analyze] Trying HF provider...`);
     try {
       const qwenOutput = await callHuggingFaceQwen({
         apiKey: hfKey,
@@ -51,36 +82,14 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
       return { rawOutput: qwenOutput, parsed, parseErr, prompt };
     } catch (e) {
       console.warn(`HF Qwen failed, falling back: ${(e as Error).message}`);
+      lastError = e;
     }
   }
 
-  const orKey = env.OPENROUTER_API_KEY;
-  if (orKey) {
-    try {
-      const orOutput = await callOpenRouter({
-        apiKey: orKey,
-        modelId: env.OPENROUTER_MODEL_ID ?? "google/gemini-2.0-flash-exp:free",
-        systemText: prompt.systemText,
-        userText: prompt.userText,
-        fewShots: prompt.fewShots,
-        imageBase64,
-        referenceImages,
-        targetMimeType: mimeType(imagePath),
-      });
-      let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
-      let parseErr: string | null = null;
-      try { parsed = parseEvidenceResponse(orOutput); }
-      catch (e) { parseErr = (e as Error).message; }
-      return { rawOutput: orOutput, parsed, parseErr, prompt };
-    } catch (e) {
-      console.warn(`OpenRouter failed, falling back: ${(e as Error).message}`);
-    }
-  }
-
+  // PRIORITY 3: Native Gemini
   const geminiKeys = buildGeminiKeyPool(env);
-  let lastError: unknown;
-
   if (geminiKeys.length > 0) {
+    console.log(`[analyze] Trying Gemini provider (${geminiKeys.length} keys)...`);
     for (let attempt = 0; attempt < geminiKeys.length; attempt++) {
       try {
         const rawOutput = await callGemini({
@@ -107,7 +116,14 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
     }
   }
 
-  throw lastError ?? new Error("Analysis failed (no working provider found)");
+  if (lastError) throw lastError;
+  console.error("[analyze] No working provider configured!", {
+    hasHf: !!hfKey,
+    hasOr: !!orKey,
+    geminiCount: geminiKeys.length,
+    modelId: env.MODEL_ID
+  });
+  throw new Error("Analysis failed (no providers configured or all failed)");
 }
 
 async function callHuggingFaceQwen(args: {

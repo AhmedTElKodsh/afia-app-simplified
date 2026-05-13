@@ -4,7 +4,7 @@
   "fixtures": [
     {
       "imageId": "../oil-bottle-augmented/275ml/aug-275ml-0078-jpeg_quality_high.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\275ml\\aug-275ml-0078-jpeg_quality_high.jpg",
+      "imagePath": "oil-bottle-augmented/275ml/aug-275ml-0078-jpeg_quality_high.jpg",
       "groundTruthMl": 275,
       "source": "aug",
       "fillBucket": "empty-low",
@@ -14,7 +14,7 @@
     },
     {
       "imageId": "../oil-bottle-augmented/1485ml/aug-1485ml-0172-flip_horizontal.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\1485ml\\aug-1485ml-0172-flip_horizontal.jpg",
+      "imagePath": "oil-bottle-augmented/1485ml/aug-1485ml-0172-flip_horizontal.jpg",
       "groundTruthMl": 1485,
       "source": "aug",
       "fillBucket": "high",
@@ -24,7 +24,7 @@
     },
     {
       "imageId": "../oil-bottle-augmented/825ml/aug-825ml-0045-rotate_minus.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\825ml\\aug-825ml-0045-rotate_minus.jpg",
+      "imagePath": "oil-bottle-augmented/825ml/aug-825ml-0045-rotate_minus.jpg",
       "groundTruthMl": 825,
       "source": "aug",
       "fillBucket": "mid-high",
@@ -34,7 +34,7 @@
     },
     {
       "imageId": "../oil-bottle-augmented/715ml/aug-715ml-0006-brightness_plus.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-augmented\\715ml\\aug-715ml-0006-brightness_plus.jpg",
+      "imagePath": "oil-bottle-augmented/715ml/aug-715ml-0006-brightness_plus.jpg",
       "groundTruthMl": 715,
       "source": "aug",
       "fillBucket": "mid-low",
@@ -44,7 +44,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/275ml/275ml_t0002.50s_f0005.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\275ml\\275ml_t0002.50s_f0005.jpg",
+      "imagePath": "oil-bottle-frames/275ml/275ml_t0002.50s_f0005.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
@@ -54,7 +54,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/empty/empty_t0075.06s_f0150.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\empty\\empty_t0075.06s_f0150.jpg",
+      "imagePath": "oil-bottle-frames/empty/empty_t0075.06s_f0150.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
@@ -64,7 +64,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/1375ml/1375ml_t0002.00s_f0004.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\1375ml\\1375ml_t0002.00s_f0004.jpg",
+      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0002.00s_f0004.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
@@ -74,7 +74,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/1485ml/1485ml_t0018.54s_f0037.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\1485ml\\1485ml_t0018.54s_f0037.jpg",
+      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0018.54s_f0037.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
@@ -84,7 +84,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/880ml/880ml_t0003.50s_f0007.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\880ml\\880ml_t0003.50s_f0007.jpg",
+      "imagePath": "oil-bottle-frames/880ml/880ml_t0003.50s_f0007.jpg",
       "groundTruthMl": 880,
       "source": "real",
       "fillBucket": "mid-high",
@@ -94,7 +94,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/1210ml/1210ml_t0041.03s_f0082.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\1210ml\\1210ml_t0041.03s_f0082.jpg",
+      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0041.03s_f0082.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "mid-high",
@@ -104,7 +104,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/770ml/770ml_t0001.50s_f0003.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\770ml\\770ml_t0001.50s_f0003.jpg",
+      "imagePath": "oil-bottle-frames/770ml/770ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 770,
       "source": "real",
       "fillBucket": "mid-low",
@@ -114,7 +114,7 @@
     },
     {
       "imageId": "../oil-bottle-frames/495ml/495ml_t0007.01s_f0014.jpg",
-      "imagePath": "D:\\AI Projects\\Freelance\\afia-app-simplified\\oil-bottle-frames\\495ml\\495ml_t0007.01s_f0014.jpg",
+      "imagePath": "oil-bottle-frames/495ml/495ml_t0007.01s_f0014.jpg",
       "groundTruthMl": 495,
       "source": "real",
       "fillBucket": "mid-low",

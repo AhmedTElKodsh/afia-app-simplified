@@ -1,4 +1,9 @@
-import "dotenv/config";
+import { config } from "dotenv";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+config({ path: resolve(__dirname, "../../.env") });
 
 export interface Env {
   ASSETS?: {
@@ -22,6 +27,7 @@ export interface Env {
 }
 
 export function loadEnv(): Env {
+  console.log(`[env] process.env keys: ${Object.keys(process.env).filter(k => k.includes("API_KEY") || k.includes("MODEL")).join(", ")}`);
   return {
     GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
     GEMINI_API_KEYS: process.env.GEMINI_API_KEYS,
