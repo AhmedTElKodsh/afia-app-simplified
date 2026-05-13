@@ -13,6 +13,8 @@ export interface Env {
   GROK_API_KEY?: string;
   GROK_MODEL_ID?: string;
   HF_API_KEY?: string;
+  OPENROUTER_API_KEY?: string;
+  OPENROUTER_MODEL_ID?: string;
   MODEL_ID: string;
   SUPABASE_SERVICE_ROLE_KEY?: string;
   SUPABASE_STORAGE_BUCKET?: string;
@@ -30,6 +32,8 @@ export function loadEnv(): Env {
     GEMINI_API_KEY4: process.env.GEMINI_API_KEY4,
     GROK_API_KEY: process.env.GROK_API_KEY,
     HF_API_KEY: process.env.HF_API_KEY,
+    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+    OPENROUTER_MODEL_ID: process.env.OPENROUTER_MODEL_ID,
     MODEL_ID: process.env.MODEL_ID ?? "gemini-2.5-flash",
   };
 }

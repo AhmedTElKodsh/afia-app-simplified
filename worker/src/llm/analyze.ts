@@ -34,20 +34,47 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
 
   const hfKey = env.HF_API_KEY;
   if (hfKey) {
-    const qwenOutput = await callHuggingFaceQwen({
-      apiKey: hfKey,
-      systemText: prompt.systemText,
-      userText: prompt.userText,
-      fewShots: prompt.fewShots,
-      imageBase64,
-      referenceImages,
-      targetMimeType: mimeType(imagePath),
-    });
-    let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
-    let parseErr: string | null = null;
-    try { parsed = parseEvidenceResponse(qwenOutput); }
-    catch (e) { parseErr = (e as Error).message; }
-    return { rawOutput: qwenOutput, parsed, parseErr, prompt };
+    try {
+      const qwenOutput = await callHuggingFaceQwen({
+        apiKey: hfKey,
+        systemText: prompt.systemText,
+        userText: prompt.userText,
+        fewShots: prompt.fewShots,
+        imageBase64,
+        referenceImages,
+        targetMimeType: mimeType(imagePath),
+      });
+      let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
+      let parseErr: string | null = null;
+      try { parsed = parseEvidenceResponse(qwenOutput); }
+      catch (e) { parseErr = (e as Error).message; }
+      return { rawOutput: qwenOutput, parsed, parseErr, prompt };
+    } catch (e) {
+      console.warn(`HF Qwen failed, falling back: ${(e as Error).message}`);
+    }
+  }
+
+  const orKey = env.OPENROUTER_API_KEY;
+  if (orKey) {
+    try {
+      const orOutput = await callOpenRouter({
+        apiKey: orKey,
+        modelId: env.OPENROUTER_MODEL_ID ?? "google/gemini-2.0-flash-exp:free",
+        systemText: prompt.systemText,
+        userText: prompt.userText,
+        fewShots: prompt.fewShots,
+        imageBase64,
+        referenceImages,
+        targetMimeType: mimeType(imagePath),
+      });
+      let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
+      let parseErr: string | null = null;
+      try { parsed = parseEvidenceResponse(orOutput); }
+      catch (e) { parseErr = (e as Error).message; }
+      return { rawOutput: orOutput, parsed, parseErr, prompt };
+    } catch (e) {
+      console.warn(`OpenRouter failed, falling back: ${(e as Error).message}`);
+    }
   }
 
   const geminiKeys = buildGeminiKeyPool(env);
@@ -140,6 +167,86 @@ async function callHuggingFaceQwen(args: {
       const data = await res.json() as any;
       const content = data?.choices?.[0]?.message?.content;
       if (!content) throw new Error("Empty response from HF Qwen");
+      return content;
+    } catch (e) {
+      lastError = e;
+      if (attempt < maxAttempts) {
+        await new Promise(r => setTimeout(r, 5000 * attempt));
+      }
+    }
+  }
+  throw lastError;
+}
+
+async function callOpenRouter(args: {
+  apiKey: string;
+  modelId: string;
+  systemText: string;
+  userText: string;
+  fewShots: any[];
+  imageBase64: string;
+  referenceImages: any[];
+  targetMimeType: string;
+}) {
+  const url = "https://openrouter.ai/api/v1/chat/completions";
+
+  // OpenRouter supports multiple images in a single turn.
+  // We'll include the reference images to help calibration if the model supports it.
+  // However, many free models have context limits, so we'll be careful.
+  
+  const promptText = [
+    args.userText,
+    "\nThe target image is the final image. Return JSON only.",
+  ].join("\n");
+
+  const messages = [
+    { role: "system", content: args.systemText },
+    {
+      role: "user",
+      content: [
+        ...args.referenceImages.map(img => ({
+          type: "image_url",
+          image_url: { url: `data:${img.mimeType};base64,${img.data}` }
+        })),
+        { type: "image_url", image_url: { url: `data:${args.targetMimeType};base64,${args.imageBase64}` } },
+        { type: "text", text: promptText }
+      ]
+    }
+  ];
+
+  const maxAttempts = 3;
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${args.apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://github.com/afia-app/afia-app-simplified",
+          "X-Title": "Afia Bottle Analysis Eval"
+        },
+        body: JSON.stringify({
+          model: args.modelId,
+          messages,
+          temperature: 0,
+        })
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        if (res.status === 429) {
+          throw new Error(`OpenRouter rate limit: ${errorText}`);
+        }
+        throw new Error(`OpenRouter error: ${res.status} ${errorText}`);
+      }
+
+      const data = await res.json() as any;
+      const content = data?.choices?.[0]?.message?.content;
+      if (!content) {
+        console.error("Full OpenRouter response:", JSON.stringify(data, null, 2));
+        throw new Error("Empty response from OpenRouter");
+      }
       return content;
     } catch (e) {
       lastError = e;
