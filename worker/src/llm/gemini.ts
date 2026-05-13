@@ -62,29 +62,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
     generationConfig: {
       temperature: 0,
       maxOutputTokens: 4096,
-      responseMimeType: "application/json",
       thinkingConfig: { thinkingBudget: args.thinkingBudget ?? 0 },
-      responseSchema: {
-        type: SchemaType.OBJECT,
-        properties: {
-          visualReasoning: { type: SchemaType.STRING, description: "A brief description of the visual features used to identify the meniscus (e.g. glare, curve, translucency)." },
-          readingPossible: { type: SchemaType.BOOLEAN },
-          meniscusVisible: { type: SchemaType.STRING, enum: ["yes", "no", "uncertain"] },
-          oilSurfaceYRatio: { type: SchemaType.NUMBER },
-          nearestReferenceMl: { type: SchemaType.NUMBER },
-          qualityFlags: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
-          confidence: { type: SchemaType.NUMBER },
-        },
-        required: [
-          "visualReasoning",
-          "readingPossible",
-          "meniscusVisible",
-          "oilSurfaceYRatio",
-          "nearestReferenceMl",
-          "qualityFlags",
-          "confidence",
-        ],
-      },
     } as any,
   });
 
@@ -101,7 +79,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
       text: [
         args.userText,
         referenceLabels ? `\nCalibrated reference images:\n${referenceLabels}` : "",
-        "\nThe target image is the final image before these instructions. Return JSON only.",
+        "\nThe target image is the final image before these instructions. Provide your reasoning first, then the JSON block.",
       ].join("\n"),
     },
   ];
@@ -110,7 +88,19 @@ export async function callGemini(args: CallArgs): Promise<string> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const result = await model.generateContent(parts);
-      return result.response.text();
+      const response = result.response;
+      
+      // Handle multi-part output (e.g. thinking models)
+      const candidate = response.candidates?.[0];
+      if (candidate?.content?.parts) {
+        const thoughtPart = candidate.content.parts.find((p: any) => (p as any).thought);
+        if (thoughtPart && (thoughtPart as any).text) {
+          const mainText = response.text();
+          return `THOUGHT:\n${(thoughtPart as any).text}\n\nRESPONSE:\n${mainText}`;
+        }
+      }
+      
+      return response.text();
     } catch (error) {
       if (!isRetryableQuotaError(error) || attempt === maxAttempts) {
         throw error;

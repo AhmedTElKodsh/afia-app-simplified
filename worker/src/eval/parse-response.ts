@@ -59,11 +59,22 @@ function ratioFromOilSurface(oilSurfaceYRatio: number): number {
 
 function parseJson(raw: string) {
   let cleaned = raw.trim();
-  if (cleaned.startsWith("```")) {
-    cleaned = cleaned.replace(/^```(?:json)?\s*/, "").replace(/```\s*$/, "");
+  
+  // Try to find a JSON code block first
+  const codeBlockMatch = cleaned.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+  if (codeBlockMatch) {
+    cleaned = codeBlockMatch[1];
+  } else {
+    // Fallback: find the first { and last }
+    const firstBrace = cleaned.indexOf("{");
+    const lastBrace = cleaned.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      cleaned = cleaned.substring(firstBrace, lastBrace + 1);
+    }
   }
+
   try { return JSON.parse(cleaned) as unknown; }
-  catch (e) { throw new Error(`LLM response not JSON: ${(e as Error).message}`); }
+  catch (e) { throw new Error(`LLM response not JSON: ${(e as Error).message}\nRaw output starts with: ${raw.substring(0, 100)}`); }
 }
 
 function clamp(n: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, n)); }
