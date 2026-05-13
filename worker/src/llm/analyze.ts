@@ -80,32 +80,34 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
   const geminiKeys = buildGeminiKeyPool(env);
   let lastError: unknown;
 
-  for (let attempt = 0; attempt < geminiKeys.length; attempt++) {
-    try {
-      const rawOutput = await callGemini({
-        apiKey: selectGeminiKey(geminiKeys, attempt),
-        modelId: env.MODEL_ID,
-        systemText: prompt.systemText,
-        userText: prompt.userText,
-        fewShots: prompt.fewShots,
-        imageBase64,
-        referenceImages,
-        targetMimeType: mimeType(imagePath),
-      });
-      let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
-      let parseErr: string | null = null;
-      try { parsed = parseEvidenceResponse(rawOutput); }
-      catch (e) { parseErr = (e as Error).message; }
-      return { rawOutput, parsed, parseErr, prompt };
-    } catch (error) {
-      lastError = error;
-      if (!isQuotaLikeError(error) || attempt === geminiKeys.length - 1) {
-        throw error;
+  if (geminiKeys.length > 0) {
+    for (let attempt = 0; attempt < geminiKeys.length; attempt++) {
+      try {
+        const rawOutput = await callGemini({
+          apiKey: selectGeminiKey(geminiKeys, attempt),
+          modelId: env.MODEL_ID,
+          systemText: prompt.systemText,
+          userText: prompt.userText,
+          fewShots: prompt.fewShots,
+          imageBase64,
+          referenceImages,
+          targetMimeType: mimeType(imagePath),
+        });
+        let parsed: ReturnType<typeof parseEvidenceResponse> | null = null;
+        let parseErr: string | null = null;
+        try { parsed = parseEvidenceResponse(rawOutput); }
+        catch (e) { parseErr = (e as Error).message; }
+        return { rawOutput, parsed, parseErr, prompt };
+      } catch (error) {
+        lastError = error;
+        if (!isQuotaLikeError(error) || attempt === geminiKeys.length - 1) {
+          throw error;
+        }
       }
     }
   }
 
-  throw lastError ?? new Error("Gemini analysis failed");
+  throw lastError ?? new Error("Analysis failed (no working provider found)");
 }
 
 async function callHuggingFaceQwen(args: {
