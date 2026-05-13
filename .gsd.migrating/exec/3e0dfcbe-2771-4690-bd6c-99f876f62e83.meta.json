@@ -1,0 +1,18 @@
+{
+  "id": "3e0dfcbe-2771-4690-bd6c-99f876f62e83",
+  "runtime": "node",
+  "purpose": "Compare MAE of run v2 vs run v1 (7 shots)",
+  "script_chars": 604,
+  "started_at": "2026-05-13T18:47:04.187Z",
+  "finished_at": "2026-05-13T18:47:04.349Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "duration_ms": 162,
+  "stdout_bytes": 51,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\3e0dfcbe-2771-4690-bd6c-99f876f62e83.stdout",
+  "stderr_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\3e0dfcbe-2771-4690-bd6c-99f876f62e83.stderr"
+}

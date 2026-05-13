@@ -1,0 +1,12 @@
+empty.json: ml=0, ratio=0.96, calculated=0.96, diff=0.00
+full-1500.json: ml=1500, ratio=0.18, calculated=0.18, diff=0.00
+high-1210.json: ml=1210, ratio=0.33, calculated=0.33, diff=0.00
+highmid-1100.json: ml=1100, ratio=0.39, calculated=0.39, diff=0.00
+low-275.json: ml=275, ratio=0.82, calculated=0.82, diff=0.00
+lowmid-385.json: ml=385, ratio=0.76, calculated=0.76, diff=0.00
+mid-605.json: ml=605, ratio=0.65, calculated=0.65, diff=0.00
+mid-770.json: ml=770, ratio=0.56, calculated=0.56, diff=0.00
+midhigh-935.json: ml=935, ratio=0.47, calculated=0.47, diff=0.00
+midlow-495.json: ml=495, ratio=0.7, calculated=0.7, diff=0.00
+vhigh-1375.json: ml=1375, ratio=0.25, calculated=0.24, diff=0.01
+vlow-165.json: ml=165, ratio=0.87, calculated=0.87, diff=0.00

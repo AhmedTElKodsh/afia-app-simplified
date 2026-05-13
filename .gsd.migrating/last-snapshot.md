@@ -1,3 +1,4 @@
-# GSD context snapshot (2026-05-12T22:35:36.910Z)
+# GSD context snapshot (2026-05-13T15:01:30.396Z)
 
-_No durable memories, active context, or exec history to surface._
+## Active context
+Active: M001 / S02 / T02 - Expand few-shot anchors

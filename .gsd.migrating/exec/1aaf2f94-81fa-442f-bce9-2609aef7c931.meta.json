@@ -1,0 +1,18 @@
+{
+  "id": "1aaf2f94-81fa-442f-bce9-2609aef7c931",
+  "runtime": "node",
+  "purpose": "Check current prompt and few-shot hashes to verify T04 used the updated files",
+  "script_chars": 822,
+  "started_at": "2026-05-13T18:42:57.038Z",
+  "finished_at": "2026-05-13T18:42:57.129Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "duration_ms": 91,
+  "stdout_bytes": 78,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\1aaf2f94-81fa-442f-bce9-2609aef7c931.stdout",
+  "stderr_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\1aaf2f94-81fa-442f-bce9-2609aef7c931.stderr"
+}

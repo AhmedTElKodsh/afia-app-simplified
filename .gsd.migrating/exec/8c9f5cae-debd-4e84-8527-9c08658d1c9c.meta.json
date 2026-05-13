@@ -1,0 +1,18 @@
+{
+  "id": "8c9f5cae-debd-4e84-8527-9c08658d1c9c",
+  "runtime": "node",
+  "purpose": "List available Gemini models to find correct model ID",
+  "script_chars": 735,
+  "started_at": "2026-05-13T17:28:01.242Z",
+  "finished_at": "2026-05-13T17:28:01.320Z",
+  "exit_code": 1,
+  "signal": null,
+  "timed_out": false,
+  "duration_ms": 78,
+  "stdout_bytes": 0,
+  "stderr_bytes": 932,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\8c9f5cae-debd-4e84-8527-9c08658d1c9c.stdout",
+  "stderr_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\8c9f5cae-debd-4e84-8527-9c08658d1c9c.stderr"
+}

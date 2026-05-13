@@ -7,11 +7,14 @@
 - [x] **S01: S01** `risk:low` `depends:[]`
   > After this: Diagnostic report for 12 probe images.
 
-- [ ] **S02: S02** `risk:medium` `depends:[]`
+- [x] **S02: S02** `risk:medium` `depends:[]`
   > After this: Improved probe results with better accuracy.
 
-- [ ] **S03: Full Dev Set Validation** `risk:medium` `depends:[S02]`
+- [ ] **S03: Full Dev Set Validation** `risk:medium` `depends:[S04]`
   > After this: Full dev eval summary.
+
+- [ ] **S04: S04** `risk:high` `depends:[]`
+  > After this: Reduced error on probe set with more reliable confidence.
 
 ## Boundary Map
 
