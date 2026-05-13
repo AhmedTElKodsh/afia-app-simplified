@@ -9,6 +9,7 @@ const Schema = z.object({
 });
 
 const EvidenceSchema = z.object({
+  visualReasoning: z.string().optional(),
   readingPossible: z.boolean(),
   meniscusVisible: z.enum(["yes", "no", "uncertain"]),
   oilSurfaceYRatio: z.number(),

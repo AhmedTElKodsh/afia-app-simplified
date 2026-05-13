@@ -67,6 +67,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
       responseSchema: {
         type: SchemaType.OBJECT,
         properties: {
+          visualReasoning: { type: SchemaType.STRING, description: "A brief description of the visual features used to identify the meniscus (e.g. glare, curve, translucency)." },
           readingPossible: { type: SchemaType.BOOLEAN },
           meniscusVisible: { type: SchemaType.STRING, enum: ["yes", "no", "uncertain"] },
           oilSurfaceYRatio: { type: SchemaType.NUMBER },
@@ -75,6 +76,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
           confidence: { type: SchemaType.NUMBER },
         },
         required: [
+          "visualReasoning",
           "readingPossible",
           "meniscusVisible",
           "oilSurfaceYRatio",

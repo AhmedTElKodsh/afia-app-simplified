@@ -3,7 +3,7 @@
   "expected": {
     "readingPossible": true,
     "meniscusVisible": "yes",
-    "oilSurfaceYRatio": 0.46,
+    "oilSurfaceYRatio": 0.47,
     "nearestReferenceMl": 935,
     "qualityFlags": [],
     "confidence": 0.88

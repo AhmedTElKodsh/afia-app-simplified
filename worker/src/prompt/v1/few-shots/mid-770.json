@@ -1,10 +1,10 @@
 {
-  "imagePath": "oil-bottle-frames/1.5L_refs/750ml.jpg",
+  "imagePath": "oil-bottle-frames/770ml/770ml_t0000.00s_f0000.jpg",
   "expected": {
     "readingPossible": true,
     "meniscusVisible": "yes",
-    "oilSurfaceYRatio": 0.57,
-    "nearestReferenceMl": 750,
+    "oilSurfaceYRatio": 0.56,
+    "nearestReferenceMl": 770,
     "qualityFlags": [],
     "confidence": 0.9
   }

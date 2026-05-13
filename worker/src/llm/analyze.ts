@@ -34,6 +34,7 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
 
   let lastError: unknown;
 
+  /*
   // PRIORITY 1: OpenRouter (to test more capable models like Qwen2.5-VL or Gemini 2.0)
   const orKey = env.OPENROUTER_API_KEY;
   if (orKey) {
@@ -85,6 +86,7 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
       lastError = e;
     }
   }
+  */
 
   // PRIORITY 3: Native Gemini
   const geminiKeys = buildGeminiKeyPool(env);
