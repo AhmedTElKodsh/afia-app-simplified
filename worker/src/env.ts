@@ -22,10 +22,8 @@ export interface Env {
 }
 
 export function loadEnv(): Env {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY missing — set in .env or shell");
   return {
-    GEMINI_API_KEY: key,
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
     GEMINI_API_KEYS: process.env.GEMINI_API_KEYS,
     GEMINI_API_KEY2: process.env.GEMINI_API_KEY2,
     GEMINI_API_KEY3: process.env.GEMINI_API_KEY3,
