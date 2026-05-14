@@ -93,9 +93,10 @@ for (const fx of manifest.fixtures as DiagnosticFixture[]) {
     `[${n}/${manifest.fixtures.length}] ${fx.imageId} gt=${fx.groundTruthMl} pred=${rec.parsedMl ?? "ERR"} ${rec.exactBucketPass ? "✓" : "✗"}\n`
   );
 
-  // Rate limiting for Gemini free tier (5 requests per minute -> ~1 request every 13s)
+  // Rate limiting: use 60s delay to avoid exhausting any single key.
+  // With 3 keys in rotation, this gives each key 180s between uses.
   if (n < manifest.fixtures.length) {
-    await new Promise((r) => setTimeout(r, 13000));
+    await new Promise((r) => setTimeout(r, 60000));
   }
 }
 
