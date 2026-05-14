@@ -56,14 +56,14 @@ const groundTruthMl = groundTruthFromPath(chosen);
 const refFiles = ["1500ml.jpg", "750ml.jpg", "55ml.jpg", "empty.jpg"].map((name) => join(refsRoot, name));
 const systemInstruction = [
   "You are a precise visual measurement assistant for Afia 1.5L cooking-oil bottles.",
-  "Use calibrated reference images as anchors. Return JSON only. No prose. No markdown.",
+  "Use calibrated reference images as anchors. Before outputting JSON, describe your visual observations (meniscus location, glare, boundary clarity).",
 ].join("\n");
 
 const prompt = [
   "The reference images appear first, then the target image.",
   "Estimate the target by locating the visible oil-air boundary and comparing it to the calibrated references.",
   "Do not infer from label artwork or bottle color alone.",
-  "Return {\"readingPossible\": boolean, \"meniscusVisible\": \"yes\"|\"no\"|\"uncertain\", \"oilSurfaceYRatio\": number, \"nearestReferenceMl\": number, \"qualityFlags\": string[], \"confidence\": number}.",
+  "First describe your visual reasoning, then return {\"readingPossible\": boolean, \"meniscusVisible\": \"yes\"|\"no\"|\"uncertain\", \"oilSurfaceYRatio\": number, \"nearestReferenceMl\": number, \"qualityFlags\": string[], \"confidence\": number}.",
 ].join("\n");
 
 const rawOutput = await callGemini({

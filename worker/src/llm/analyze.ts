@@ -16,9 +16,10 @@ function mimeType(path: string) {
   return "image/jpeg";
 }
 
-function isQuotaLikeError(error: unknown): boolean {
+function isRetryableKeyError(error: unknown): boolean {
   if (!error || typeof error !== "object") return false;
   const maybeError = error as { status?: number; message?: string };
+  if (maybeError.status === 403) return true; // leaked/revoked key — try next
   return maybeError.status === 429 || /quota exceeded|too many requests|rate limit/i.test(maybeError.message ?? "");
 }
 
@@ -111,7 +112,7 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
         return { rawOutput, parsed, parseErr, prompt };
       } catch (error) {
         lastError = error;
-        if (!isQuotaLikeError(error) || attempt === geminiKeys.length - 1) {
+        if (!isRetryableKeyError(error) || attempt === geminiKeys.length - 1) {
           throw error;
         }
       }

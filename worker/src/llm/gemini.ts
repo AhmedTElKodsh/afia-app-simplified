@@ -62,7 +62,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
     generationConfig: {
       temperature: 0,
       maxOutputTokens: 4096,
-      thinkingConfig: { thinkingBudget: args.thinkingBudget ?? 0 },
+      thinkingConfig: { thinkingBudget: args.thinkingBudget ?? 1024 },
     } as any,
   });
 
