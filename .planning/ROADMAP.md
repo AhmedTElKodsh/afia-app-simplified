@@ -20,6 +20,12 @@
 
 **Requirements:** OPS-01, OPS-02, TEST-01, TEST-03, UX-01
 
+**Plans:** 2 plans in 1 wave
+
+Plans:
+- [ ] 01-01-PLAN.md — CI/CD Pipeline & Eval Infrastructure (Wave 1, autonomous)
+- [ ] 01-02-PLAN.md — Fallback UX (Wave 1, has checkpoint)
+
 **Success criteria:**
 1. Staging Worker deploys with separate wrangler config (staging/production split)
 2. CI pipeline runs `vitest run` + `eval:dev-quick` (10-fixture sample) on every push — feedback under 5min
