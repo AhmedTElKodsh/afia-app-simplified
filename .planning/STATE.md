@@ -1,32 +1,34 @@
----
+﻿---
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Production Readiness
-status: planning
-last_updated: "2026-05-15T11:30:00.000Z"
-last_activity: 2026-05-15 — Phase 1 planned (2 plans, 1 wave)
+status: executing
+last_updated: "2026-05-15T18:30:00.000Z"
+last_activity: "2026-05-15 — Phase 2 Plan 1 completed: edge-case corpus expanded, model version tracking defined"
 progress:
   total_phases: 5
-  completed_phases: 0
-  total_plans: 2
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 1
 ---
 
 # Project State
 
 ## Current Position
 
-Phase: Planning complete — Phase 1 ready for execution
-Plan: Phase 1 — Staging Environment & Eval Harness
-Status: 2 plans created (1 autonomous, 1 with checkpoint), ready to execute
-Last activity: 2026-05-15 — Phase 1 planned (2 plans, 1 wave)
+Phase: Phase 2 — Heuristic Improvements & ONNX Feasibility
+Status: Plan 1 of 4 complete (Edge-case corpus + Model version tracking)
+Last activity: 2026-05-15 — Executed 02-01-PLAN.md
 
-## Project Reference
+## Completed Plans
 
-See: .planning/PROJECT.md (updated 2026-05-15)
+- [x] 02-01-PLAN.md — Edge-case Corpus & Model Version Tracking
 
-**Core value:** Accurate oil level estimation for Afia bottles that users and admins can trust.
-**Current focus:** Phase 1 — Heuristic Improvements & ONNX Feasibility
+## Remaining Plans
+
+- [ ] 02-02-PLAN.md — ONNX Feasibility Spike
+- [ ] 02-03-PLAN.md — Heuristic Improvements (depends on Plan 1)
+- [ ] 02-04-PLAN.md — Decision Gate & Documentation (depends on Plans 2 & 3)
 
 ## Blockers
 
@@ -34,15 +36,15 @@ See: .planning/PROJECT.md (updated 2026-05-15)
 
 ## Next Action
 
-`/gsd-execute-phase 01-staging-environment-eval-harness` — execute Phase 1 plans
+/gsd-execute-phase 02-heuristic-improvements-onnx-feasibility 2 (02-02-PLAN.md) or
+/gsd-execute-phase 02-heuristic-improvements-onnx-feasibility 3 (02-03-PLAN.md)
 
 ## Sessions
 
-- 2026-05-15: Phase 1 context gathered (discuss mode, 5 areas discussed with BMAD agents)
-- 2026-05-15: Phase 1 planned (2 plans created: CI pipeline + fallback UX)
+- 2026-05-15: Phase 2 context captured (party mode roundtable: edge-case sourcing, ONNX scope, heuristic approach, budget thresholds)
+- 2026-05-15: Executed 02-01-PLAN.md — coverage-gap analysis, manifest expansion, model version tracking
 
 ## Resume Info
 
-- Stopped at: Phase 1 plans created
-- Resume file: `.planning/phases/01-staging-environment-eval-harness/01-CONTEXT.md`
-- Plans to execute: `01-01-PLAN.md` (CI/CD), `01-02-PLAN.md` (Fallback UX)
+- Stopped at: Phase 2 Plan 1 complete
+- Resume file: .planning/phases/02-heuristic-improvements-onnx-feasibility/02-01-SUMMARY.md
