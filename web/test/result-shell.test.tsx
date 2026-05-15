@@ -83,7 +83,10 @@ describe("result shell", () => {
     renderResult();
 
     expect(screen.getByText(/no analyzed camera capture found/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /retake/i })).toHaveAttribute("href", "/scan?size=1.5L");
+    expect(screen.getByRole("link", { name: /return to scan/i })).toHaveAttribute(
+      "href",
+      "/scan?size=1.5L",
+    );
   });
 });
 

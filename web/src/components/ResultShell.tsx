@@ -1,9 +1,16 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { BOTTLE_1_5L, DEFAULT_BOTTLE_SIZE, ML_PER_CUP_QUARTER } from "@afia/shared";
 import { useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import {
+  isErrorResult,
+  getSupportEmail,
+  type ErrorResult,
+  type StoredAnalysisResult,
+} from "../errors";
 
 const CAPTURE_STORAGE_KEY = "afia.capture";
 const ANALYSIS_STORAGE_KEY = "afia.analysis";
+const ERROR_CONTEXT_KEY = "afia.errorContext";
 const DEFAULT_REMAINING_ML = 770;
 const SLIDER_MAX_ML = Math.floor(BOTTLE_1_5L.capacityMl / ML_PER_CUP_QUARTER) * ML_PER_CUP_QUARTER;
 const DEFAULT_RED_LINE_Y_RATIO = mlToYRatio(snapMl(DEFAULT_REMAINING_ML));
@@ -11,13 +18,20 @@ const DEFAULT_RED_LINE_Y_RATIO = mlToYRatio(snapMl(DEFAULT_REMAINING_ML));
 export function ResultShell() {
   const [params] = useSearchParams();
   const size = params.get("size") ?? DEFAULT_BOTTLE_SIZE;
+  const isRetry = params.get("retry") === "true";
   const capturedImage = readCapturedImage();
   const initialResult = readStoredResult();
-  const modelRemainingMl = useMemo(() => snapMl(initialResult?.remainingMl ?? DEFAULT_REMAINING_ML), [initialResult?.remainingMl]);
-  const detectedRedLineYRatio = initialResult?.redLineYRatio ?? DEFAULT_RED_LINE_Y_RATIO;
+  const errorContext = readErrorContext();
+  const modelRemainingMl = useMemo(
+    () => snapMl(initialResult != null && !isErrorResult(initialResult) ? initialResult.remainingMl : DEFAULT_REMAINING_ML),
+    [initialResult],
+  );
+  const detectedRedLineYRatio = !isErrorResult(initialResult)
+    ? initialResult?.redLineYRatio ?? DEFAULT_RED_LINE_Y_RATIO
+    : DEFAULT_RED_LINE_Y_RATIO;
   const [remainingMl, setRemainingMl] = useState(modelRemainingMl);
   const thumbYRatio = useMemo(
-    () => remainingMl === modelRemainingMl ? detectedRedLineYRatio : mlToYRatio(remainingMl),
+    () => (remainingMl === modelRemainingMl ? detectedRedLineYRatio : mlToYRatio(remainingMl)),
     [detectedRedLineYRatio, modelRemainingMl, remainingMl],
   );
   const consumedMl = BOTTLE_1_5L.capacityMl - remainingMl;
@@ -32,44 +46,107 @@ export function ResultShell() {
         </div>
 
         {capturedImage && initialResult ? (
-          <div className="grid grid-cols-[86px_minmax(0,1fr)] items-start gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <OilLevelSlider
-                modelYRatio={detectedRedLineYRatio}
-                remainingMl={remainingMl}
-                thumbYRatio={thumbYRatio}
-                onChange={setRemainingMl}
-              />
-              <CupCounter display={cupDisplay} />
-            </div>
+          isErrorResult(initialResult) ? (
+            <>
+              {/* Fatal error card (D-13): error description, error code, retry, contact support */}
+              <div className="rounded-lg border border-red-400/50 bg-red-500/10 p-6 text-center">
+                <p className="text-lg font-semibold text-red-300">Analysis Failed</p>
+                <div className="mt-3 space-y-2 text-sm text-neutral-200">
+                  {initialResult.errors.map((err, i) => (
+                    <p key={i}>{err.description}</p>
+                  ))}
+                  {initialResult.errors.length > 0 && (
+                    <p
+                      className="mt-1 font-mono text-xs text-neutral-400"
+                      aria-label={`Error code: ${initialResult.errors[0].code}`}
+                    >
+                      Error code: {initialResult.errors[0].code}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                  <Link
+                    className="rounded-md bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-500 transition-colors"
+                    to={`/scan?size=${encodeURIComponent(size)}${isRetry ? "&retry=true" : ""}`}
+                  >
+                    Retry Scan
+                  </Link>
+                  <a
+                    className="rounded-md border border-white/20 px-5 py-3 font-semibold text-white hover:bg-white/5 transition-colors"
+                    href={buildMailtoHref(errorContext)}
+                  >
+                    Contact Support
+                  </a>
+                </div>
+              </div>
+              {/* Sally: show captured image below error card for context */}
+              {capturedImage && (
+                <div className="rounded-lg border border-white/15 bg-white/8 p-3">
+                  <p className="mb-2 text-xs font-medium text-neutral-400 uppercase tracking-wider">
+                    Captured Image
+                  </p>
+                  <img
+                    src={capturedImage}
+                    alt="Captured bottle that failed analysis"
+                    className="block max-h-48 w-full rounded object-contain bg-black"
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            /* Normal result view (unchanged) */
+            <div className="grid grid-cols-[86px_minmax(0,1fr)] items-start gap-4">
+              <div className="flex flex-col items-center gap-3">
+                <OilLevelSlider
+                  modelYRatio={detectedRedLineYRatio}
+                  remainingMl={remainingMl}
+                  thumbYRatio={thumbYRatio}
+                  onChange={setRemainingMl}
+                />
+                <CupCounter display={cupDisplay} />
+              </div>
 
-            <div className="rounded-lg border border-white/15 bg-white/8 p-3">
-              <CapturedBottleImage imageSrc={capturedImage} redLineYRatio={detectedRedLineYRatio} />
-              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <Metric label="Remaining" value={`${remainingMl} ml`} />
-                <Metric label="Consumed" value={`${consumedMl} ml`} />
+              <div className="rounded-lg border border-white/15 bg-white/8 p-3">
+                <CapturedBottleImage imageSrc={capturedImage} redLineYRatio={detectedRedLineYRatio} />
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <Metric label="Remaining" value={`${remainingMl} ml`} />
+                  <Metric label="Consumed" value={`${consumedMl} ml`} />
+                </div>
               </div>
             </div>
-          </div>
+          )
         ) : (
+          /* No-data fallback — Sally: add "Return to Scan" link */
           <div className="rounded-lg border border-red-300/40 bg-red-400/10 p-5">
             <p className="text-lg font-medium">No analyzed camera capture found</p>
             <p className="mt-2 text-sm text-neutral-200">
-              Start a new scan and capture the bottle again so this screen can show the actual camera image and detected oil level.
+              Start a new scan and capture the bottle again so this screen can show the actual camera image and
+              detected oil level.
             </p>
+            <Link
+              className="mt-4 inline-block rounded-md border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/5 transition-colors"
+              to={`/scan?size=${encodeURIComponent(size)}`}
+            >
+              Return to Scan
+            </Link>
           </div>
         )}
 
-        <Link
-          className="rounded-md border border-white/20 px-4 py-3 text-center font-semibold text-white"
-          to={`/scan?size=${encodeURIComponent(size)}`}
-        >
-          Retake
-        </Link>
+        {/* Only show Retake link for normal results — error case has its own buttons */}
+        {!isErrorResult(initialResult) && initialResult && (
+          <Link
+            className="rounded-md border border-white/20 px-4 py-3 text-center font-semibold text-white"
+            to={`/scan?size=${encodeURIComponent(size)}`}
+          >
+            Retake
+          </Link>
+        )}
       </section>
     </main>
   );
 }
+
+// Degraded view (tier: "degraded") reserved for Phase 2+ when API returns partial results
 
 function CapturedBottleImage({ imageSrc, redLineYRatio }: { imageSrc: string; redLineYRatio: number }) {
   return (
@@ -203,11 +280,23 @@ function readCapturedImage(): string | null {
   return /^data:image\/(?:jpeg|jpg|png|webp);base64,/i.test(value) ? value : null;
 }
 
-function readStoredResult(): { remainingMl?: number; redLineYRatio?: number } | null {
+function readStoredResult(): StoredAnalysisResult | null {
   try {
     const raw = sessionStorage.getItem(ANALYSIS_STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as { remainingMl?: unknown; redLineYRatio?: unknown };
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+
+    // Check if it's an error state (persisted by CaptureShell on failure)
+    if (parsed.tier === "error" && Array.isArray(parsed.errors)) {
+      return {
+        errors: parsed.errors as Array<{ code: string; description: string }>,
+        tier: "error",
+        confidence: typeof parsed.confidence === "number" ? parsed.confidence : 0,
+        remainingMl: parsed.remainingMl != null ? (parsed.remainingMl as number) : null,
+      } as ErrorResult;
+    }
+
+    // Normal AnalysisResultContract path
     if (typeof parsed.remainingMl !== "number" || typeof parsed.redLineYRatio !== "number") return null;
     return {
       remainingMl: parsed.remainingMl,
@@ -216,6 +305,35 @@ function readStoredResult(): { remainingMl?: number; redLineYRatio?: number } | 
   } catch {
     return null;
   }
+}
+
+function readErrorContext(): { code: string; description: string; timestamp: string } | null {
+  try {
+    const raw = sessionStorage.getItem(ERROR_CONTEXT_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as { code: string; description: string; timestamp: string };
+  } catch {
+    return null;
+  }
+}
+
+function buildMailtoHref(context: { code: string; description: string; timestamp: string } | null): string {
+  const email = getSupportEmail();
+  const subject = encodeURIComponent("Afia App — Analysis Error");
+  const body = context
+    ? encodeURIComponent(
+        [
+          "Error details for Afia support:",
+          "",
+          `Error code: ${context.code}`,
+          `Description: ${context.description}`,
+          `Timestamp: ${context.timestamp}`,
+          "",
+          "Additional notes:",
+        ].join("\n"),
+      )
+    : encodeURIComponent("Error details for Afia support:\n\n");
+  return `mailto:${email}?subject=${subject}&body=${body}`;
 }
 
 function snapMl(value: number): number {
