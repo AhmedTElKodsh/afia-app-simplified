@@ -111,7 +111,7 @@ describe("camera capture shell", () => {
     expect(screen.getByRole("link", { name: /retake/i })).toHaveAttribute("href", "/scan?size=1.5L");
   });
 
-  it("keeps the user on capture when API analysis fails", async () => {
+  it("navigates to result with error card when API analysis fails", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: false,
       status: 502,
@@ -126,8 +126,20 @@ describe("camera capture shell", () => {
     fireEvent.canPlay(document.querySelector("video")!);
     fireEvent.click(screen.getByRole("button", { name: /capture/i }));
 
-    expect(await screen.findByText(/could not analyze this capture/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /capture/i })).toBeEnabled();
-    expect(sessionStorage.getItem("afia.analysis")).toBeNull();
+    // Error state persisted to sessionStorage
+    await waitFor(() => {
+      const stored = sessionStorage.getItem("afia.analysis");
+      expect(stored).not.toBeNull();
+      expect(stored).toContain("ANALYSIS_FAILED");
+    });
+
+    // ResultShell renders the error card with exact heading text
+    expect(await screen.findByText("Analysis Failed")).toBeInTheDocument();
+    expect(screen.getByText(/ANALYSIS_FAILED/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /retry scan/i })).toHaveAttribute(
+      "href",
+      "/scan?size=1.5L&retry=true",
+    );
+    expect(screen.getByRole("link", { name: /contact support/i })).toBeInTheDocument();
   });
 });

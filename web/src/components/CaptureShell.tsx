@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bottleCleanOutlineUrl from "../../../oil-bottle-frames/afia-bottle-clean.svg";
 import { AnalysisResultSchema, DEFAULT_BOTTLE_SIZE, type AnalysisResultContract } from "@afia/shared";
+import { ERROR_CODES, getSupportEmail } from "../errors";
 
 type CameraState = "starting" | "ready" | "missing" | "blocked" | "capture-failed" | "analyzing" | "analysis-failed";
 
@@ -83,8 +84,39 @@ export function CaptureShell() {
       const analysis = await analyzeCapture(dataUrl);
       sessionStorage.setItem(ANALYSIS_STORAGE_KEY, JSON.stringify(analysis));
       navigate(`/result?size=${encodeURIComponent(DEFAULT_BOTTLE_SIZE)}`);
-    } catch {
+    } catch (err) {
+      // Persist structured error state per D-14
+      const errorState = {
+        errors: [
+          {
+            code: ERROR_CODES.ANALYSIS_FAILED,
+            description:
+              err instanceof Error
+                ? err.message
+                : "Analysis request failed. Check your connection and try again.",
+          },
+        ],
+        tier: "error" as const,
+        confidence: 0,
+        remainingMl: null,
+      };
+      sessionStorage.setItem(ANALYSIS_STORAGE_KEY, JSON.stringify(errorState));
+      // Pre-fill mailto body with error context per Sally feedback
+      sessionStorage.setItem(
+        "afia.errorContext",
+        JSON.stringify({
+          code: ERROR_CODES.ANALYSIS_FAILED,
+          description:
+            err instanceof Error ? err.message : "Unknown error",
+          timestamp: new Date().toISOString(),
+          supportEmail: getSupportEmail(),
+        }),
+      );
       setCameraState("analysis-failed");
+      // Navigate to result page with ?retry=true (Sally: preserve camera config on retry)
+      navigate(
+        `/result?size=${encodeURIComponent(DEFAULT_BOTTLE_SIZE)}&retry=true`,
+      );
     }
   }
 
