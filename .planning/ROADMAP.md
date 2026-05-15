@@ -20,11 +20,11 @@
 
 **Requirements:** OPS-01, OPS-02, TEST-01, TEST-03, UX-01
 
-**Plans:** 2 plans in 1 wave
+**Plans:** 4 plans in 3 waves
 
 Plans:
-- [ ] 01-01-PLAN.md — CI/CD Pipeline & Eval Infrastructure (Wave 1, autonomous)
-- [ ] 01-02-PLAN.md — Fallback UX (Wave 1, has checkpoint)
+- [x] 01-01-PLAN.md — CI/CD Pipeline & Eval Infrastructure (Wave 1, autonomous)
+- [x] 01-02-PLAN.md — Fallback UX (Wave 1, has checkpoint)
 
 **Success criteria:**
 1. Staging Worker deploys with separate wrangler config (staging/production split)
@@ -50,6 +50,22 @@ Plans:
 6. Model version tracking scheme defined (ONNX hash + extractor version + prompt hash + eval summary)
 7. ONNX model loading test passes in Workers runtime
 8. Edge-case images available *before* heuristic tuning starts (ACCR-05 before ACCR-02)
+
+**Plans:** 4 plans in 3 waves
+
+**Plan structure:**
+```mermaid
+flowchart LR
+    A[02-01: Edge-case + Versioning] --> B[02-03: Heuristic Improvements]
+    C[02-02: ONNX Feasibility] --> D[02-04: Decision Gate + Docs]
+    B --> D
+```
+
+Plans:
+- [ ] 02-01-PLAN.md — Edge-case Corpus & Model Version Tracking (Wave 1, autonomous)
+- [ ] 02-02-PLAN.md — ONNX Feasibility Spike (Wave 1, autonomous)
+- [ ] 02-03-PLAN.md — Heuristic Improvements (Wave 2, autonomous)
+- [ ] 02-04-PLAN.md — Decision Gate & Documentation (Wave 3, autonomous)
 
 ---
 
