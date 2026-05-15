@@ -8,6 +8,9 @@
     "eval:dev": "tsx src/eval/run.ts --set=dev",
     "eval:holdout": "tsx src/eval/run.ts --set=holdout",
     "eval:probe": "tsx src/eval/run.ts --manifest=worker/test/fixtures/dev/probe-manifest.json --label=probe",
+    "eval:cv": "tsx src/eval/cv-eval.ts",
+    "eval:dev-quick": "tsx src/eval/run.ts --manifest=worker/test/fixtures/dev/probe-manifest.json --label=dev-quick",
+    "eval:edge": "tsx src/eval/cv-eval.ts worker/test/fixtures/cv-edge-eval/manifest.json",
     "probe:gemini": "tsx src/eval/probe-gemini-frame.ts",
     "signoff": "tsx src/eval/signoff.ts",
     "build-manifest": "tsx src/eval/build-manifest.ts"
@@ -16,12 +19,17 @@
     "@afia/shared": "workspace:*",
     "@google/generative-ai": "0.21.0",
     "@supabase/supabase-js": "2.49.4",
+    "@techstark/opencv-js": "4.12.0-release.1",
     "dotenv": "16.4.5",
     "hono": "4.6.10",
+    "jpeg-js": "^0.4.4",
+    "pngjs": "^7.0.0",
+    "sharp": "^0.34.5",
     "zod": "3.23.8"
   },
   "devDependencies": {
     "@types/node": "22.9.0",
+    "@types/pngjs": "^6.0.5",
     "tsx": "4.19.2",
     "typescript": "5.6.3",
     "vitest": "2.1.4"

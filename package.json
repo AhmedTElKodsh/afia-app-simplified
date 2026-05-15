@@ -6,6 +6,8 @@
     "test": "pnpm -r run test",
     "eval:dev": "pnpm --filter worker eval:dev",
     "eval:holdout": "pnpm --filter worker eval:holdout",
+    "eval:dev-quick": "pnpm --filter worker eval:dev-quick",
+    "eval:edge": "pnpm --filter worker eval:edge",
     "signoff": "pnpm --filter worker signoff"
   },
   "devDependencies": {
