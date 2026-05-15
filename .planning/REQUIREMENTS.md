@@ -68,29 +68,29 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ACCR-02 | Phase 1 | Pending |
-| ACCR-01 | Phase 1 | Pending |
-| ACCR-05 | Phase 1 | Pending |
-| ACCR-06 | Phase 1 | Pending |
-| TEST-02 | Phase 1 | Pending |
+| OPS-01 | Phase 1 | Pending |
+| OPS-02 | Phase 1 | Pending |
+| TEST-01 | Phase 1 | Pending |
+| TEST-03 | Phase 1 | Pending |
 | UX-01 | Phase 1 | Pending |
-| ACCR-03 | Phase 2 | Pending |
-| ACCR-07 | Phase 2 | Pending |
-| ACCR-08 | Phase 2 | Pending |
-| ACCR-04 | Phase 2 | Pending |
-| OPS-02 | Phase 3 | Pending |
-| OPS-01 | Phase 3 | Pending |
-| TEST-01 | Phase 3 | Pending |
-| TEST-03 | Phase 3 | Pending |
-| OPS-03 | Phase 4 | Pending |
+| ACCR-01 | Phase 2 | Pending |
+| ACCR-02 | Phase 2 | Pending |
+| ACCR-05 | Phase 2 | Pending |
+| ACCR-06 | Phase 2 | Pending |
+| TEST-02 | Phase 2 | Pending |
+| ACCR-03 | Phase 3 | Pending |
+| ACCR-04 | Phase 3 | Pending |
+| ACCR-07 | Phase 3 | Pending |
+| ACCR-08 | Phase 3 | Pending |
 | OPS-04 | Phase 4 | Pending |
 | OPS-05 | Phase 4 | Pending |
 | OPS-06 | Phase 4 | Pending |
-| OPS-07 | Phase 4 | Pending |
 | OPS-08 | Phase 4 | Pending |
-| TEST-04 | Phase 4 | Pending |
-| TEST-05 | Phase 4 | Pending |
-| UX-02 | Phase 4 | Pending |
+| OPS-03 | Phase 5 | Pending |
+| OPS-07 | Phase 5 | Pending |
+| TEST-04 | Phase 5 | Pending |
+| TEST-05 | Phase 5 | Pending |
+| UX-02 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 23 total
