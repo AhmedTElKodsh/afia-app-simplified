@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import * as ort from "onnxruntime-web";
+import { resolveOnnxModelPath } from "../src/onnx/loader.js";
 
 // Note: These tests run locally (tsx/vitest Node.js environment).
 // Workers runtime test is Task 2 (endpoint deployment).
@@ -7,6 +8,11 @@ import * as ort from "onnxruntime-web";
 describe("ONNX Runtime Loading", () => {
   it("ort is importable and has InferenceSession", () => {
     expect(typeof ort.InferenceSession).toBe("function");
+  });
+
+  it("resolves model paths when launched from repository root", async () => {
+    const path = await resolveOnnxModelPath("./src/onnx/models/regression.onnx");
+    expect(path.replaceAll("\\", "/")).toMatch(/worker\/src\/onnx\/models\/regression\.onnx$/);
   });
 
   it("can load constant model from disk", async () => {

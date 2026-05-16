@@ -66,6 +66,38 @@ describe("ONNX Model Integration in Pipeline", () => {
     expect(result2.diagnostics.onnxLoadStatus).toContain("loaded");
   });
 
+  it("passes the four-feature regression tensor into ONNX", async () => {
+    const isModelLoadedSpy = vi.mocked(loader.isModelLoaded);
+    isModelLoadedSpy.mockReturnValue(true);
+
+    await runPipeline({ imageData: new ArrayBuffer(0) });
+
+    const tensor = vi.mocked(loader.runOnnxInference).mock.calls.at(-1)?.[0]["input"];
+    expect(tensor?.dims).toEqual([1, 4]);
+    expect(Array.from(tensor?.data as Float32Array)).toEqual([
+      expect.closeTo(0.5),
+      expect.closeTo(0.05),
+      expect.closeTo(0.5),
+      expect.closeTo(1),
+    ]);
+  });
+
+  it("clamps ONNX output before using it as confidence input", async () => {
+    vi.mocked(loader.isModelLoaded).mockReturnValue(true);
+    vi.mocked(loader.runOnnxInference).mockResolvedValue({
+      "output": {
+        data: new Float32Array([-9.35]),
+        dims: [1, 1],
+        type: "float32"
+      } as any
+    });
+
+    const result = await runPipeline({ imageData: new ArrayBuffer(0) });
+
+    expect(result.diagnostics.onnxScore).toBe(0);
+    expect(result.confidence).toBeGreaterThanOrEqual(0);
+  });
+
   it("integrates ONNX score into confidence calculation", async () => {
     vi.mocked(loader.isModelLoaded).mockReturnValue(true);
     vi.mocked(loader.runOnnxInference).mockResolvedValue({
@@ -77,7 +109,7 @@ describe("ONNX Model Integration in Pipeline", () => {
     });
 
     const result = await runPipeline({ imageData: new ArrayBuffer(0) });
-    
+
     // Heuristic score for edgeStrength=1000, contourCount=5 is roughly 0.5 - 0.0125 = 0.4875
     // ONNX score is 0.9
     // Average should be (0.4875 + 0.9) / 2 = 0.69375

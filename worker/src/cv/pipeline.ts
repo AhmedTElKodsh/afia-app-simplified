@@ -148,19 +148,20 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       stages.push("onnx_inference");
       const tOnnx = Date.now();
       try {
-        // Prepare inputs for regression model
-        // Regression model expects: edgeStrength, contourCount, meniscusYRatio
+        // Regression model expects four normalized float features.
         const inputData: Record<string, ort.Tensor> = {
           "input": new ort.Tensor("float32", new Float32Array([
             contourResult.edgeStrength / 2000,
             contourResult.contourCount / 100,
-            contourResult.meniscusYRatio
-          ]), [1, 3])
+            contourResult.meniscusYRatio,
+            1,
+          ]), [1, 4])
         };
         const results = await runOnnxInference(inputData);
         const output = results["output"];
         if (output) {
-          onnxScore = (output.data as Float32Array)[0];
+          const rawOnnxScore = (output.data as Float32Array)[0];
+          onnxScore = Math.max(0, Math.min(1, rawOnnxScore));
           logStage("onnx_inference", Date.now() - tOnnx, onnxScore, "pass");
         }
       } catch (e) {
