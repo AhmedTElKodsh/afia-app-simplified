@@ -9,8 +9,9 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY ?? "";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "../../..");
 
-const manifestPath = process.argv[2]
-  ? resolve(repoRoot, process.argv[2])
+const manifestPathArg = process.argv.find(a => !a.startsWith("-") && (a.endsWith(".json")));
+const manifestPath = manifestPathArg
+  ? resolve(repoRoot, manifestPathArg)
   : resolve(repoRoot, "worker/test/fixtures/cv-eval/manifest.json");
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
@@ -34,13 +35,20 @@ const results: Array<{
   edgeStrength: number;
   stages: string[];
   missReason?: string;
+  onnxScore?: number;
 }> = [];
 
 let exact = 0, close = 0, n = 0;
 const latencies: number[] = [];
+const dryRun = process.argv.includes("--dry-run");
+
+let processedCount = 0;
 for (const fx of fixtures) {
-  n++;
+  if (dryRun && processedCount >= 1) break; 
+  processedCount++;
+
   const t0 = Date.now();
+  n = processedCount;
   const imgPath = resolve(repoRoot, fx.imagePath);
   const groundTruthMl = fx.groundTruthMl;
   const buf = await readFile(imgPath);
@@ -77,9 +85,10 @@ for (const fx of fixtures) {
     edgeStrength: result.diagnostics.edgeStrength,
     stages: result.diagnostics.stages,
     missReason: result.diagnostics.missReason,
+    onnxScore: result.diagnostics.onnxScore,
   });
 
-  console.log(`[${n}/${fixtures.length}] ${fx.imageId ?? fx.imagePath.split("/").pop()} gt=${groundTruthMl} cv=${cvMl ?? "ERR"} err=${absErr ?? "?"} conf=${result.tier} ${exactPass ? "✓" : "✗"}`);
+  console.log(`[${n}/${fixtures.length}] ${fx.imageId ?? fx.imagePath.split("/").pop()} gt=${groundTruthMl} cv=${cvMl ?? "ERR"} err=${absErr ?? "?"} conf=${result.tier} onnx=${result.diagnostics.onnxScore?.toFixed(2) ?? "N/A"} ${exactPass ? "✓" : "✗"}`);
 
   const elapsed = Date.now() - t0;
   latencies.push(elapsed);
@@ -202,7 +211,16 @@ if (missCounts.size > 0) {
 const worst = results.filter((r) => r.absErrorMl !== null).sort((a, b) => (b.absErrorMl ?? 0) - (a.absErrorMl ?? 0)).slice(0, 5);
 console.log(`\nWorst misses:`);
 for (const w of worst) {
-  console.log(`  ${w.imageId} gt=${w.groundTruthMl} cv=${w.cvMl} err=${w.absErrorMl} conf=${w.tier}(${w.confidenceScore.toFixed(2)})`);
+  console.log(`  ${w.imageId} gt=${w.groundTruthMl} cv=${w.cvMl} err=${w.absErrorMl} conf=${w.tier}(${w.confidenceScore.toFixed(2)}) onnx=${w.onnxScore?.toFixed(2) ?? "N/A"}`);
+}
+
+// ONNX vs CV Delta analysis
+const onnxDeltas = results.filter(r => r.onnxScore !== undefined && r.fillRatio !== null)
+  .map(r => Math.abs((r.onnxScore! * 1500) - (r.fillRatio! * 1500)));
+if (onnxDeltas.length > 0) {
+  const avgDelta = onnxDeltas.reduce((s, d) => s + d, 0) / onnxDeltas.length;
+  console.log(`\nONNX vs CV Pipeline Delta:`);
+  console.log(`  Avg Delta: ${avgDelta.toFixed(1)}ml`);
 }
 
 function bucketForMl(ml: number): string {
