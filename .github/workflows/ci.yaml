@@ -86,11 +86,14 @@ jobs:
 
       - name: Quick eval (10-fixture probe, per D-04)
         if: steps.filter.outputs.src_or_eval == 'true'
-        run: pnpm eval:dev-quick
+        run: pnpm eval:dev-quick --min-exact=50
+        # --min-exact=50: fails build if exact accuracy drops below 50%
+        # Catches catastrophic regressions (model collapse, API failure)
 
       - name: Edge-case CV eval (20 images)
         if: steps.filter.outputs.src_or_eval == 'true'
-        run: pnpm eval:edge
+        run: pnpm eval:edge --min-exact=30
+        # --min-exact=30: edge cases are harder; fails only on catastrophic regressions
 
   # ═══════════════════════════════════════════════════
   # JOB: full-eval (runs on merge to main)

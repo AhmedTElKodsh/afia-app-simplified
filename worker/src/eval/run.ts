@@ -159,6 +159,16 @@ if (worstMisses.length > 0) {
 }
 console.log(`\noutput: ${outPath}`);
 
+const minExact = args["min-exact"] ? parseFloat(args["min-exact"]) : null;
+if (minExact !== null) {
+  const exactPct = n > 0 ? (100 * exact / n) : 0;
+  if (exactPct < minExact) {
+    console.error(`FAIL: exact accuracy ${exactPct.toFixed(1)}% < ${minExact}% threshold (--min-exact)`);
+    process.exit(1);
+  }
+  console.log(`PASS: exact accuracy ${exactPct.toFixed(1)}% >= ${minExact}% threshold`);
+}
+
 function bump(map: Map<string, { n: number; exact: number }>, key: string, exactPass: boolean) {
   const current = map.get(key) ?? { n: 0, exact: 0 };
   current.n += 1;
