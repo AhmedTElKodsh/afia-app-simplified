@@ -11,6 +11,7 @@
     "eval:cv": "tsx src/eval/cv-eval.ts",
     "eval:dev-quick": "tsx src/eval/run.ts --manifest=worker/test/fixtures/dev/probe-manifest.json --label=dev-quick",
     "eval:edge": "tsx src/eval/cv-eval.ts worker/test/fixtures/cv-edge-eval/manifest.json",
+    "gate:rss": "tsx src/onnx/rss-gate.ts",
     "probe:gemini": "tsx src/eval/probe-gemini-frame.ts",
     "signoff": "tsx src/eval/signoff.ts",
     "build-manifest": "tsx src/eval/build-manifest.ts",

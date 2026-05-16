@@ -6,10 +6,11 @@
 #   Nightly cron    → full eval:dev + eval:holdout + edge-eval (drift detection)
 #   Manual dispatch → signoff gate (human review)
 #
-# Rollback procedure (manual):
-#   1. git revert HEAD --no-edit && git push
-#   2. Verify staging at https://afia-stage1.workers.dev
-#   3. If rollback is urgent: git revert with GIT_SEQUENCE_EDITOR
+# Rollback:
+#   scripts/rollback.ps1       — PowerShell script (dev workstation)
+#   scripts/rollback-test.sh   — Bash script (CI Ubuntu runners)
+#   .github/workflows/rollback-test.yaml — GitHub Actions workflow (manual dispatch)
+#   See those files for the full rollback procedure.
 
 name: CI
 
@@ -140,8 +141,22 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      # Path filtering for ONNX RSS gate
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            src_or_eval:
+              - 'worker/src/**'
+              - 'evals/**'
+              - 'worker/test/fixtures/**'
+
       - name: Edge-case CV eval
         run: pnpm eval:edge
+
+      - name: ONNX RSS budget gate
+        if: steps.filter.outputs.src_or_eval == 'true'
+        run: pnpm gate:rss
 
       - name: Upload edge-eval results
         uses: actions/upload-artifact@v4
