@@ -43,3 +43,10 @@
 {"ts":"2026-05-16T19:32:39.400Z","flowId":"b79b49c1-66b6-4e1a-877c-25a16ae31aee","seq":2,"eventType":"dispatch-match","rule":"executing → execute-task","data":{"unitType":"execute-task","unitId":"M003/S09/T03"}}
 {"ts":"2026-05-16T19:32:39.642Z","flowId":"b79b49c1-66b6-4e1a-877c-25a16ae31aee","seq":3,"eventType":"unit-start","data":{"unitType":"execute-task","unitId":"M003/S09/T03"}}
 {"ts":"2026-05-16T20:33:04.826Z","flowId":"b79b49c1-66b6-4e1a-877c-25a16ae31aee","seq":4,"eventType":"unit-end","data":{"unitType":"execute-task","unitId":"M003/S09/T03","status":"crash-recovered","artifactVerified":false},"causedBy":{"flowId":"b79b49c1-66b6-4e1a-877c-25a16ae31aee","seq":3}}
+{"ts":"2026-05-16T20:33:06.582Z","flowId":"auto-orchestrator-1778963586575","seq":1,"eventType":"iteration-start","data":{"source":"auto-orchestrator","name":"start"}}
+{"ts":"2026-05-16T20:33:08.812Z","flowId":"auto-orchestrator-1778963586575","seq":2,"eventType":"dispatch-stop","data":{"source":"auto-orchestrator","name":"advance-stopped","reason":"no remaining units"}}
+{"ts":"2026-05-16T20:33:08.832Z","flowId":"9c4145d8-204a-4d5f-9ff5-f35672125daf","seq":1,"eventType":"iteration-start","data":{"iteration":1}}
+{"ts":"2026-05-16T20:33:09.244Z","flowId":"9c4145d8-204a-4d5f-9ff5-f35672125daf","seq":2,"eventType":"dispatch-match","rule":"executing → execute-task","data":{"unitType":"execute-task","unitId":"M003/S09/T03"}}
+{"ts":"2026-05-16T20:33:09.530Z","flowId":"9c4145d8-204a-4d5f-9ff5-f35672125daf","seq":3,"eventType":"unit-start","data":{"unitType":"execute-task","unitId":"M003/S09/T03"}}
+{"ts":"2026-05-16T20:45:42.867Z","flowId":"542afcb8-0120-4fed-ae4d-fafc0de3a08d","seq":0,"eventType":"auto-exit","data":{"reason":"other","milestoneId":"M003","milestoneMerged":false,"isolationMode":"none","worktreeActive":false,"exitedAt":"2026-05-16T20:45:42.867Z"}}
+{"ts":"2026-05-16T22:27:24.206Z","flowId":"9c4145d8-204a-4d5f-9ff5-f35672125daf","seq":4,"eventType":"unit-end","data":{"unitType":"execute-task","unitId":"M003/S09/T03","status":"crash-recovered","artifactVerified":false},"causedBy":{"flowId":"9c4145d8-204a-4d5f-9ff5-f35672125daf","seq":3}}

@@ -41,6 +41,8 @@ const results: Array<{
 let exact = 0, close = 0, n = 0;
 const latencies: number[] = [];
 const dryRun = process.argv.includes("--dry-run");
+const perImageDelayMs = Number(process.env.EVAL_DELAY_MS ?? process.env.RATE_LIMIT_DELAY_MS ?? 0);
+const shouldDelay = Number.isFinite(perImageDelayMs) && perImageDelayMs > 0;
 
 let processedCount = 0;
 for (const fx of fixtures) {
@@ -93,16 +95,16 @@ for (const fx of fixtures) {
   const elapsed = Date.now() - t0;
   latencies.push(elapsed);
 
-  // Rate limiting for pipeline
-  if (n < fixtures.length) {
-    await new Promise((r) => setTimeout(r, 500));
+  // Preserve benchmark throughput by default; enable pacing only when explicitly requested.
+  if (shouldDelay && n < fixtures.length) {
+    await new Promise((r) => setTimeout(r, perImageDelayMs));
   }
 }
 
 // Write results
 const outDir = resolve(repoRoot, "runs/cv-eval-200");
 await mkdir(outDir, { recursive: true });
-const outPath = join(outDir, `cv-eval-${Date.now()}.json`);
+const outPath = join(outDir, "cv-eval-results.json");
 await writeFile(outPath, JSON.stringify(results, null, 2));
 
 // Summary
