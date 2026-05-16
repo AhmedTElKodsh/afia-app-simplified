@@ -7,6 +7,8 @@ import type { Context } from "hono";
 import { callGemini } from "../llm/gemini.js";
 import { callGrok } from "../llm/grok.js";
 import { parseEvidenceResponse } from "../eval/parse-response.js";
+import { loadPrompt } from "../prompt/load.js";
+import type { LoadedPrompt } from "../prompt/load.js";
 import type { Env } from "../env.js";
 import { buildGeminiKeyPool, selectGeminiKey } from "../llm/rotation.js";
 import { createAnalysisStorage } from "../storage/supabase.js";
@@ -14,12 +16,6 @@ import { createAnalysisStorage } from "../storage/supabase.js";
 const PROMPT_VERSION = "v1";
 const DEFAULT_MODEL_ID = "gemini-2.5-flash";
 const DEFAULT_GROK_MODEL_ID = "grok-2-vision-1212";
-
-const SYSTEM_TEXT = "You estimate remaining oil in a 1.5L Afia cooking-oil bottle from one front-side image by locating the visible oil-air boundary. Before outputting JSON, first describe your visual observations in a 'Visual Reasoning' section — where you see the meniscus, glare, boundary clarity, and how you mapped it to a measurement. Then provide the final JSON.";
-const USER_TEXT = [
-  "Estimate the visible oil level for the target Afia 1.5L bottle.",
-  "First describe your visual reasoning, then return evidence JSON with readingPossible, meniscusVisible, oilSurfaceYRatio, nearestReferenceMl, qualityFlags, and confidence.",
-].join("\n");
 
 export async function analyzeRoute(c: Context<{ Bindings: Env }>) {
   let body: ReturnType<typeof AnalysisRequestSchema.parse>;
@@ -56,7 +52,9 @@ export async function analyzeRoute(c: Context<{ Bindings: Env }>) {
     provider: analysis.provider,
     rawMetadata: {
       modelId: analysis.modelId,
-      promptVersion: PROMPT_VERSION,
+      promptVersion: analysis.promptVersion,
+      promptHash: analysis.promptHash,
+      fewshotHash: analysis.fewshotHash,
       rawModelText: analysis.rawModelText,
       fallbackReason: analysis.fallbackReason,
     },
@@ -82,7 +80,7 @@ export async function analyzeRoute(c: Context<{ Bindings: Env }>) {
   });
 }
 
-async function callGeminiWithRetry(env: Env, keyPool: string[], imageBase64: string): Promise<string> {
+async function callGeminiWithRetry(env: Env, keyPool: string[], imageBase64: string, prompt: LoadedPrompt): Promise<string> {
   const attempts = Math.min(2, Math.max(1, keyPool.length));
   let lastError: unknown;
 
@@ -91,9 +89,9 @@ async function callGeminiWithRetry(env: Env, keyPool: string[], imageBase64: str
       return await callGemini({
         apiKey: selectGeminiKey(keyPool, attempt),
         modelId: env.MODEL_ID ?? DEFAULT_MODEL_ID,
-        systemText: SYSTEM_TEXT,
-        userText: USER_TEXT,
-        fewShots: [],
+        systemText: prompt.systemText,
+        userText: prompt.userText,
+        fewShots: prompt.fewShots,
         imageBase64: stripDataUrlPrefix(imageBase64),
         targetMimeType: readMimeType(imageBase64),
       });
@@ -114,15 +112,23 @@ type ModelAnalysis = {
   rawModelText: string;
   provider: "gemini" | "grok";
   modelId: string;
+  promptVersion: string;
+  promptHash: string;
+  fewshotHash: string;
   fallbackReason?: "gemini_failed";
 };
 
 async function analyzeWithFallback(env: Env, keyPool: string[], imageBase64: string): Promise<ModelAnalysis> {
+  const prompt = await loadPrompt(PROMPT_VERSION);
+
   try {
     return {
-      rawModelText: await callGeminiWithRetry(env, keyPool, imageBase64),
+      rawModelText: await callGeminiWithRetry(env, keyPool, imageBase64, prompt),
       provider: "gemini",
       modelId: env.MODEL_ID ?? DEFAULT_MODEL_ID,
+      promptVersion: prompt.promptVersion,
+      promptHash: prompt.promptHash,
+      fewshotHash: prompt.fewshotHash,
     };
   } catch (error) {
     console.error(error);
@@ -133,13 +139,16 @@ async function analyzeWithFallback(env: Env, keyPool: string[], imageBase64: str
       rawModelText: await callGrok({
         apiKey: env.GROK_API_KEY,
         modelId,
-        systemText: SYSTEM_TEXT,
-        userText: USER_TEXT,
+        systemText: prompt.systemText,
+        userText: prompt.userText,
         imageBase64,
         targetMimeType: readMimeType(imageBase64),
       }),
       provider: "grok",
       modelId,
+      promptVersion: prompt.promptVersion,
+      promptHash: prompt.promptHash,
+      fewshotHash: prompt.fewshotHash,
       fallbackReason: "gemini_failed",
     };
   }

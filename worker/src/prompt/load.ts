@@ -1,4 +1,4 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -17,6 +17,18 @@ export interface FewShot {
   };
 }
 
+export interface FewShotManifestEntry {
+  path: string;
+  role: "anchor" | "golden";
+  remainingMl: number;
+}
+
+interface FewShotManifest {
+  version: string;
+  description?: string;
+  entries: FewShotManifestEntry[];
+}
+
 export interface LoadedPrompt {
   systemText: string;
   userText: string;
@@ -24,6 +36,7 @@ export interface LoadedPrompt {
   promptHash: string;
   fewshotHash: string;
   promptVersion: string;
+  fewShotManifest: FewShotManifestEntry[];
 }
 
 function hash16(s: string): string {
@@ -35,15 +48,21 @@ export async function loadPrompt(version: string): Promise<LoadedPrompt> {
   const systemText = await readFile(join(root, "system.md"), "utf8");
   const userText = await readFile(join(root, "bottle-reference.md"), "utf8");
   const fewshotDir = join(root, "few-shots");
-  const files = (await readdir(fewshotDir)).filter((f) => f.endsWith(".json")).sort();
+  const manifest = JSON.parse(await readFile(join(fewshotDir, "manifest.json"), "utf8")) as FewShotManifest;
+  if (manifest.version !== version) {
+    throw new Error(`Few-shot manifest version ${manifest.version} does not match prompt version ${version}`);
+  }
   const fewShots: FewShot[] = [];
-  for (const f of files) fewShots.push(JSON.parse(await readFile(join(fewshotDir, f), "utf8")));
+  for (const entry of manifest.entries) {
+    fewShots.push(JSON.parse(await readFile(join(fewshotDir, entry.path), "utf8")));
+  }
   return {
     systemText,
     userText,
     fewShots,
     promptHash: hash16(systemText + "\n---\n" + userText),
-    fewshotHash: hash16(JSON.stringify(fewShots)),
+    fewshotHash: hash16(JSON.stringify({ entries: manifest.entries, fewShots })),
     promptVersion: version,
+    fewShotManifest: manifest.entries,
   };
 }

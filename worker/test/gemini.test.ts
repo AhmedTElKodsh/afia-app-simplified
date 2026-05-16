@@ -22,12 +22,19 @@ describe("callGemini", () => {
     });
   });
 
-  it("returns raw text from SDK", async () => {
+  it("returns raw text from SDK and configures model correctly", async () => {
     const text = await callGemini({
       apiKey: "test", modelId: "gemini-2.5-flash",
       systemText: "sys", userText: "user", fewShots: [], imageBase64: "abc",
     });
     expect(text).toContain("770");
+    expect(getGenerativeModel).toHaveBeenLastCalledWith(expect.objectContaining({
+      model: "gemini-2.5-flash",
+      generationConfig: {
+        temperature: 0,
+        maxOutputTokens: 4096,
+      },
+    }));
   });
 
   it("retries 429 quota responses using server-provided retry delay", async () => {
@@ -75,5 +82,6 @@ describe("callGemini", () => {
     expect(parts.slice(0, 3).map((part) => part.inlineData?.data)).toEqual(["ref-full", "ref-empty", "target"]);
     expect(parts.at(-1)?.text).toContain("Reference A: full 1500ml");
     expect(parts.at(-1)?.text).toContain("user");
+    expect(parts.at(-1)?.text).toContain("Return exactly one JSON object");
   });
 });

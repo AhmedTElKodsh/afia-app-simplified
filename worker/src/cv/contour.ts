@@ -218,7 +218,7 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
 
         if (edges.length === 0) continue;
 
-        const midY = cr.h / 2;
+        const midY = cr.height / 2;
         const bestEdge = edges.reduce((a, b) => {
           const posBonusA = 1 - Math.abs(a.y - midY) / midY;
           const posBonusB = 1 - Math.abs(b.y - midY) / midY;

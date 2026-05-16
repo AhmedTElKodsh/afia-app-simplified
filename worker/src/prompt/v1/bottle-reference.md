@@ -21,7 +21,7 @@ The usable oil column runs roughly from Y=0.18 (full) to Y=0.96 (empty).
 8. `nearestReferenceMl` is advisory only: use it to indicate which reference the
    target most closely resembles after locating the boundary.
 
-**Output JSON schema (no other fields, no markdown):**
+**Output JSON schema (no prose, no markdown, no extra fields):**
 { "visualReasoning": <string explaining physical observations>,
   "readingPossible": <boolean>,
   "meniscusVisible": "yes" | "no" | "uncertain",

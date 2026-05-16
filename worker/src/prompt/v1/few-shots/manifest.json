@@ -1,0 +1,18 @@
+{
+  "version": "v1",
+  "description": "Explicit ordered Afia 1.5L prompt calibration set shared by eval and analysis routes.",
+  "entries": [
+    { "path": "full-1500.json", "role": "anchor", "remainingMl": 1500 },
+    { "path": "high-1210.json", "role": "anchor", "remainingMl": 1210 },
+    { "path": "hidden/vhigh-1375.json", "role": "golden", "remainingMl": 1375 },
+    { "path": "hidden/highmid-1100.json", "role": "golden", "remainingMl": 1100 },
+    { "path": "hidden/midhigh-935.json", "role": "golden", "remainingMl": 935 },
+    { "path": "mid-770.json", "role": "anchor", "remainingMl": 770 },
+    { "path": "hidden/mid-605.json", "role": "golden", "remainingMl": 605 },
+    { "path": "hidden/midlow-495.json", "role": "golden", "remainingMl": 495 },
+    { "path": "hidden/lowmid-385.json", "role": "golden", "remainingMl": 385 },
+    { "path": "low-275.json", "role": "anchor", "remainingMl": 275 },
+    { "path": "hidden/vlow-165.json", "role": "golden", "remainingMl": 165 },
+    { "path": "empty.json", "role": "anchor", "remainingMl": 0 }
+  ]
+}

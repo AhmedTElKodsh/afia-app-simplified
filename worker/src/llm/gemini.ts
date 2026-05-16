@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { FewShot } from "../prompt/load.js";
 
 export interface GeminiReferenceImage {
@@ -16,7 +16,6 @@ interface CallArgs {
   imageBase64: string;
   referenceImages?: GeminiReferenceImage[];
   targetMimeType?: string;
-  thinkingBudget?: number;
 }
 
 function sleep(ms: number): Promise<void> {
@@ -62,8 +61,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
     generationConfig: {
       temperature: 0,
       maxOutputTokens: 4096,
-      thinkingConfig: { thinkingBudget: args.thinkingBudget ?? 1024 },
-    } as any,
+    },
   });
 
   const referenceLabels = (args.referenceImages ?? [])
@@ -79,7 +77,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
       text: [
         args.userText,
         referenceLabels ? `\nCalibrated reference images:\n${referenceLabels}` : "",
-        "\nThe target image is the final image before these instructions. Provide your reasoning first, then the JSON block.",
+        "\nThe target image is the final image before these instructions. Return exactly one JSON object. Put visual observations in the visualReasoning field.",
       ].join("\n"),
     },
   ];
@@ -88,19 +86,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const result = await model.generateContent(parts);
-      const response = result.response;
-      
-      // Handle multi-part output (e.g. thinking models)
-      const candidate = response.candidates?.[0];
-      if (candidate?.content?.parts) {
-        const thoughtPart = candidate.content.parts.find((p: any) => (p as any).thought);
-        if (thoughtPart && (thoughtPart as any).text) {
-          const mainText = response.text();
-          return `THOUGHT:\n${(thoughtPart as any).text}\n\nRESPONSE:\n${mainText}`;
-        }
-      }
-      
-      return response.text();
+      return result.response.text();
     } catch (error) {
       if (!isRetryableQuotaError(error) || attempt === maxAttempts) {
         throw error;

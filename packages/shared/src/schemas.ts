@@ -45,6 +45,8 @@ export interface AnalysisResultContract {
   provider: Provider;
   rawMetadata: {
     promptVersion: string;
+    promptHash?: string;
+    fewshotHash?: string;
     modelId: string;
     providerModelVersion?: string;
     fallbackReason?: string;
@@ -146,6 +148,8 @@ export const AnalysisResultSchema: Schema<AnalysisResultContract> = {
       provider: ProviderSchema.parse(record.provider),
       rawMetadata: {
         promptVersion: nonEmptyString(rawMetadata.promptVersion, "promptVersion"),
+        promptHash: optionalString(rawMetadata.promptHash, "promptHash"),
+        fewshotHash: optionalString(rawMetadata.fewshotHash, "fewshotHash"),
         modelId: nonEmptyString(rawMetadata.modelId, "modelId"),
         providerModelVersion: optionalString(rawMetadata.providerModelVersion, "providerModelVersion"),
         fallbackReason: optionalString(rawMetadata.fallbackReason, "fallbackReason"),

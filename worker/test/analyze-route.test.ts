@@ -18,10 +18,20 @@ const mocks = vi.hoisted(() => ({
     confidence: 0.62,
   })),
   saveAnalysis: vi.fn(async () => ({ id: "0d44aecc-8344-44c8-8b7f-201216f7c9f9" })),
+  loadPrompt: vi.fn(async () => ({
+    systemText: "Mock system instruction for Afia bottle",
+    userText: "Mock user instruction",
+    fewShots: [{ expected: { nearestReferenceMl: 750 } }],
+    promptHash: "a1b2c3d4e5f6g7h8",
+    fewshotHash: "h8g7f6e5d4c3b2a1",
+    promptVersion: "v1",
+    fewShotManifest: [{ path: "mid-770.json", role: "anchor", remainingMl: 770 }],
+  })),
 }));
 
 vi.mock("../src/llm/gemini.js", () => ({ callGemini: mocks.callGemini }));
 vi.mock("../src/llm/grok.js", () => ({ callGrok: mocks.callGrok }));
+vi.mock("../src/prompt/load.js", () => ({ loadPrompt: mocks.loadPrompt }));
 vi.mock("../src/storage/supabase.js", () => ({
   createAnalysisStorage: vi.fn(() => ({ saveAnalysis: mocks.saveAnalysis })),
 }));
@@ -95,12 +105,19 @@ describe("POST /api/analyze", () => {
       confidence: 0.8,
       warnings: ["mild_glare"],
       provider: "gemini",
-      rawMetadata: { modelId: "gemini-test", promptVersion: "v1" },
+      rawMetadata: expect.objectContaining({
+        modelId: "gemini-test",
+        promptVersion: "v1",
+        promptHash: "a1b2c3d4e5f6g7h8",
+        fewshotHash: "h8g7f6e5d4c3b2a1",
+      }),
     });
     expect(mocks.callGemini).toHaveBeenCalledWith(expect.objectContaining({
       apiKey: "first-key",
       imageBase64: "abc",
       targetMimeType: "image/png",
+      systemText: "Mock system instruction for Afia bottle",
+      fewShots: expect.arrayContaining([expect.anything()]),
     }));
     expect(mocks.saveAnalysis).toHaveBeenCalledWith(expect.objectContaining({
       bottleSize: "1.5L",
@@ -167,14 +184,18 @@ describe("POST /api/analyze", () => {
     await expect(res.json()).resolves.toMatchObject({
       remainingMl: 692,
       provider: "grok",
-      rawMetadata: {
+      rawMetadata: expect.objectContaining({
         modelId: "grok-test",
+        promptVersion: "v1",
+        promptHash: "a1b2c3d4e5f6g7h8",
+        fewshotHash: "h8g7f6e5d4c3b2a1",
         fallbackReason: "gemini_failed",
-      },
+      }),
     });
     expect(mocks.callGrok).toHaveBeenCalledWith(expect.objectContaining({
       apiKey: "grok-secret",
       imageBase64: "abc",
+      systemText: "Mock system instruction for Afia bottle",
     }));
     expect(mocks.saveAnalysis).toHaveBeenCalledWith(expect.objectContaining({
       result: expect.objectContaining({ provider: "grok" }),
