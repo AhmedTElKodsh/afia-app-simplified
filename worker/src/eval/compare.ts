@@ -11,3 +11,12 @@ export function compareMl(predicted: number, groundTruth: number) {
     closeBucketPass: absErrorMl <= CLOSE_TOLERANCE_ML,
   };
 }
+
+export function computeMAE(actual: number, predicted: number): number {
+  return Math.abs(actual - predicted);
+}
+
+export function computeRMSE(errors: number[]): number {
+  const sumSq = errors.reduce((sum, e) => sum + e * e, 0);
+  return Math.sqrt(sumSq / errors.length);
+}

@@ -13,7 +13,8 @@
     "eval:edge": "tsx src/eval/cv-eval.ts worker/test/fixtures/cv-edge-eval/manifest.json",
     "probe:gemini": "tsx src/eval/probe-gemini-frame.ts",
     "signoff": "tsx src/eval/signoff.ts",
-    "build-manifest": "tsx src/eval/build-manifest.ts"
+    "build-manifest": "tsx src/eval/build-manifest.ts",
+    "baseline:capture": "tsx src/eval/capture-baseline.ts"
   },
   "dependencies": {
     "@afia/shared": "workspace:*",

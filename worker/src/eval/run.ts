@@ -103,6 +103,16 @@ for (const fx of manifest.fixtures as DiagnosticFixture[]) {
 console.log(`\n=== ${set} run ${runId} ===`);
 console.log(`exact (±55ml): ${exact}/${n} = ${(100 * exact / n).toFixed(1)}%`);
 console.log(`close (±110ml): ${close}/${n} = ${(100 * close / n).toFixed(1)}%`);
+
+// MAE/RMSE computation
+const errors = records
+  .filter(r => typeof r.absErrorMl === "number")
+  .map(r => r.absErrorMl as number);
+const mae = errors.length > 0 ? errors.reduce((s, e) => s + e, 0) / errors.length : 0;
+const rmse = errors.length > 0 ? Math.sqrt(errors.reduce((s, e) => s + e * e, 0) / errors.length) : 0;
+console.log(`MAE: ${mae.toFixed(1)}ml`);
+console.log(`RMSE: ${rmse.toFixed(1)}ml`);
+
 console.log(`\nper-stratum exact:`);
 for (const [k, v] of [...perStratum.entries()].sort()) {
   console.log(`  ${k}: ${v.exact}/${v.n} = ${(100 * v.exact / v.n).toFixed(1)}%`);
