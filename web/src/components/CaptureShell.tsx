@@ -80,37 +80,45 @@ export function CaptureShell() {
         capturedAt: new Date().toISOString(),
       },
     });
+    writeLegacySessionValue("afia.capture", dataUrl);
+    writeLegacySessionValue("afia.captureSource", "camera");
     setCameraState("analyzing");
 
     try {
       const analysis = await analyzeCapture(dataUrl);
       writeState({ analysis: { ...analysis, tier: "success" as const } });
+      writeLegacySessionValue("afia.analysis", JSON.stringify(analysis));
       navigate(`/result?size=${encodeURIComponent(DEFAULT_BOTTLE_SIZE)}`);
     } catch (err) {
+      const description =
+        err instanceof Error
+          ? err.message
+          : "Analysis request failed. Check your connection and try again.";
+      const errorAnalysis = {
+        errors: [
+          {
+            code: ERROR_CODES.ANALYSIS_FAILED,
+            description,
+          },
+        ],
+        tier: "error" as const,
+        confidence: 0,
+        remainingMl: null,
+      };
+      const errorContext = {
+        code: ERROR_CODES.ANALYSIS_FAILED,
+        description: err instanceof Error ? err.message : "Unknown error",
+        timestamp: new Date().toISOString(),
+        supportEmail: getSupportEmail(),
+      };
+
       // Persist structured error state per D-14
       writeState({
-        analysis: {
-          errors: [
-            {
-              code: ERROR_CODES.ANALYSIS_FAILED,
-              description:
-                err instanceof Error
-                  ? err.message
-                  : "Analysis request failed. Check your connection and try again.",
-            },
-          ],
-          tier: "error",
-          confidence: 0,
-          remainingMl: null,
-        },
-        errorContext: {
-          code: ERROR_CODES.ANALYSIS_FAILED,
-          description:
-            err instanceof Error ? err.message : "Unknown error",
-          timestamp: new Date().toISOString(),
-          supportEmail: getSupportEmail(),
-        },
+        analysis: errorAnalysis,
+        errorContext,
       });
+      writeLegacySessionValue("afia.analysis", JSON.stringify(errorAnalysis));
+      writeLegacySessionValue("afia.errorContext", JSON.stringify(errorContext));
       setCameraState("analysis-failed");
       // Navigate to result page with ?retry=true (Sally: preserve camera config on retry)
       navigate(
@@ -199,4 +207,12 @@ async function analyzeCapture(imageBase64: string): Promise<AnalysisResultContra
 
   if (!response.ok) throw new Error(`Analysis failed with ${response.status}`);
   return AnalysisResultSchema.parse(await response.json());
+}
+
+function writeLegacySessionValue(key: string, value: string): void {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch {
+    // Keep primary envelope write as source of truth when legacy compatibility fails.
+  }
 }

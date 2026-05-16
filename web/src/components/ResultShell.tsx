@@ -273,15 +273,16 @@ function CupCounter({ display }: { display: CupDisplay }) {
 
 function readCapturedImage(): string | null {
   const state = readState();
-  if (!state?.capture) return null;
-  const value = state.capture.captureBlob;
+  const value = state?.capture?.captureBlob ?? readLegacySessionValue("afia.capture");
+  if (!value) return null;
   return /^data:image\/(?:jpeg|jpg|png|webp);base64,/i.test(value) ? value : null;
 }
 
 function readStoredResult(): StoredAnalysisResult | null {
   const state = readState();
-  if (!state?.analysis) return null;
-  const a = state.analysis;
+  const legacyAnalysis = !state?.analysis ? readLegacyJson("afia.analysis") : null;
+  const a = state?.analysis ?? legacyAnalysis;
+  if (!a) return null;
 
   // Check if it's an error state (persisted by CaptureShell on failure)
   if (a.tier === "error" && Array.isArray(a.errors)) {
@@ -303,8 +304,27 @@ function readStoredResult(): StoredAnalysisResult | null {
 
 function readErrorContext(): { code: string; description: string; timestamp: string } | null {
   const state = readState();
-  if (!state?.errorContext) return null;
-  return state.errorContext as { code: string; description: string; timestamp: string };
+  const context = state?.errorContext ?? readLegacyJson("afia.errorContext");
+  if (!context) return null;
+  return context as { code: string; description: string; timestamp: string };
+}
+
+function readLegacySessionValue(key: string): string | null {
+  try {
+    return sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function readLegacyJson(key: string): Record<string, unknown> | null {
+  const raw = readLegacySessionValue(key);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
 }
 
 function buildMailtoHref(context: { code: string; description: string; timestamp: string } | null): string {
