@@ -1,0 +1,5 @@
+# Iteration 2 — CLAHE 4.0 (8×8) — Gaussian blur
+## Exact accuracy: 16/198 = 8.1% (+1.0pp vs baseline, -1.5pp vs iter-1)
+## Close accuracy: 26/198 = 13.1% (-1.5pp vs baseline)
+## Contour found: 193/198 = 97.5%
+## Decision: REJECT — worse than iter-1

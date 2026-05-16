@@ -1,0 +1,5 @@
+# Iteration 1 — CLAHE 3.0 (8×8) — Gaussian blur
+## Exact accuracy: 19/198 = 9.6% (+2.5pp vs baseline 7.1%)
+## Close accuracy: 28/198 = 14.1% (-0.5pp vs baseline)
+## Contour found: 191/198 = 96.5% (+1.0pp)
+## Decision: ACCEPT — best pre-processing config
