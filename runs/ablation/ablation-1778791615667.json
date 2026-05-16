@@ -1,0 +1,106 @@
+[
+  {
+    "file": "empty_t0086.57s_f0173.jpg",
+    "groundTruth": {
+      "ml": 0,
+      "cat": "Empty"
+    },
+    "predicted": {
+      "ml": null,
+      "cat": null
+    },
+    "confidence": 0,
+    "tier": "low",
+    "contourFound": false,
+    "edgeStrength": 0,
+    "latencyMs": 7,
+    "stages": [
+      "validate",
+      "preprocess"
+    ]
+  },
+  {
+    "file": "275ml_t0026.00s_f0052.jpg",
+    "groundTruth": {
+      "ml": 275,
+      "cat": "Quarter"
+    },
+    "predicted": {
+      "ml": null,
+      "cat": null
+    },
+    "confidence": 0,
+    "tier": "low",
+    "contourFound": false,
+    "edgeStrength": 0,
+    "latencyMs": 1,
+    "stages": [
+      "validate",
+      "preprocess"
+    ]
+  },
+  {
+    "file": "660ml_t0006.50s_f0013.jpg",
+    "groundTruth": {
+      "ml": 660,
+      "cat": "Half"
+    },
+    "predicted": {
+      "ml": null,
+      "cat": null
+    },
+    "confidence": 0,
+    "tier": "low",
+    "contourFound": false,
+    "edgeStrength": 0,
+    "latencyMs": 8,
+    "stages": [
+      "validate",
+      "preprocess"
+    ]
+  },
+  {
+    "file": "990ml_t0041.06s_f0082.jpg",
+    "groundTruth": {
+      "ml": 990,
+      "cat": "Three Quarter"
+    },
+    "predicted": {
+      "ml": null,
+      "cat": null
+    },
+    "confidence": 0,
+    "tier": "low",
+    "contourFound": false,
+    "edgeStrength": 0,
+    "latencyMs": 1,
+    "stages": [
+      "validate",
+      "preprocess"
+    ]
+  },
+  {
+    "file": "1485ml_t0116.75s_f0233.jpg",
+    "groundTruth": {
+      "ml": 1485,
+      "cat": "Full"
+    },
+    "predicted": {
+      "ml": 225,
+      "cat": "Quarter"
+    },
+    "confidence": 0.8,
+    "tier": "high",
+    "contourFound": true,
+    "edgeStrength": 11103,
+    "latencyMs": 528,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  }
+]

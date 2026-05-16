@@ -1,0 +1,117 @@
+[
+  {
+    "file": "empty_t0086.57s_f0173.jpg",
+    "groundTruth": {
+      "ml": 0,
+      "cat": "Empty"
+    },
+    "predicted": {
+      "ml": 977,
+      "cat": "Three Quarter"
+    },
+    "confidence": 0.85,
+    "tier": "high",
+    "contourFound": true,
+    "edgeStrength": 5315,
+    "latencyMs": 438,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "file": "275ml_t0026.00s_f0052.jpg",
+    "groundTruth": {
+      "ml": 275,
+      "cat": "Quarter"
+    },
+    "predicted": {
+      "ml": 911,
+      "cat": "Half"
+    },
+    "confidence": 0.85,
+    "tier": "high",
+    "contourFound": true,
+    "edgeStrength": 4758,
+    "latencyMs": 135,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "file": "660ml_t0006.50s_f0013.jpg",
+    "groundTruth": {
+      "ml": 660,
+      "cat": "Half"
+    },
+    "predicted": {
+      "ml": 653,
+      "cat": "Half"
+    },
+    "confidence": 0.85,
+    "tier": "high",
+    "contourFound": true,
+    "edgeStrength": 9661,
+    "latencyMs": 97,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "file": "990ml_t0041.06s_f0082.jpg",
+    "groundTruth": {
+      "ml": 990,
+      "cat": "Three Quarter"
+    },
+    "predicted": {
+      "ml": 47,
+      "cat": "Empty"
+    },
+    "confidence": 0.15949999999999992,
+    "tier": "low",
+    "contourFound": true,
+    "edgeStrength": 1019,
+    "latencyMs": 85,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "file": "1485ml_t0116.75s_f0233.jpg",
+    "groundTruth": {
+      "ml": 1485,
+      "cat": "Full"
+    },
+    "predicted": {
+      "ml": 0,
+      "cat": "Empty"
+    },
+    "confidence": 0.6499999999999999,
+    "tier": "medium",
+    "contourFound": true,
+    "edgeStrength": 11103,
+    "latencyMs": 115,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  }
+]

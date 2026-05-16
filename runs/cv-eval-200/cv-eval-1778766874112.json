@@ -1,0 +1,3734 @@
+[
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0065.05s_f0130.jpg",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0131.61s_f0263.jpg",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0064.55s_f0129.jpg",
+    "groundTruthMl": 0,
+    "cvMl": 1226,
+    "absErrorMl": 1226,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8174603174603174,
+    "contourFound": true,
+    "edgeStrength": 2085,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0098.08s_f0196.jpg",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0103.08s_f0206.jpg",
+    "groundTruthMl": 0,
+    "cvMl": 1353,
+    "absErrorMl": 1353,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9017857142857143,
+    "contourFound": true,
+    "edgeStrength": 2168,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0067.55s_f0135.jpg",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0086.57s_f0173.jpg",
+    "groundTruthMl": 0,
+    "cvMl": 977,
+    "absErrorMl": 977,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.6515151515151515,
+    "contourFound": true,
+    "edgeStrength": 5118,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0083.07s_f0166.jpg",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/empty/empty_t0081.07s_f0162.jpg",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0003.54s_f0007.jpg",
+    "groundTruthMl": 55,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0018.70s_f0037.jpg",
+    "groundTruthMl": 55,
+    "cvMl": 1045,
+    "absErrorMl": 990,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "medium",
+    "confidenceScore": 0.5712,
+    "fillRatio": 0.6963499999999999,
+    "contourFound": true,
+    "edgeStrength": 357,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0009.10s_f0018.jpg",
+    "groundTruthMl": 55,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0007.58s_f0015.jpg",
+    "groundTruthMl": 55,
+    "cvMl": 68,
+    "absErrorMl": 13,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.04506802721088432,
+    "contourFound": true,
+    "edgeStrength": 7186,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0002.02s_f0004.jpg",
+    "groundTruthMl": 55,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0037.90s_f0075.jpg",
+    "groundTruthMl": 55,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0014.15s_f0028.jpg",
+    "groundTruthMl": 55,
+    "cvMl": 222,
+    "absErrorMl": 167,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.14798359535201633,
+    "contourFound": true,
+    "edgeStrength": 8961,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0021.73s_f0043.jpg",
+    "groundTruthMl": 55,
+    "cvMl": 357,
+    "absErrorMl": 302,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8,
+    "fillRatio": 0.23809523809523814,
+    "contourFound": true,
+    "edgeStrength": 626,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/55ml/55ml_t0000.00s_f0000.jpg",
+    "groundTruthMl": 55,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0034.05s_f0068.jpg",
+    "groundTruthMl": 110,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0016.52s_f0033.jpg",
+    "groundTruthMl": 110,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0010.01s_f0020.jpg",
+    "groundTruthMl": 110,
+    "cvMl": 268,
+    "absErrorMl": 158,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.1785714285714286,
+    "contourFound": true,
+    "edgeStrength": 1019,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0004.51s_f0009.jpg",
+    "groundTruthMl": 110,
+    "cvMl": 119,
+    "absErrorMl": 9,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.07933370976849241,
+    "contourFound": true,
+    "edgeStrength": 11660,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0005.01s_f0010.jpg",
+    "groundTruthMl": 110,
+    "cvMl": 95,
+    "absErrorMl": 15,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.06349206349206338,
+    "contourFound": true,
+    "edgeStrength": 1885,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0021.53s_f0043.jpg",
+    "groundTruthMl": 110,
+    "cvMl": 631,
+    "absErrorMl": 521,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.4206349206349206,
+    "contourFound": true,
+    "edgeStrength": 13255,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0008.51s_f0017.jpg",
+    "groundTruthMl": 110,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0054.08s_f0108.jpg",
+    "groundTruthMl": 110,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/110ml/110ml_t0040.56s_f0081.jpg",
+    "groundTruthMl": 110,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0019.01s_f0038.jpg",
+    "groundTruthMl": 165,
+    "cvMl": 248,
+    "absErrorMl": 83,
+    "exactBucketPass": false,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.1654611211573236,
+    "contourFound": true,
+    "edgeStrength": 16102,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0002.50s_f0005.jpg",
+    "groundTruthMl": 165,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0006.00s_f0012.jpg",
+    "groundTruthMl": 165,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0020.52s_f0041.jpg",
+    "groundTruthMl": 165,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0019.51s_f0039.jpg",
+    "groundTruthMl": 165,
+    "cvMl": 24,
+    "absErrorMl": 141,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.015873015873015817,
+    "contourFound": true,
+    "edgeStrength": 6483,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0000.00s_f0000.jpg",
+    "groundTruthMl": 165,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0006.50s_f0013.jpg",
+    "groundTruthMl": 165,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0023.02s_f0046.jpg",
+    "groundTruthMl": 165,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/165ml/165ml_t0004.00s_f0008.jpg",
+    "groundTruthMl": 165,
+    "cvMl": 1425,
+    "absErrorMl": 1260,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.95,
+    "contourFound": true,
+    "edgeStrength": 6501,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0004.50s_f0009.jpg",
+    "groundTruthMl": 220,
+    "cvMl": 265,
+    "absErrorMl": 45,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.17669172932330823,
+    "contourFound": true,
+    "edgeStrength": 4045,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0022.00s_f0044.jpg",
+    "groundTruthMl": 220,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0031.00s_f0062.jpg",
+    "groundTruthMl": 220,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0015.00s_f0030.jpg",
+    "groundTruthMl": 220,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0030.00s_f0060.jpg",
+    "groundTruthMl": 220,
+    "cvMl": 648,
+    "absErrorMl": 428,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.43172268907563016,
+    "contourFound": true,
+    "edgeStrength": 13889,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0018.50s_f0037.jpg",
+    "groundTruthMl": 220,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0004.00s_f0008.jpg",
+    "groundTruthMl": 220,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0022.50s_f0045.jpg",
+    "groundTruthMl": 220,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/220ml/220ml_t0003.50s_f0007.jpg",
+    "groundTruthMl": 220,
+    "cvMl": 1057,
+    "absErrorMl": 837,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.7044817927170868,
+    "contourFound": true,
+    "edgeStrength": 12660,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0026.00s_f0052.jpg",
+    "groundTruthMl": 275,
+    "cvMl": 13,
+    "absErrorMl": 262,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.008692365835222926,
+    "contourFound": true,
+    "edgeStrength": 19519,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0039.50s_f0079.jpg",
+    "groundTruthMl": 275,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0037.00s_f0074.jpg",
+    "groundTruthMl": 275,
+    "cvMl": 1479,
+    "absErrorMl": 1204,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9861944777911165,
+    "contourFound": true,
+    "edgeStrength": 7605,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0012.00s_f0024.jpg",
+    "groundTruthMl": 275,
+    "cvMl": 239,
+    "absErrorMl": 36,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.15943339361060882,
+    "contourFound": true,
+    "edgeStrength": 13540,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0018.00s_f0036.jpg",
+    "groundTruthMl": 275,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0026.50s_f0053.jpg",
+    "groundTruthMl": 275,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0027.00s_f0054.jpg",
+    "groundTruthMl": 275,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0002.50s_f0005.jpg",
+    "groundTruthMl": 275,
+    "cvMl": 348,
+    "absErrorMl": 73,
+    "exactBucketPass": false,
+    "closeBucketPass": true,
+    "confidenceTier": "medium",
+    "confidenceScore": 0.6576,
+    "fillRatio": 0.23228440366972472,
+    "contourFound": true,
+    "edgeStrength": 411,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/275ml/275ml_t0053.50s_f0107.jpg",
+    "groundTruthMl": 275,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0000.00s_f0000.jpg",
+    "groundTruthMl": 330,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0003.00s_f0006.jpg",
+    "groundTruthMl": 330,
+    "cvMl": 1458,
+    "absErrorMl": 1128,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9718614718614719,
+    "contourFound": true,
+    "edgeStrength": 2871,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0016.98s_f0034.jpg",
+    "groundTruthMl": 330,
+    "cvMl": 716,
+    "absErrorMl": 386,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.4773569370111158,
+    "contourFound": true,
+    "edgeStrength": 12168,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0023.97s_f0048.jpg",
+    "groundTruthMl": 330,
+    "cvMl": 393,
+    "absErrorMl": 63,
+    "exactBucketPass": false,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8,
+    "fillRatio": 0.26190476190476186,
+    "contourFound": true,
+    "edgeStrength": 558,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0003.99s_f0008.jpg",
+    "groundTruthMl": 330,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0004.49s_f0009.jpg",
+    "groundTruthMl": 330,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0024.47s_f0049.jpg",
+    "groundTruthMl": 330,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0020.97s_f0042.jpg",
+    "groundTruthMl": 330,
+    "cvMl": 973,
+    "absErrorMl": 643,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.6488095238095237,
+    "contourFound": true,
+    "edgeStrength": 5099,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/330ml/330ml_t0022.47s_f0045.jpg",
+    "groundTruthMl": 330,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/385ml/385ml_t0003.01s_f0006.jpg",
+    "groundTruthMl": 385,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/385ml/385ml_t0020.57s_f0041.jpg",
+    "groundTruthMl": 385,
+    "cvMl": 1249,
+    "absErrorMl": 864,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8324555628703094,
+    "contourFound": true,
+    "edgeStrength": 8330,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/385ml/385ml_t0016.56s_f0033.jpg",
+    "groundTruthMl": 385,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/385ml/385ml_t0015.55s_f0031.jpg",
+    "groundTruthMl": 385,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/385ml/385ml_t0017.06s_f0034.jpg",
+    "groundTruthMl": 385,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/385ml/385ml_t0014.55s_f0029.jpg",
+    "groundTruthMl": 385,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/440ml/440ml_t0000.00s_f0000.jpg",
+    "groundTruthMl": 440,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/440ml/440ml_t0019.03s_f0038.jpg",
+    "groundTruthMl": 440,
+    "cvMl": 503,
+    "absErrorMl": 63,
+    "exactBucketPass": false,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.3351648351648351,
+    "contourFound": true,
+    "edgeStrength": 1516,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/440ml/440ml_t0008.01s_f0016.jpg",
+    "groundTruthMl": 440,
+    "cvMl": 60,
+    "absErrorMl": 380,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.04011741682974568,
+    "contourFound": true,
+    "edgeStrength": 3135,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/440ml/440ml_t0024.04s_f0048.jpg",
+    "groundTruthMl": 440,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/495ml/495ml_t0027.04s_f0054.jpg",
+    "groundTruthMl": 495,
+    "cvMl": 585,
+    "absErrorMl": 90,
+    "exactBucketPass": false,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8,
+    "fillRatio": 0.3902439024390244,
+    "contourFound": true,
+    "edgeStrength": 803,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/495ml/495ml_t0011.52s_f0023.jpg",
+    "groundTruthMl": 495,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/495ml/495ml_t0010.01s_f0020.jpg",
+    "groundTruthMl": 495,
+    "cvMl": 196,
+    "absErrorMl": 299,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.13054187192118227,
+    "contourFound": true,
+    "edgeStrength": 4629,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/495ml/495ml_t0016.52s_f0033.jpg",
+    "groundTruthMl": 495,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/550ml/550ml_t0001.00s_f0002.jpg",
+    "groundTruthMl": 550,
+    "cvMl": 1209,
+    "absErrorMl": 659,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8061224489795918,
+    "contourFound": true,
+    "edgeStrength": 9409,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/550ml/550ml_t0000.00s_f0000.jpg",
+    "groundTruthMl": 550,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/550ml/550ml_t0003.00s_f0006.jpg",
+    "groundTruthMl": 550,
+    "cvMl": 732,
+    "absErrorMl": 182,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.48789346246973364,
+    "contourFound": true,
+    "edgeStrength": 2081,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/550ml/550ml_t0008.51s_f0017.jpg",
+    "groundTruthMl": 550,
+    "cvMl": 1409,
+    "absErrorMl": 859,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9395604395604396,
+    "contourFound": true,
+    "edgeStrength": 1301,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/605ml/605ml_t0013.51s_f0027.jpg",
+    "groundTruthMl": 605,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/605ml/605ml_t0004.50s_f0009.jpg",
+    "groundTruthMl": 605,
+    "cvMl": 797,
+    "absErrorMl": 192,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.531055900621118,
+    "contourFound": true,
+    "edgeStrength": 14342,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/605ml/605ml_t0023.02s_f0046.jpg",
+    "groundTruthMl": 605,
+    "cvMl": 1014,
+    "absErrorMl": 409,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8,
+    "fillRatio": 0.6756756756756757,
+    "contourFound": true,
+    "edgeStrength": 787,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/605ml/605ml_t0008.51s_f0017.jpg",
+    "groundTruthMl": 605,
+    "cvMl": 381,
+    "absErrorMl": 224,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.25369458128078815,
+    "contourFound": true,
+    "edgeStrength": 1732,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/660ml/660ml_t0006.50s_f0013.jpg",
+    "groundTruthMl": 660,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/660ml/660ml_t0008.50s_f0017.jpg",
+    "groundTruthMl": 660,
+    "cvMl": 265,
+    "absErrorMl": 395,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.17669172932330823,
+    "contourFound": true,
+    "edgeStrength": 1724,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/660ml/660ml_t0011.50s_f0023.jpg",
+    "groundTruthMl": 660,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/660ml/660ml_t0023.99s_f0048.jpg",
+    "groundTruthMl": 660,
+    "cvMl": 1216,
+    "absErrorMl": 556,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8107960741548528,
+    "contourFound": true,
+    "edgeStrength": 9205,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/715ml/715ml_t0002.50s_f0005.jpg",
+    "groundTruthMl": 715,
+    "cvMl": 289,
+    "absErrorMl": 426,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8,
+    "fillRatio": 0.19277108433734935,
+    "contourFound": true,
+    "edgeStrength": 648,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/715ml/715ml_t0003.00s_f0006.jpg",
+    "groundTruthMl": 715,
+    "cvMl": 1279,
+    "absErrorMl": 564,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8528399311531842,
+    "contourFound": true,
+    "edgeStrength": 9182,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/715ml/715ml_t0004.50s_f0009.jpg",
+    "groundTruthMl": 715,
+    "cvMl": 51,
+    "absErrorMl": 664,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.03416149068322982,
+    "contourFound": true,
+    "edgeStrength": 4467,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/715ml/715ml_t0007.00s_f0014.jpg",
+    "groundTruthMl": 715,
+    "cvMl": 68,
+    "absErrorMl": 647,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.0454545454545453,
+    "contourFound": true,
+    "edgeStrength": 2871,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/770ml/770ml_t0014.52s_f0029.jpg",
+    "groundTruthMl": 770,
+    "cvMl": 398,
+    "absErrorMl": 372,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8,
+    "fillRatio": 0.26530612244897955,
+    "contourFound": true,
+    "edgeStrength": 607,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/770ml/770ml_t0010.01s_f0020.jpg",
+    "groundTruthMl": 770,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/770ml/770ml_t0028.03s_f0056.jpg",
+    "groundTruthMl": 770,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/770ml/770ml_t0020.02s_f0040.jpg",
+    "groundTruthMl": 770,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/825ml/825ml_t0002.50s_f0005.jpg",
+    "groundTruthMl": 825,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/825ml/825ml_t0018.51s_f0037.jpg",
+    "groundTruthMl": 825,
+    "cvMl": 1360,
+    "absErrorMl": 535,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9065934065934066,
+    "contourFound": true,
+    "edgeStrength": 16461,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/825ml/825ml_t0013.51s_f0027.jpg",
+    "groundTruthMl": 825,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/825ml/825ml_t0012.51s_f0025.jpg",
+    "groundTruthMl": 825,
+    "cvMl": 84,
+    "absErrorMl": 741,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.05598455598455587,
+    "contourFound": true,
+    "edgeStrength": 1560,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/880ml/880ml_t0015.52s_f0031.jpg",
+    "groundTruthMl": 880,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/880ml/880ml_t0032.53s_f0065.jpg",
+    "groundTruthMl": 880,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/880ml/880ml_t0000.00s_f0000.jpg",
+    "groundTruthMl": 880,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/880ml/880ml_t0038.54s_f0077.jpg",
+    "groundTruthMl": 880,
+    "cvMl": 1464,
+    "absErrorMl": 584,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9761904761904762,
+    "contourFound": true,
+    "edgeStrength": 1851,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/935ml/935ml_t0005.01s_f0010.jpg",
+    "groundTruthMl": 935,
+    "cvMl": 276,
+    "absErrorMl": 659,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.1838407494145199,
+    "contourFound": true,
+    "edgeStrength": 17362,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/935ml/935ml_t0014.03s_f0028.jpg",
+    "groundTruthMl": 935,
+    "cvMl": 583,
+    "absErrorMl": 352,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.38888888888888895,
+    "contourFound": true,
+    "edgeStrength": 1333,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/935ml/935ml_t0002.00s_f0004.jpg",
+    "groundTruthMl": 935,
+    "cvMl": 1262,
+    "absErrorMl": 327,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8416149068322981,
+    "contourFound": true,
+    "edgeStrength": 5928,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/935ml/935ml_t0007.01s_f0014.jpg",
+    "groundTruthMl": 935,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/935ml/935ml_t0009.02s_f0018.jpg",
+    "groundTruthMl": 935,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/935ml/935ml_t0015.03s_f0030.jpg",
+    "groundTruthMl": 935,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/990ml/990ml_t0041.06s_f0082.jpg",
+    "groundTruthMl": 990,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/990ml/990ml_t0047.07s_f0094.jpg",
+    "groundTruthMl": 990,
+    "cvMl": 410,
+    "absErrorMl": 580,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8904,
+    "fillRatio": 0.2735191637630662,
+    "contourFound": true,
+    "edgeStrength": 984,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/990ml/990ml_t0058.58s_f0117.jpg",
+    "groundTruthMl": 990,
+    "cvMl": 1489,
+    "absErrorMl": 499,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9929577464788732,
+    "contourFound": true,
+    "edgeStrength": 6961,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/990ml/990ml_t0006.01s_f0012.jpg",
+    "groundTruthMl": 990,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/990ml/990ml_t0026.54s_f0053.jpg",
+    "groundTruthMl": 990,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/990ml/990ml_t0018.53s_f0037.jpg",
+    "groundTruthMl": 990,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1045ml/1045ml_t0049.02s_f0098.jpg",
+    "groundTruthMl": 1045,
+    "cvMl": 122,
+    "absErrorMl": 923,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.08128078817733986,
+    "contourFound": true,
+    "edgeStrength": 1007,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1045ml/1045ml_t0003.00s_f0006.jpg",
+    "groundTruthMl": 1045,
+    "cvMl": 1228,
+    "absErrorMl": 183,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8184165232358003,
+    "contourFound": true,
+    "edgeStrength": 11266,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1045ml/1045ml_t0007.50s_f0015.jpg",
+    "groundTruthMl": 1045,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1045ml/1045ml_t0025.01s_f0050.jpg",
+    "groundTruthMl": 1045,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1045ml/1045ml_t0034.51s_f0069.jpg",
+    "groundTruthMl": 1045,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1045ml/1045ml_t0047.52s_f0095.jpg",
+    "groundTruthMl": 1045,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1100ml/1100ml_t0004.00s_f0008.jpg",
+    "groundTruthMl": 1100,
+    "cvMl": 468,
+    "absErrorMl": 632,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.31203007518797,
+    "contourFound": true,
+    "edgeStrength": 3286,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1100ml/1100ml_t0003.00s_f0006.jpg",
+    "groundTruthMl": 1100,
+    "cvMl": 429,
+    "absErrorMl": 671,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.2857142857142857,
+    "contourFound": true,
+    "edgeStrength": 8271,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1100ml/1100ml_t0040.99s_f0082.jpg",
+    "groundTruthMl": 1100,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1100ml/1100ml_t0009.00s_f0018.jpg",
+    "groundTruthMl": 1100,
+    "cvMl": 1451,
+    "absErrorMl": 351,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.967032967032967,
+    "contourFound": true,
+    "edgeStrength": 5242,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1100ml/1100ml_t0004.50s_f0009.jpg",
+    "groundTruthMl": 1100,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1100ml/1100ml_t0022.00s_f0044.jpg",
+    "groundTruthMl": 1100,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1155ml/1155ml_t0005.51s_f0011.jpg",
+    "groundTruthMl": 1155,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1155ml/1155ml_t0036.05s_f0072.jpg",
+    "groundTruthMl": 1155,
+    "cvMl": 944,
+    "absErrorMl": 211,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "medium",
+    "confidenceScore": 0.6656,
+    "fillRatio": 0.629103448275862,
+    "contourFound": true,
+    "edgeStrength": 416,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "regression",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1155ml/1155ml_t0002.00s_f0004.jpg",
+    "groundTruthMl": 1155,
+    "cvMl": 259,
+    "absErrorMl": 896,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.17252747252747247,
+    "contourFound": true,
+    "edgeStrength": 10734,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1155ml/1155ml_t0045.06s_f0090.jpg",
+    "groundTruthMl": 1155,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1155ml/1155ml_t0026.03s_f0052.jpg",
+    "groundTruthMl": 1155,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1155ml/1155ml_t0081.10s_f0162.jpg",
+    "groundTruthMl": 1155,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0029.52s_f0059.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0018.02s_f0036.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0024.02s_f0048.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": 1037,
+    "absErrorMl": 173,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0.46440000000000003,
+    "fillRatio": 0.6916376306620209,
+    "contourFound": true,
+    "edgeStrength": 274,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0000.00s_f0000.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0003.50s_f0007.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": 1097,
+    "absErrorMl": 113,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.7310405643738976,
+    "contourFound": true,
+    "edgeStrength": 4696,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0037.53s_f0075.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0033.53s_f0067.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0040.53s_f0081.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1210ml/1210ml_t0047.54s_f0095.jpg",
+    "groundTruthMl": 1210,
+    "cvMl": 1131,
+    "absErrorMl": 79,
+    "exactBucketPass": false,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.753968253968254,
+    "contourFound": true,
+    "edgeStrength": 7815,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0034.56s_f0069.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": 1467,
+    "absErrorMl": 202,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.977767265846736,
+    "contourFound": true,
+    "edgeStrength": 5796,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0019.53s_f0039.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0002.50s_f0005.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0045.58s_f0091.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0019.03s_f0038.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0016.03s_f0032.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0052.59s_f0105.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0005.01s_f0010.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": 1002,
+    "absErrorMl": 263,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.6680672268907564,
+    "contourFound": true,
+    "edgeStrength": 2870,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1265ml/1265ml_t0005.51s_f0011.jpg",
+    "groundTruthMl": 1265,
+    "cvMl": 282,
+    "absErrorMl": 983,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.18812877263581484,
+    "contourFound": true,
+    "edgeStrength": 6435,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0034.02s_f0068.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0001.50s_f0003.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0004.50s_f0009.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": 427,
+    "absErrorMl": 893,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.284366576819407,
+    "contourFound": true,
+    "edgeStrength": 7188,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0012.01s_f0024.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0005.50s_f0011.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0009.51s_f0019.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": 1405,
+    "absErrorMl": 85,
+    "exactBucketPass": false,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8,
+    "fillRatio": 0.9365079365079365,
+    "contourFound": true,
+    "edgeStrength": 10242,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0014.51s_f0029.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0015.51s_f0031.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1320ml/1320ml_t0007.51s_f0015.jpg",
+    "groundTruthMl": 1320,
+    "cvMl": 596,
+    "absErrorMl": 724,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.39740611691831207,
+    "contourFound": true,
+    "edgeStrength": 5856,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0066.10s_f0132.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0081.63s_f0163.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": 1429,
+    "absErrorMl": 54,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.952887537993921,
+    "contourFound": true,
+    "edgeStrength": 9847,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0060.59s_f0121.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0045.07s_f0090.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0041.06s_f0082.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": 570,
+    "absErrorMl": 805,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.3801534036433365,
+    "contourFound": true,
+    "edgeStrength": 5517,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0040.56s_f0081.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0068.61s_f0137.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": 1367,
+    "absErrorMl": 8,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.9112554112554112,
+    "contourFound": true,
+    "edgeStrength": 10912,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0077.12s_f0154.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": 1100,
+    "absErrorMl": 275,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.7336448598130841,
+    "contourFound": true,
+    "edgeStrength": 6930,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1375ml/1375ml_t0042.06s_f0084.jpg",
+    "groundTruthMl": 1375,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0008.51s_f0017.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": 680,
+    "absErrorMl": 750,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.45341614906832295,
+    "contourFound": true,
+    "edgeStrength": 7872,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0045.53s_f0091.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": 1481,
+    "absErrorMl": 51,
+    "exactBucketPass": true,
+    "closeBucketPass": true,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8802,
+    "fillRatio": 0.987012987012987,
+    "contourFound": true,
+    "edgeStrength": 967,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0070.05s_f0140.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": 226,
+    "absErrorMl": 1204,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.15097402597402598,
+    "contourFound": true,
+    "edgeStrength": 12156,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0012.51s_f0025.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0022.02s_f0044.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": 435,
+    "absErrorMl": 995,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.8298,
+    "fillRatio": 0.2899159663865546,
+    "contourFound": true,
+    "edgeStrength": 883,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0023.02s_f0046.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": 527,
+    "absErrorMl": 903,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.3511904761904763,
+    "contourFound": true,
+    "edgeStrength": 1651,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0070.55s_f0141.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0003.50s_f0007.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1430ml/1430ml_t0001.00s_f0002.jpg",
+    "groundTruthMl": 1430,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0116.75s_f0233.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0096.71s_f0193.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0111.24s_f0222.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": 1309,
+    "absErrorMl": 176,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.8726708074534162,
+    "contourFound": true,
+    "edgeStrength": 10281,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0036.08s_f0072.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0061.13s_f0122.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0083.18s_f0166.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0012.53s_f0025.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0065.64s_f0131.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1485ml/1485ml_t0073.16s_f0146.jpg",
+    "groundTruthMl": 1485,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0018.50s_f0037.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": 812,
+    "absErrorMl": 688,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.5410509031198687,
+    "contourFound": true,
+    "edgeStrength": 6095,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0001.50s_f0003.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0041.01s_f0082.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": 376,
+    "absErrorMl": 1124,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0.4284,
+    "fillRatio": 0.2504302925989673,
+    "contourFound": true,
+    "edgeStrength": 214,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0022.00s_f0044.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0031.51s_f0063.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0068.01s_f0136.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0062.51s_f0125.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": 699,
+    "absErrorMl": 801,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.9,
+    "fillRatio": 0.4659863945578231,
+    "contourFound": true,
+    "edgeStrength": 11099,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0035.51s_f0071.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "oil-bottle-frames/1500ml/1500ml_t0006.50s_f0013.jpg",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  }
+]

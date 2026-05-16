@@ -1,0 +1,377 @@
+[
+  {
+    "imageId": "edge-empty_uniform_light",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess"
+    ]
+  },
+  {
+    "imageId": "edge-empty_dark_background",
+    "groundTruthMl": 0,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-empty_side_light",
+    "groundTruthMl": 0,
+    "cvMl": 977,
+    "absErrorMl": 977,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.85,
+    "fillRatio": 0.6515151515151515,
+    "contourFound": true,
+    "edgeStrength": 5118,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "edge-low_meniscus_at_shoulder",
+    "groundTruthMl": 55,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-low_dark_frame",
+    "groundTruthMl": 55,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-low_overexposed",
+    "groundTruthMl": 110,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-low_label_overlap",
+    "groundTruthMl": 165,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-mid_no_contour",
+    "groundTruthMl": 495,
+    "cvMl": 658,
+    "absErrorMl": 163,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0.17650000000000002,
+    "fillRatio": 0.4387755102040817,
+    "contourFound": true,
+    "edgeStrength": 653,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "edge-mid_no_contour",
+    "groundTruthMl": 660,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-mid_no_contour",
+    "groundTruthMl": 770,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-mid_glare",
+    "groundTruthMl": 825,
+    "cvMl": 247,
+    "absErrorMl": 578,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.85,
+    "fillRatio": 0.16498103666245256,
+    "contourFound": true,
+    "edgeStrength": 17703,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "edge-mid_no_contour",
+    "groundTruthMl": 880,
+    "cvMl": 1464,
+    "absErrorMl": 584,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.7755,
+    "fillRatio": 0.9761904761904762,
+    "contourFound": true,
+    "edgeStrength": 1851,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "edge-high_no_contour",
+    "groundTruthMl": 1100,
+    "cvMl": 468,
+    "absErrorMl": 632,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.85,
+    "fillRatio": 0.31203007518797,
+    "contourFound": true,
+    "edgeStrength": 3286,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "edge-high_no_contour",
+    "groundTruthMl": 1265,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-high_no_contour",
+    "groundTruthMl": 1430,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-full_shoulder_reflection",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-full_dark",
+    "groundTruthMl": 1500,
+    "cvMl": null,
+    "absErrorMl": null,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "low",
+    "confidenceScore": 0,
+    "fillRatio": null,
+    "contourFound": false,
+    "edgeStrength": 0,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour"
+    ]
+  },
+  {
+    "imageId": "edge-known_good_detection",
+    "groundTruthMl": 440,
+    "cvMl": 60,
+    "absErrorMl": 380,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.85,
+    "fillRatio": 0.04011741682974568,
+    "contourFound": true,
+    "edgeStrength": 3135,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "edge-known_good_detection",
+    "groundTruthMl": 880,
+    "cvMl": 1339,
+    "absErrorMl": 459,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.85,
+    "fillRatio": 0.8928571428571428,
+    "contourFound": true,
+    "edgeStrength": 4527,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  },
+  {
+    "imageId": "edge-known_good_detection",
+    "groundTruthMl": 1375,
+    "cvMl": 562,
+    "absErrorMl": 813,
+    "exactBucketPass": false,
+    "closeBucketPass": false,
+    "confidenceTier": "high",
+    "confidenceScore": 0.85,
+    "fillRatio": 0.37451737451737455,
+    "contourFound": true,
+    "edgeStrength": 5517,
+    "stages": [
+      "validate",
+      "preprocess",
+      "contour",
+      "confidence",
+      "complete"
+    ]
+  }
+]

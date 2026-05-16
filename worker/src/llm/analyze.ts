@@ -38,7 +38,7 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
   // PRIORITY 1: OpenRouter (to test more capable models like Qwen2.5-VL or Gemini 2.0)
   const orKey = env.OPENROUTER_API_KEY;
   if (orKey) {
-    const modelId = env.OPENROUTER_MODEL_ID ?? "google/gemini-2.0-flash-exp:free";
+    const modelId = env.OPENROUTER_MODEL_ID ?? "meta-llama/llama-3.2-11b-vision-instruct";
     console.log(`[analyze] Trying OpenRouter provider (model: ${modelId})...`);
     try {
       const orOutput = await callOpenRouter({
@@ -86,7 +86,6 @@ export async function analyzeFixture(imagePath: string, env: Env, promptVersion 
       lastError = e;
     }
   }
-  */
 
   // PRIORITY 3: Native Gemini
   const geminiKeys = buildGeminiKeyPool(env);
@@ -249,6 +248,7 @@ async function callOpenRouter(args: {
         body: JSON.stringify({
           model: args.modelId,
           messages,
+          max_tokens: 256,
           temperature: 0,
         })
       });

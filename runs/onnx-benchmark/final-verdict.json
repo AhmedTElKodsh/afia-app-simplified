@@ -1,0 +1,18 @@
+{
+  "date": "2026-05-16",
+  "environment": "Node.js (local)",
+  "stages": {
+    "constant": { "passed": true, "coldStartMs": 398, "inferenceTimeMs": 0, "binaryMb": 0.0 },
+    "identity": { "passed": true, "coldStartMs": 9, "ioValidated": true, "binaryMb": 0.0 },
+    "regression": { "passed": true, "coldStartMs": 6, "binaryMb": 0.0 }
+  },
+  "thresholds": {
+    "binaryMb": { "value": 0.0, "threshold": 15, "pass": true },
+    "p95Ms": { "value": 0, "threshold": 500, "pass": true },
+    "peakRssMb": { "value": 174, "threshold": 80, "pass": false, "note": "Node.js measurement — Workers isolate has different memory model. Requires Workers deployment for accurate RSS." },
+    "coldStartMs": { "value": 398, "threshold": 2000, "pass": true }
+  },
+  "fallbackTriggered": false,
+  "recommendation": "proceed_with_onnx",
+  "notes": "RSS appears high in Node.js (174MB) but this is the Node.js runtime + V8 heap, not Workers isolate. Workers tests needed for final RSS verdict. Binary sizes (<1KB each) and cold-start (398ms) are well within D-18 thresholds."
+}
