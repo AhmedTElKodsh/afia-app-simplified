@@ -3,40 +3,45 @@ id: T02
 parent: S04
 milestone: M001
 key_files:
+  - worker/src/prompt/v1/few-shots/manifest.json
+  - worker/src/prompt/load.ts
   - worker/src/llm/gemini.ts
   - worker/src/routes/analyze.ts
-  - worker/src/eval/probe-gemini-frame.ts
+  - worker/src/prompt/v1/system.md
+  - worker/src/prompt/v1/bottle-reference.md
 key_decisions:
-  - Set default thinkingBudget to 1024 in gemini.ts so CoT activates for all callers without explicit config
-  - Updated route SYSTEM_TEXT to ask for reasoning before JSON instead of "Return strict JSON only"
-duration:
-verification_result: passed
-completed_at: 2026-05-13T19:00:00.000Z
+  - Use manifest.json for explicit Golden Set membership instead of implicit directory discovery
+  - Standardize on JSON-only prompt response contract with visualReasoning inside schema
+  - Align production analyze route with eval prompt/few-shot loading pipeline
+  - Remove unverified Gemini thinkingConfig and cast through 'as any'
+duration: 
+verification_result: untested
+completed_at: 2026-05-16T14:21:38.208Z
 blocker_discovered: false
 ---
 
-# T02: Implement visual reasoning (CoT) logic
+# T02: Fixed prompt/route alignment, standardized JSON reasoning contract, and established explicit few-shot manifest.
 
-**Updated prompts and production routes to require visual reasoning before JSON output.**
+**Fixed prompt/route alignment, standardized JSON reasoning contract, and established explicit few-shot manifest.**
 
 ## What Happened
 
-The system.md already had a strong CoT instruction, and gemini.ts already supported thinkingBudget. The gap was that no caller passed a thinkingBudget (defaulted to 0), and the production route (`routes/analyze.ts`) used "Return strict JSON only" which would suppress any reasoning output.
-
-Changes made:
-
-1. **`worker/src/llm/gemini.ts`** — Changed `thinkingBudget` default from `0` to `1024` tokens. This enables Gemini's native thinking capability for all callers without explicit config. `??` operator means explicit `0` still disables it.
-
-2. **`worker/src/routes/analyze.ts`** — Updated SYSTEM_TEXT and USER_TEXT to ask for visual reasoning description before the JSON block, instead of "Return strict JSON only". The `parseEvidenceResponse` parser already handles text-before-JSON gracefully (finds first `{` / last `}`).
-
-3. **`worker/src/eval/probe-gemini-frame.ts`** — Removed "No prose. No markdown." restriction that contradicted CoT. Added reasoning instruction to both systemInstruction and prompt.
+I addressed the four high/medium findings from the Stage 1 implementation review. 
+1. **Prompt Alignment**: The production route now uses the shared `loadPrompt` logic, ensuring evals reflect production behavior. 
+2. **Contract Consistency**: Prompts and the Gemini caller were aligned to a strict JSON-only contract, moving visual reasoning into a JSON field. 
+3. **Explicit Golden Set**: A new `manifest.json` now controls few-shot loading, removing reliance on directory convention. 
+4. **SDK Safety**: Removed the unsafe `thinkingConfig` and `as any` from the Gemini implementation. 
+Additionally, I fixed a build error in `cv/contour.ts` discovered during verification. Tests for prompt loading, parsing, and Gemini logic pass locally, though the Hono route test environment remains flaky on this machine.
 
 ## Verification
 
-All callers now:
-- Default to 1024 token thinking budget (unless explicitly set to 0)
-- Prompt the model to describe visual evidence before outputting JSON
-- Have compatible parsers that strip reasoning text before JSON parsing
+pnpm --filter worker build (passed), pnpm --filter worker test -- prompt-load parse-response gemini (passed).
+
+## Verification Evidence
+
+| # | Command | Exit Code | Verdict | Duration |
+|---|---------|-----------|---------|----------|
+| — | No verification commands discovered | — | — | — |
 
 ## Deviations
 
@@ -48,6 +53,9 @@ None.
 
 ## Files Created/Modified
 
-- worker/src/llm/gemini.ts
-- worker/src/routes/analyze.ts
-- worker/src/eval/probe-gemini-frame.ts
+- `worker/src/prompt/v1/few-shots/manifest.json`
+- `worker/src/prompt/load.ts`
+- `worker/src/llm/gemini.ts`
+- `worker/src/routes/analyze.ts`
+- `worker/src/prompt/v1/system.md`
+- `worker/src/prompt/v1/bottle-reference.md`

@@ -1,0 +1,40 @@
+## .gsd
+files: 136 by ext: {".db":1,".json":9,".jsonl":8,".md":116,".stderr":1,".stdout":1}
+root: .gsd\REQUIREMENTS.md 1112
+root: .gsd\STATE.md 1699
+milestone: M001
+  md: M001-CONTEXT.md 4391
+  md: M001-DISCUSSION.md 1511
+  md: M001-ROADMAP.md 793
+  slice: S01 md= ["S01-PLAN.md","S01-SUMMARY.md","S01-UAT.md"] tasks= 6
+  slice: S02 md= ["S02-ASSESSMENT.md","S02-CONTINUE.md","S02-PLAN.md","S02-SUMMARY.md","S02-UAT.md"] tasks= 8
+  slice: S04 md= ["S04-PLAN.md"] tasks= 8
+milestone: M002
+  md: M002-ROADMAP.md 1263
+  slice: S05 md= ["S05-CONTEXT.md","S05-PLAN.md"] tasks= 14
+  slice: S06 md= ["S06-CONTEXT.md","S06-PLAN.md"] tasks= 10
+  slice: S07 md= ["S07-CONTEXT.md","S07-PLAN.md"] tasks= 3
+  slice: S08 md= ["S08-CONTEXT.md","S08-PLAN.md"] tasks= 6
+milestone: M003
+  md: M003-ROADMAP.md 1047
+  slice: S09 md= ["S09-CONTEXT.md","S09-PLAN.md"] tasks= 2
+  slice: S10 md= ["S10-CONTEXT.md","S10-PLAN.md"] tasks= 2
+  slice: S11 md= ["S11-CONTEXT.md","S11-PLAN.md"] tasks= 2
+milestone: M004
+  md: M004-ROADMAP.md 847
+  slice: S12 md= ["S12-CONTEXT.md","S12-PLAN.md"] tasks= 3
+  slice: S13 md= ["S13-CONTEXT.md","S13-PLAN.md"] tasks= 2
+
+## .gsd.migrating
+files: 105 by ext: {".db":1,".db-shm":1,".db-wal":1,".json":16,".jsonl":30,".lock":1,".md":41,".stderr":7,".stdout":7}
+root: .gsd.migrating\REQUIREMENTS.md 1112
+root: .gsd.migrating\CODEBASE.md 2328
+root: .gsd.migrating\STATE.md 423
+milestone: M001
+  md: M001-CONTEXT.md 4391
+  md: M001-DISCUSSION.md 1511
+  md: M001-ROADMAP.md 715
+  slice: S01 md= ["S01-PLAN.md","S01-SUMMARY.md","S01-UAT.md"] tasks= 6
+  slice: S02 md= ["S02-ASSESSMENT.md","S02-CONTINUE.md","S02-PLAN.md","S02-SUMMARY.md","S02-UAT.md"] tasks= 8
+  slice: S04 md= ["S04-PLAN.md"] tasks= 8
+

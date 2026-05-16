@@ -1,0 +1,18 @@
+{
+  "id": "906dfafa-9026-47f6-9350-6a475a245fae",
+  "runtime": "node",
+  "purpose": "inventory .gsd and .gsd.migrating artifacts",
+  "script_chars": 1684,
+  "started_at": "2026-05-16T13:01:48.086Z",
+  "finished_at": "2026-05-16T13:01:48.357Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "duration_ms": 271,
+  "stdout_bytes": 1709,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\906dfafa-9026-47f6-9350-6a475a245fae.stdout",
+  "stderr_path": "D:\\AI Projects\\Freelance\\afia-app-simplified\\.gsd\\exec\\906dfafa-9026-47f6-9350-6a475a245fae.stderr"
+}

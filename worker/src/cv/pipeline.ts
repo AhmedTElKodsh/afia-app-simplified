@@ -6,6 +6,9 @@ import { validateBottle } from "./validate.js";
 import { contourNotFound, implausibleRatio, perspectiveFailed, internalError } from "./errors.js";
 import type { PipelineError } from "./errors.js";
 import { logStage } from "./logger.js";
+import { isModelLoaded, loadOnnxModel, runOnnxInference } from "../onnx/loader.js";
+import { MODEL_PATHS } from "../onnx/models.js";
+import * as ort from "onnxruntime-web";
 
 export interface PipelineInput {
   imageData: ArrayBuffer;
@@ -27,6 +30,8 @@ export interface PipelineOutput {
     edgeStrength: number;
     stages: string[];
     missReason?: string;
+    onnxScore?: number;
+    onnxLoadStatus?: string;
   };
 }
 
@@ -41,8 +46,25 @@ export function ratioToCategory(ratio: number): string {
 export async function runPipeline(input: PipelineInput): Promise<PipelineOutput> {
   const stages: string[] = [];
   const errors: PipelineError[] = [];
+  let onnxScore: number | undefined;
+  let onnxLoadStatus = "not_attempted";
 
   try {
+    // Stage 0: ONNX model loading (lazy)
+    if (!isModelLoaded()) {
+      try {
+        const tModel = Date.now();
+        await loadOnnxModel(MODEL_PATHS.regression);
+        onnxLoadStatus = `loaded (${Date.now() - tModel}ms)`;
+        logStage("onnx_load", Date.now() - tModel, 1, "pass");
+      } catch (e) {
+        onnxLoadStatus = `fail: ${(e as Error).message}`;
+        logStage("onnx_load", 0, 0, "fail", (e as Error).message);
+      }
+    } else {
+      onnxLoadStatus = "cached";
+    }
+
     // Stage 1: Bottle validation
     stages.push("validate");
     const t0 = Date.now();
@@ -61,7 +83,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
           message: bottleCheck.message ?? "Unsupported bottle size",
           recoverable: false,
         }],
-        diagnostics: { contourFound: false, meniscusY: null, edgeStrength: 0, stages },
+        diagnostics: { contourFound: false, meniscusY: null, edgeStrength: 0, stages, onnxLoadStatus },
       };
     }
 
@@ -76,7 +98,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       logStage("preprocess", Date.now() - t1, 0, "fail", (e as Error).message);
       console.error("Preprocess error:", e);
       errors.push(perspectiveFailed());
-      return errorResult(errors, stages);
+      return errorResult(errors, stages, { onnxLoadStatus });
     }
 
     // Stage 3: Contour detection
@@ -90,7 +112,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       logStage("contour", Date.now() - t2, 0, "fail");
       errors.push(internalError(`Contour detection failed: ${(e as Error).message}`));
       releasePreprocessed(preprocessed);
-      return errorResult(errors, stages);
+      return errorResult(errors, stages, { onnxLoadStatus });
     }
 
     releasePreprocessed(preprocessed);
@@ -100,7 +122,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       return {
         success: false, fillRatio: null, category: null, confidence: 0, tier: "low",
         errors,
-        diagnostics: { contourFound: false, meniscusY: null, edgeStrength: 0, stages, missReason: contourResult.missReason || "contour_not_found" },
+        diagnostics: { contourFound: false, meniscusY: null, edgeStrength: 0, stages, missReason: contourResult.missReason || "contour_not_found", onnxLoadStatus },
       };
     }
 
@@ -109,7 +131,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       return {
         success: false, fillRatio: null, category: null, confidence: 0, tier: "low",
         errors,
-        diagnostics: { contourFound: true, meniscusY: contourResult.meniscusY, edgeStrength: contourResult.edgeStrength, stages, missReason: "null_ratio" },
+        diagnostics: { contourFound: true, meniscusY: contourResult.meniscusY, edgeStrength: contourResult.edgeStrength, stages, missReason: "null_ratio", onnxLoadStatus },
       };
     }
     if (contourResult.meniscusYRatio < -0.5 || contourResult.meniscusYRatio > 1.5) {
@@ -117,14 +139,39 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       return {
         success: false, fillRatio: null, category: null, confidence: 0, tier: "low",
         errors,
-        diagnostics: { contourFound: true, meniscusY: contourResult.meniscusY, edgeStrength: contourResult.edgeStrength, stages, missReason: "implausible_ratio" },
+        diagnostics: { contourFound: true, meniscusY: contourResult.meniscusY, edgeStrength: contourResult.edgeStrength, stages, missReason: "implausible_ratio", onnxLoadStatus },
       };
+    }
+
+    // Stage 3.5: ONNX Inference (if model loaded)
+    if (isModelLoaded()) {
+      stages.push("onnx_inference");
+      const tOnnx = Date.now();
+      try {
+        // Prepare inputs for regression model
+        // Regression model expects: edgeStrength, contourCount, meniscusYRatio
+        const inputData: Record<string, ort.Tensor> = {
+          "input": new ort.Tensor("float32", new Float32Array([
+            contourResult.edgeStrength / 2000,
+            contourResult.contourCount / 100,
+            contourResult.meniscusYRatio
+          ]), [1, 3])
+        };
+        const results = await runOnnxInference(inputData);
+        const output = results["output"];
+        if (output) {
+          onnxScore = (output.data as Float32Array)[0];
+          logStage("onnx_inference", Date.now() - tOnnx, onnxScore, "pass");
+        }
+      } catch (e) {
+        logStage("onnx_inference", Date.now() - tOnnx, 0, "fail", (e as Error).message);
+      }
     }
 
     // Stage 4: Confidence scoring
     stages.push("confidence");
     const t3 = Date.now();
-    const confidence = scoreConfidence(contourResult);
+    const confidence = scoreConfidence(contourResult, onnxScore);
     logStage("confidence", Date.now() - t3, confidence.score, confidence.tier);
 
     stages.push("complete");
@@ -142,15 +189,17 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
         meniscusY: contourResult.meniscusY,
         edgeStrength: contourResult.edgeStrength,
         stages,
+        onnxScore,
+        onnxLoadStatus,
       },
     };
   } catch (e) {
     errors.push(internalError((e as Error).message));
-    return errorResult(errors, stages);
+    return errorResult(errors, stages, { onnxLoadStatus });
   }
 }
 
-function errorResult(errors: PipelineError[], stages: string[]): PipelineOutput {
+function errorResult(errors: PipelineError[], stages: string[], diagExtras: Partial<PipelineOutput["diagnostics"]> = {}): PipelineOutput {
   return {
     success: false,
     fillRatio: null,
@@ -163,6 +212,7 @@ function errorResult(errors: PipelineError[], stages: string[]): PipelineOutput 
       meniscusY: null,
       edgeStrength: 0,
       stages,
+      ...diagExtras,
     },
   };
 }

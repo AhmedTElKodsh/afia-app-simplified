@@ -31,3 +31,8 @@
 {"ts":"2026-05-14T11:03:09.561Z","flowId":"919171d1-ea25-4c46-a809-6b31ff4b2761","seq":5,"eventType":"post-unit-finalize-start","data":{"iteration":1,"unitType":"reactive-execute","unitId":"M001/S04/reactive+T02,T03"}}
 {"ts":"2026-05-14T11:03:09.672Z","flowId":"919171d1-ea25-4c46-a809-6b31ff4b2761","seq":6,"eventType":"post-unit-finalize-end","data":{"iteration":1,"unitType":"reactive-execute","unitId":"M001/S04/reactive+T02,T03","status":"completed","action":"next"}}
 {"ts":"2026-05-14T11:03:09.676Z","flowId":"919171d1-ea25-4c46-a809-6b31ff4b2761","seq":7,"eventType":"iteration-end","data":{"iteration":1}}
+{"ts":"2026-05-14T11:03:13.966Z","flowId":"auto-orchestrator-1778756593963","seq":1,"eventType":"iteration-start","data":{"source":"auto-orchestrator","name":"start"}}
+{"ts":"2026-05-14T11:03:16.115Z","flowId":"auto-orchestrator-1778756593963","seq":2,"eventType":"guard-block","data":{"source":"auto-orchestrator","name":"advance-blocked","reason":"invalid-root: Unit root D:\\AI Projects\\Freelance\\afia-app-simplified is not the expected worktree root for M001.","unitType":"reactive-execute","unitId":"M001/S04/reactive+T02,T03"}}
+{"ts":"2026-05-14T11:03:16.136Z","flowId":"218bdf2c-63f7-4780-b40f-f2f7851daabc","seq":1,"eventType":"iteration-start","data":{"iteration":1}}
+{"ts":"2026-05-14T11:03:16.619Z","flowId":"218bdf2c-63f7-4780-b40f-f2f7851daabc","seq":2,"eventType":"dispatch-match","rule":"executing → reactive-execute (parallel dispatch)","data":{"unitType":"reactive-execute","unitId":"M001/S04/reactive+T02,T03"}}
+{"ts":"2026-05-14T11:03:16.631Z","flowId":"218bdf2c-63f7-4780-b40f-f2f7851daabc","seq":3,"eventType":"unit-start","data":{"unitType":"reactive-execute","unitId":"M001/S04/reactive+T02,T03"}}

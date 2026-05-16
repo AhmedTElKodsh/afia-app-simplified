@@ -10,10 +10,10 @@
 - [x] **S02: S02** `risk:medium` `depends:[]`
   > After this: Improved probe results with better accuracy.
 
-- [ ] **S03: Full Dev Set Validation** `risk:medium` `depends:[S04]`
+- [x] **S03: Full Dev Set Validation** `risk:medium` `depends:[S04]`
   > After this: Full dev eval summary.
 
-- [ ] **S04: S04** `risk:high` `depends:[]`
+- [x] **S04: S04** `risk:high` `depends:[]`
   > After this: Reduced error on probe set with more reliable confidence.
 
 ## Boundary Map
