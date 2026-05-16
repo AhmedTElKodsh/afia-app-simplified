@@ -1,0 +1,75 @@
+{
+  "plan": "02-03",
+  "description": "Heuristic contour scoring improvements — pre-processing, contour tuning, fusion eval",
+  "baseline": {
+    "corpus": "cv-eval (198 images)",
+    "exact_accuracy_pct": 7.1,
+    "close_accuracy_pct": 14.6,
+    "contour_found_pct": 95.5,
+    "confusion_empty_to_high": 5,
+    "confusion_high_to_empty": 13,
+    "miss_reasons": { "heuristic_rejected(no_valid_contours)": 8 }
+  },
+  "after_tuning": {
+    "corpus": "cv-eval (198 images)",
+    "exact_accuracy_pct": 9.6,
+    "close_accuracy_pct": 14.1,
+    "contour_found_pct": 96.5,
+    "confusion_empty_to_high": 3,
+    "confusion_high_to_empty": 18,
+    "miss_reasons": {
+      "heuristic_rejected(no_valid_contours)": 3,
+      "heuristic_rejected(bestScore=0.29)": 2,
+      "heuristic_rejected(bestScore=0.26)": 1
+    },
+    "config_used": {
+      "preprocessing": { "claheClipLimit": 3.0, "claheTileSize": 8, "bilateralEnabled": false, "blurKernelSize": 7 },
+      "contour_scoring": { "aspectWeight": 0.5, "centerWeight": 0.3, "sizeWeight": 0.2, "minScoreThreshold": 0.25 },
+      "contour_detection": { "minContourArea": 100, "maxBottleAreaRatio": 0.45 },
+      "confidence": { "edgeMax": 2000, "noisePenaltyCap": 0.25, "extremePenalty": 0.2 }
+    }
+  },
+  "edge_case_eval": {
+    "corpus": "cv-edge-eval (30 images)",
+    "exact_accuracy_pct": 13.3,
+    "close_accuracy_pct": 16.7,
+    "contour_found_pct": 96.7,
+    "empty_high_flips": 4,
+    "accre_02_target_met": false
+  },
+  "fusion_eval": {
+    "enabled": false,
+    "decision": "REVERTED — improved exact accuracy (20%) but worsened empty↔full confusion (6 flips)",
+    "exact_accuracy_pct": 20.0,
+    "close_accuracy_pct": 23.3,
+    "contour_found_pct": 96.7,
+    "empty_high_flips": 6
+  },
+  "improvements": {
+    "exact_accuracy_delta_pp": 2.5,
+    "contour_found_delta_pp": 1.0,
+    "miss_reasons_reduced": true,
+    "empty_to_high_flips_reduced": true,
+    "high_to_empty_flips_increased": true
+  },
+  "limitations": {
+    "accre_02_unmet": true,
+    "primary_gap": "Empty↔full confusion at 4 flips on 30 edge-case images (target ≤3)",
+    "mitigation": "ONNX regression model training (Phase 3) expected to bridge remaining gap"
+  },
+  "iteration_summary": {
+    "preprocessing": [
+      { "iter": 1, "config": "CLAHE 3.0, 8x8", "exact_pct": 9.6, "verdict": "ACCEPT - best" },
+      { "iter": 2, "config": "CLAHE 4.0, 8x8", "exact_pct": 8.1, "verdict": "REJECT - worse than iter 1" },
+      { "iter": 3, "config": "CLAHE 2.0, 12x12", "exact_pct": 6.6, "verdict": "REJECT - regression" },
+      { "iter": 4, "config": "Bilateral ON, CLAHE 2.0", "exact_pct": 6.6, "verdict": "REJECT - severe regression" }
+    ],
+    "scoring": [
+      { "iter": 1, "config": "aspect=0.6, center=0.25, size=0.15", "exact_pct": 9.6, "verdict": "NEUTRAL" },
+      { "iter": 2, "config": "threshold=0.25, area=0.45, noise=0.25", "exact_pct": 9.6, "verdict": "ACCEPT - no regression" }
+    ],
+    "fusion": [
+      { "iter": 1, "config": "top-3 fusion", "exact_pct": 20.0, "verdict": "REVERT - worsened confusion" }
+    ]
+  }
+}
