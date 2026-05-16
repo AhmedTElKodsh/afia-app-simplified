@@ -30,17 +30,8 @@ on:
         type: boolean
         default: false
 
-env:
-  # Shared LLM API keys per D-09 (same key pool for dev/staging/production)
-  # Gated on main branch for sensitive jobs; available to all jobs for eval
-  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-  GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
-  GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
-  GEMINI_API_KEY3: ${{ secrets.GEMINI_API_KEY3 }}
-  GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
-  MODEL_ID: ${{ secrets.MODEL_ID }}
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+# Secrets are scoped per job below — no workflow-level env block.
+# Fork PRs (lint-test-build only) must NOT have access to secrets.
 
 # Per Murat: eval concurrency group prevents overlapping eval runs on same branch
 concurrency:
@@ -102,6 +93,13 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: lint-test-build
     runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+      GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+      GEMINI_API_KEY3: ${{ secrets.GEMINI_API_KEY3 }}
+      GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+      MODEL_ID: ${{ secrets.MODEL_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -189,6 +187,16 @@ jobs:
   nightly-eval:
     if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.run_nightly)
     runs-on: ubuntu-latest
+    env:
+      # Drift detection eval needs LLM API keys + Supabase DB access
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+      GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+      GEMINI_API_KEY3: ${{ secrets.GEMINI_API_KEY3 }}
+      GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+      MODEL_ID: ${{ secrets.MODEL_ID }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
