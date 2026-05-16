@@ -5,11 +5,13 @@
  * Used by CaptureShell for error state persistence and
  * ResultShell for error code display.
  *
- * Per D-14: error state is persisted to sessionStorage
- * as { errors: Array<{code, description}>, tier, confidence, remainingMl }.
+ * Per D-14: error state is persisted to the consolidated session state
+ * envelope (web/src/storage/sessionState.ts) under `analysis.tier === "error"`
+ * and `errorContext`.
  *
- * @see CaptureShell.tsx — persists errors on analysis failure
- * @see ResultShell.tsx — reads and displays errors
+ * @see CaptureShell.tsx — persists errors on analysis failure via writeState()
+ * @see ResultShell.tsx — reads and displays errors via readState()
+ * @see "../storage/sessionState" — consolidated state envelope (P5)
  */
 
 /** Application-wide error code constants */

@@ -7,10 +7,7 @@ import {
   type ErrorResult,
   type StoredAnalysisResult,
 } from "../errors";
-
-const CAPTURE_STORAGE_KEY = "afia.capture";
-const ANALYSIS_STORAGE_KEY = "afia.analysis";
-const ERROR_CONTEXT_KEY = "afia.errorContext";
+import { readState } from "../storage/sessionState";
 const DEFAULT_REMAINING_ML = 770;
 const SLIDER_MAX_ML = Math.floor(BOTTLE_1_5L.capacityMl / ML_PER_CUP_QUARTER) * ML_PER_CUP_QUARTER;
 const DEFAULT_RED_LINE_Y_RATIO = mlToYRatio(snapMl(DEFAULT_REMAINING_ML));
@@ -275,46 +272,39 @@ function CupCounter({ display }: { display: CupDisplay }) {
 }
 
 function readCapturedImage(): string | null {
-  const value = sessionStorage.getItem(CAPTURE_STORAGE_KEY);
-  if (!value) return null;
+  const state = readState();
+  if (!state?.capture) return null;
+  const value = state.capture.captureBlob;
   return /^data:image\/(?:jpeg|jpg|png|webp);base64,/i.test(value) ? value : null;
 }
 
 function readStoredResult(): StoredAnalysisResult | null {
-  try {
-    const raw = sessionStorage.getItem(ANALYSIS_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
+  const state = readState();
+  if (!state?.analysis) return null;
+  const a = state.analysis;
 
-    // Check if it's an error state (persisted by CaptureShell on failure)
-    if (parsed.tier === "error" && Array.isArray(parsed.errors)) {
-      return {
-        errors: parsed.errors as Array<{ code: string; description: string }>,
-        tier: "error",
-        confidence: typeof parsed.confidence === "number" ? parsed.confidence : 0,
-        remainingMl: parsed.remainingMl != null ? (parsed.remainingMl as number) : null,
-      } as ErrorResult;
-    }
-
-    // Normal AnalysisResultContract path
-    if (typeof parsed.remainingMl !== "number" || typeof parsed.redLineYRatio !== "number") return null;
+  // Check if it's an error state (persisted by CaptureShell on failure)
+  if (a.tier === "error" && Array.isArray(a.errors)) {
     return {
-      remainingMl: parsed.remainingMl,
-      redLineYRatio: clamp(parsed.redLineYRatio, 0, 1),
-    };
-  } catch {
-    return null;
+      errors: a.errors,
+      tier: "error",
+      confidence: a.confidence,
+      remainingMl: a.remainingMl,
+    } as ErrorResult;
   }
+
+  // Normal analysis path
+  if (typeof a.remainingMl !== "number" || typeof a.redLineYRatio !== "number") return null;
+  return {
+    remainingMl: a.remainingMl,
+    redLineYRatio: clamp(a.redLineYRatio, 0, 1),
+  };
 }
 
 function readErrorContext(): { code: string; description: string; timestamp: string } | null {
-  try {
-    const raw = sessionStorage.getItem(ERROR_CONTEXT_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as { code: string; description: string; timestamp: string };
-  } catch {
-    return null;
-  }
+  const state = readState();
+  if (!state?.errorContext) return null;
+  return state.errorContext as { code: string; description: string; timestamp: string };
 }
 
 function buildMailtoHref(context: { code: string; description: string; timestamp: string } | null): string {
