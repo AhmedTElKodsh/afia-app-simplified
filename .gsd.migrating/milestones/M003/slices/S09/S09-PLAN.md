@@ -1,21 +1,37 @@
-# S09: Confidence Calibration
+# S09: ONNX Regression Model Integration
 
-**Goal:** Fix confidence scoring so tiers actually discriminate. Add per-stratum eval metrics.
-**Demo:** Eval output shows accuracy per fill bucket and confidence tier.
+**Goal:** Integrate ONNX regression model into CV pipeline for confidence calibration and signal fusion.
+**Demo:** Regression model loaded and bench-tested in CV pipeline.
+
+## Must-Haves
+
+- Complete the planned slice outcomes.
+
+## Verification
+
+- Run the task and slice verification checks for this slice.
 
 ## Tasks
 
-- [ ] **T01: Recalibrate confidence weights** `est:0.5h`
-  Remove automatic "free" points. Make edgeClarity dominant. Ensure sum of weights = 1.0. Thresholds at 0.8/0.5. Add calibration validation.
-  - Files: `worker/src/cv/confidence.ts`, `worker/src/cv/config.ts`
-  - Verify: Some successful detections score "medium" or "low".
+- [x] **T01: Integrate ONNX Regression Model into CV Pipeline** `est:1h`
+  Modify worker/src/cv/confidence.ts to include the regression model as a confidence signal. Integrate it into worker/src/cv/pipeline.ts to load and run the model during analysis. Ensure the model is loaded once and reused.
+  - Files: `worker/src/cv/confidence.ts`, `worker/src/cv/pipeline.ts`, `worker/src/onnx/loader.ts`
+  - Verify: npm test -- --grep "onnx model integration"
 
-- [ ] **T02: Add per-stratum eval metrics** `est:0.5h`
-  Modify eval runner to report accuracy by fill bucket (empty-low, mid-low, mid-high, high) and by source (real vs aug). Also report MAE per tier.
+- [x] **T02: Enhance CV Eval with Stratum Metrics and ONNX Tracking** `est:45m`
+  Update worker/src/eval/cv-eval.ts to include per-stratum metrics and MAE per confidence tier. Add logic to track ONNX model performance specifically. Ensure the eval report includes a breakdown of accuracy by fill bucket (stratum) as defined in the context.
   - Files: `worker/src/eval/cv-eval.ts`
-  - Verify: Eval output shows stratum breakdown.
+  - Verify: tsx worker/src/eval/cv-eval.ts --dry-run
 
-- [ ] **T03: Run calibration eval** `est:1h`
-  Run `pnpm eval:cv` against both main manifest and edge-case manifest. Verify confidence tiers discriminate. Report per-stratum numbers.
-  - Files: `runs/calibration-*.json`
-  - Verify: Tiers show different accuracy rates.
+- [ ] **T03: Benchmark CV Pipeline with ONNX Signal** `est:30m`
+  Run the full 200-image eval suite using the updated cv-eval.ts. Capture results and verify that the confidence tiers now show meaningful discrimination (e.g. higher error in lower confidence tiers). Analyze the stratum-level metrics to identify specific fill ranges where the model or heuristic performs poorly.
+  - Files: `runs/cv-eval-200/cv-eval-results.json`
+  - Verify: test -f runs/cv-eval-200/cv-eval-results.json
+
+## Files Likely Touched
+
+- worker/src/cv/confidence.ts
+- worker/src/cv/pipeline.ts
+- worker/src/onnx/loader.ts
+- worker/src/eval/cv-eval.ts
+- runs/cv-eval-200/cv-eval-results.json

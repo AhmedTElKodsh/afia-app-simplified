@@ -4,7 +4,7 @@
 
 ## Slices
 
-- [ ] **S09: ONNX Regression Model Integration** `risk:medium` `depends:[]`
+- [ ] **S09: S09** `risk:medium` `depends:[]`
   > After this: Regression model loaded and bench-tested in CV pipeline.
 
 - [ ] **S10: Multi-Signal Fusion Scorer** `risk:high` `depends:[S09]`
