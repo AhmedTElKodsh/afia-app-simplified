@@ -1,3 +1,10 @@
+export const CONTOUR_SCORING_CONFIG = {
+  aspectWeight: 0.5,
+  centerWeight: 0.3,
+  sizeWeight: 0.2,
+  minScoreThreshold: 0.25,
+};
+
 export interface ContourRect {
   origIdx: number; x: number; y: number; w: number; h: number; area: number;
 }
@@ -32,8 +39,10 @@ export function scoreContours(
     const centerScore = Math.max(0, 1 - distFromCenter * 3);
     const sizeScore = Math.min(1, sizeRatio * 5);
 
-    const score = aspectScore * 0.5 + centerScore * 0.3 + sizeScore * 0.2;
-    if (score > (best?.score ?? -1) && score >= 0.3) {
+    const score = aspectScore * CONTOUR_SCORING_CONFIG.aspectWeight
+      + centerScore * CONTOUR_SCORING_CONFIG.centerWeight
+      + sizeScore * CONTOUR_SCORING_CONFIG.sizeWeight;
+    if (score > (best?.score ?? -1) && score >= CONTOUR_SCORING_CONFIG.minScoreThreshold) {
       best = { idx: i, score };
     }
   }

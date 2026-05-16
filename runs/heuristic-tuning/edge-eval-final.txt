@@ -1,0 +1,10 @@
+# Edge-case evaluation (30 images) — Final after Tasks 1+2
+## Exact accuracy: 4/30 = 13.3%
+## Close accuracy: 5/30 = 16.7%
+## Contour found: 29/30 = 96.7%
+## Confusion bands (empty↔full flips):
+##   empty→high: 3 (empty classified as full)
+##   high→empty: 1 (full classified as empty)
+##   Total empty↔full: 4 on 30 images
+## ACCR-02 target: ≤3 on 30 images — NOT MET (4 > 3)
+## Decision: Proceed to Task 3 (multi-contour fusion) per conditional logic

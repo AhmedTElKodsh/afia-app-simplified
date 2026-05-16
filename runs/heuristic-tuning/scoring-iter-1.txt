@@ -1,0 +1,5 @@
+# Scoring Iteration 1 — aspectsWeight=0.6, centerWeight=0.25, sizeWeight=0.15
+## Exact accuracy: 19/198 = 9.6% (same as best, no improvement, no regression)
+## Close accuracy: 26/198 = 13.1%
+## Contour found: 192/198 = 97.0%
+## Decision: NEUTRAL — weight change had minimal impact

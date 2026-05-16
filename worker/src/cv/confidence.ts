@@ -1,14 +1,22 @@
 import type { ContourResult } from "./contour.js";
 
+export const CONFIDENCE_CONFIG = {
+  // Edge clarity normalization threshold — higher = harder to reach high confidence
+  edgeMax: 2000,
+  // Noise penalty cap per 100 contours
+  noisePenaltyCap: 0.25,
+  // Extreme ratio penalty (ratio near 0 or 1)
+  extremePenalty: 0.2,
+  // Edge clarity thresholds for tier classification
+  edgeHighThreshold: 0.7,
+  edgeMediumThreshold: 0.3,
+};
+
 export interface ConfidenceResult {
   score: number;
   tier: "high" | "medium" | "low";
   reasons: string[];
 }
-
-const EDGE_HIGH = 0.7;
-const EDGE_MEDIUM = 0.3;
-const EDGE_MAX = 2000;
 
 /**
  * Pure edge-clarity confidence scoring with extreme-ratio penalty.
@@ -23,23 +31,23 @@ export function scoreConfidence(contour: ContourResult): ConfidenceResult {
   const reasons: string[] = [];
 
   // Edge clarity (0-1): how strong is the meniscus edge?
-  const edgeClarity = Math.min(1, contour.edgeStrength / EDGE_MAX);
+  const edgeClarity = Math.min(1, contour.edgeStrength / CONFIDENCE_CONFIG.edgeMax);
 
   // Penalty: high contour count suggests noise
-  const noisePenalty = Math.min(1, contour.contourCount / 100) * 0.15;
+  const noisePenalty = Math.min(1, contour.contourCount / 100) * CONFIDENCE_CONFIG.noisePenaltyCap;
 
   // Extreme-ratio penalty: ratios near 0 or 1 are suspicious
   // (likely bottle boundary, not meniscus)
   const ratio = contour.meniscusYRatio ?? 0.5;
-  const extremePenalty = ratio < 0.05 ? 0.2 : ratio > 0.95 ? 0.2 : 0;
+  const extremePenalty = ratio < 0.05 ? CONFIDENCE_CONFIG.extremePenalty : ratio > 0.95 ? CONFIDENCE_CONFIG.extremePenalty : 0;
   if (extremePenalty > 0) reasons.push(`Extreme ratio (${(ratio * 100).toFixed(0)}%)`);
 
   const score = Math.max(0, Math.min(1, edgeClarity - noisePenalty - extremePenalty));
 
   let tier: "high" | "medium" | "low";
-  if (score >= EDGE_HIGH) {
+  if (score >= CONFIDENCE_CONFIG.edgeHighThreshold) {
     tier = "high";
-  } else if (score >= EDGE_MEDIUM) {
+  } else if (score >= CONFIDENCE_CONFIG.edgeMediumThreshold) {
     tier = "medium";
   } else {
     tier = "low";

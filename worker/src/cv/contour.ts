@@ -1,3 +1,10 @@
+export const CONTOUR_CONFIG = {
+  // Min contour area (pixels) — smaller values capture more candidates
+  minContourArea: 100,
+  // Max bottle contour area as fraction of frame — reject > this ratio
+  maxBottleAreaRatio: 0.45,
+};
+
 import { cv, ensureCv } from "./index.js";
 import type { PreprocessedImage } from "./preprocess.js";
 import { getBottleGeometry, calibrateFillRatio, isSupportedBottle } from "./geometry.js";
@@ -94,7 +101,7 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
     for (let i = 0; i < contours.size(); i++) {
       const c = contours.get(i);
       const area = cv.contourArea(c);
-      if (area < 100) continue;
+      if (area < CONTOUR_CONFIG.minContourArea) continue;
       const rect = cv.boundingRect(c);
       contourRects.push({ origIdx: i, x: rect.x, y: rect.y, w: rect.width, h: rect.height, area });
     }
@@ -141,10 +148,10 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
       const bottleContour = contours.get(bestIdx);
       const cr = cv.boundingRect(bottleContour);
 
-      // Area sanity: reject if contour bounding box is >50% of frame (false large contour)
+      // Area sanity: reject if contour bounding box exceeds max ratio of frame (false large contour)
       const bottleArea = cr.width * cr.height;
       const frameArea = width * height;
-      if (bottleArea / frameArea > 0.50) {
+      if (bottleArea / frameArea > CONTOUR_CONFIG.maxBottleAreaRatio) {
         return {
           found: false,
           meniscusY: null,

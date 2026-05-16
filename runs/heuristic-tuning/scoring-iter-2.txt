@@ -1,0 +1,5 @@
+# Scoring Iteration 2 — minScoreThreshold=0.25, maxBottleAreaRatio=0.45, noisePenaltyCap=0.25
+## Exact accuracy: 19/198 = 9.6% (no regression vs best)
+## Close accuracy: 28/198 = 14.1%
+## Contour found: 191/198 = 96.5%
+## Decision: ACCEPT — config refactored, no regression, slight improvement at contour margin
