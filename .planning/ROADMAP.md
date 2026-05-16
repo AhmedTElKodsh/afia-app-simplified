@@ -65,7 +65,7 @@ Plans:
 - [x] 02-01-PLAN.md — Edge-case Corpus & Model Version Tracking (Wave 1, autonomous)
 - [ ] 02-02-PLAN.md — ONNX Feasibility Spike (Wave 1, autonomous)
 - [ ] 02-03-PLAN.md — Heuristic Improvements (Wave 2, autonomous)
-- [ ] 02-04-PLAN.md — Decision Gate & Documentation (Wave 3, autonomous)
+- [x] 02-04-PLAN.md — Decision Gate & Documentation (Wave 3, autonomous)
 
 ---
 
