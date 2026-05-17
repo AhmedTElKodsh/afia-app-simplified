@@ -8,6 +8,8 @@ import type { PipelineError } from "./errors.js";
 import { logStage } from "./logger.js";
 import { isModelLoaded, loadOnnxModel, runOnnxInference } from "../onnx/loader.js";
 import { MODEL_PATHS } from "../onnx/models.js";
+import { FusionScorer } from "../scoring/fusion-scorer.js";
+import type { Scorer, ScorerResult } from "../scoring/interface.js";
 import * as ort from "onnxruntime-web";
 
 export interface PipelineInput {
@@ -15,6 +17,10 @@ export interface PipelineInput {
   bottleSizeMl?: number;
   imageBase64?: string;
   geminiApiKey?: string;
+  llmRemainingMl?: number;
+  llmFillRatio?: number;
+  llmConfidence?: number;
+  llmScore?: number;
 }
 
 export interface PipelineOutput {
@@ -32,6 +38,14 @@ export interface PipelineOutput {
     missReason?: string;
     onnxScore?: number;
     onnxLoadStatus?: string;
+    heuristicConfidence?: number;
+    fusion?: {
+      source: string;
+      confidence: number;
+      score: number;
+      remainingMl: number;
+      features: Record<string, number>;
+    };
   };
 }
 
@@ -169,21 +183,58 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       }
     }
 
-    // Stage 4: Confidence scoring
+    // Stage 4: Conservative multi-signal fusion
     stages.push("confidence");
+    stages.push("fusion");
     const t3 = Date.now();
-    const confidence = scoreConfidence(contourResult, onnxScore);
-    logStage("confidence", Date.now() - t3, confidence.score, confidence.tier);
+    const heuristicConfidence = scoreConfidence(contourResult);
+    const bottleSizeMl = input.bottleSizeMl ?? 1500;
+    const heuristicRemainingMl = contourResult.meniscusYRatio * bottleSizeMl;
+
+    const scorers: Scorer[] = [staticScorer("heuristic", {
+      remainingMl: heuristicRemainingMl,
+      confidence: heuristicConfidence.score,
+      source: "heuristic",
+      features: {
+        contourFillRatio: contourResult.meniscusYRatio,
+        contourEdgeStrength: contourResult.edgeStrength,
+        contourCount: contourResult.contourCount,
+      },
+      score: heuristicConfidence.score,
+    })];
+
+    if (onnxScore !== undefined) {
+      scorers.push(staticScorer("onnx", {
+        remainingMl: onnxScore * bottleSizeMl,
+        confidence: onnxScore,
+        source: "onnx",
+        features: { onnxScore },
+        score: onnxScore,
+      }));
+    }
+
+    const llmSignal = normalizeLlmSignal(input, bottleSizeMl);
+    if (llmSignal) scorers.push(staticScorer("llm", llmSignal));
+
+    const fused = await new FusionScorer(scorers, {
+      maxReasonableRemainingMl: bottleSizeMl,
+      weakOnnxHeuristicMl: Math.max(40, bottleSizeMl * 0.08),
+      disagreementMl: Math.max(50, bottleSizeMl * 0.1),
+    }).score(input.imageData);
+    const fusedFillRatio = Math.max(0, Math.min(1, fused.remainingMl / bottleSizeMl));
+    const tier = tierFromScore(fused.confidence);
+    logStage("confidence", Date.now() - t3, heuristicConfidence.score, heuristicConfidence.tier);
+    logStage("fusion", Date.now() - t3, fused.confidence, tier);
 
     stages.push("complete");
     console.log(JSON.stringify({ event: "cv_pipeline_complete", stages }));
 
     return {
       success: true,
-      fillRatio: contourResult.meniscusYRatio,
-      category: contourResult.meniscusYRatio !== null ? ratioToCategory(contourResult.meniscusYRatio) : null,
-      confidence: confidence.score,
-      tier: confidence.tier,
+      fillRatio: fusedFillRatio,
+      category: ratioToCategory(fusedFillRatio),
+      confidence: fused.confidence,
+      tier,
       errors,
       diagnostics: {
         contourFound: true,
@@ -192,6 +243,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
         stages,
         onnxScore,
         onnxLoadStatus,
+        heuristicConfidence: heuristicConfidence.score,
+        fusion: fusionDiagnostics(fused),
       },
     };
   } catch (e) {
@@ -217,3 +270,46 @@ function errorResult(errors: PipelineError[], stages: string[], diagExtras: Part
     },
   };
 }
+
+function staticScorer(name: string, result: ScorerResult): Scorer {
+  return {
+    name,
+    async score() {
+      return result;
+    },
+  };
+}
+
+function normalizeLlmSignal(input: PipelineInput, bottleSizeMl: number): ScorerResult | undefined {
+  const confidence = input.llmConfidence;
+  const score = input.llmScore ?? confidence;
+  const remainingMl = input.llmRemainingMl ?? (input.llmFillRatio !== undefined ? input.llmFillRatio * bottleSizeMl : undefined);
+  if (remainingMl === undefined && confidence === undefined && score === undefined) return undefined;
+
+  return {
+    remainingMl: Number(remainingMl),
+    confidence: Number(confidence),
+    source: "llm",
+    features: { llmSignalProvided: 1 },
+    score: Number(score),
+  };
+}
+
+function fusionDiagnostics(result: ScorerResult): NonNullable<PipelineOutput["diagnostics"]["fusion"]> {
+  return {
+    source: String(result.source),
+    confidence: result.confidence,
+    score: result.score,
+    remainingMl: result.remainingMl,
+    features: result.features,
+  };
+}
+
+function tierFromScore(score: number): "high" | "medium" | "low" {
+  if (score >= CONFIDENCE_TIER_HIGH) return "high";
+  if (score >= CONFIDENCE_TIER_MEDIUM) return "medium";
+  return "low";
+}
+
+const CONFIDENCE_TIER_HIGH = 0.7;
+const CONFIDENCE_TIER_MEDIUM = 0.3;

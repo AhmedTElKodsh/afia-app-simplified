@@ -110,10 +110,10 @@ describe("ONNX Model Integration in Pipeline", () => {
 
     const result = await runPipeline({ imageData: new ArrayBuffer(0) });
 
-    // Heuristic score for edgeStrength=1000, contourCount=5 is roughly 0.5 - 0.0125 = 0.4875
-    // ONNX score is 0.9
-    // Average should be (0.4875 + 0.9) / 2 = 0.69375
-    expect(result.confidence).toBeCloseTo(0.69375, 4);
+    // Heuristic confidence remains independent from ONNX. Fusion uses ONNX as
+    // a conservative weighted signal and applies disagreement penalties.
+    expect(result.confidence).toBeLessThan(0.4875);
+    expect(result.diagnostics.fusion?.features._fusionDisagreementPenalty).toBeGreaterThan(0);
     expect(result.diagnostics.onnxScore).toBeCloseTo(0.9, 4);
   });
 });

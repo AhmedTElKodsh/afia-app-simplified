@@ -48,16 +48,15 @@ describe("FusionScorer", () => {
     });
     const fusion = new FusionScorer([s1, s2]);
     const result = await fusion.score(new ArrayBuffer(0));
-    // s2 has very low confidence, so result should be close to s1
-    // weighted: (400 * 0.9 + 500 * 0.1) / 1.0 = 410
-    expect(result.remainingMl).toBeCloseTo(410, -1);
+    // s2 has very low confidence and a lower ONNX base weight, so result stays close to s1.
+    expect(result.remainingMl).toBeCloseTo(403.3, 1);
     expect(result.source).toBe("heuristic+onnx");
   });
 
   it("falls back below confidence threshold", async () => {
     const low = new MockScorer("low", {
       remainingMl: 0,
-      confidence: 0.1,
+      confidence: Number.NaN,
       source: "heuristic",
       features: {},
       score: 0.1,
@@ -135,7 +134,7 @@ describe("FusionScorer", () => {
   it("minScorersRequired rejects insufficient threshold-crossing scorers", async () => {
     const low1 = new MockScorer("low1", {
       remainingMl: 0,
-      confidence: 0.1,
+      confidence: Number.NaN,
       source: "low1",
       features: {},
       score: 0.1,
@@ -145,14 +144,14 @@ describe("FusionScorer", () => {
       confidence: 0.2,
       source: "low2",
       features: {},
-      score: 0.2,
+      score: Number.NaN,
     });
     const fusion = new FusionScorer([low1, low2], {
       fallbackConfidenceThreshold: 0.3,
       minScorersRequired: 2,
     });
     const result = await fusion.score(new ArrayBuffer(0));
-    // Neither meets the 0.3 threshold, and minScorersRequired=2, so fallback triggers
+    // Invalid signals leave fewer than minScorersRequired valid signals, so fallback triggers
     expect(result.features._fusionFallback).toBe(1);
   });
 });

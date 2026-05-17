@@ -39,6 +39,10 @@ export async function cvAnalyzeRoute(c: Context<{ Bindings: Env }>) {
       bottleSizeMl,
       imageBase64: body.imageBase64,
       geminiApiKey: c.env.GEMINI_API_KEY,
+      llmRemainingMl: body.llmRemainingMl,
+      llmFillRatio: body.llmFillRatio,
+      llmConfidence: body.llmConfidence,
+      llmScore: body.llmScore,
     });
 
     return c.json({

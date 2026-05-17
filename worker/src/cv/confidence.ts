@@ -16,7 +16,6 @@ export interface ConfidenceResult {
   score: number;
   tier: "high" | "medium" | "low";
   reasons: string[];
-  onnxScore?: number;
 }
 
 /**
@@ -24,7 +23,7 @@ export interface ConfidenceResult {
  * Extreme fill ratios (near 0 or 1) get a confidence penalty because
  * they're more likely to be Sobel picking bottle boundaries, not the meniscus.
  */
-export function scoreConfidence(contour: ContourResult, onnxScore?: number): ConfidenceResult {
+export function scoreConfidence(contour: ContourResult): ConfidenceResult {
   if (!contour.found) {
     return { score: 0, tier: "low", reasons: ["No contour found"] };
   }
@@ -44,14 +43,6 @@ export function scoreConfidence(contour: ContourResult, onnxScore?: number): Con
   if (extremePenalty > 0) reasons.push(`Extreme ratio (${(ratio * 100).toFixed(0)}%)`);
 
   let score = Math.max(0, Math.min(1, edgeClarity - noisePenalty - extremePenalty));
-
-  // Integrate ONNX regression model score as a calibration signal
-  if (onnxScore !== undefined) {
-    // We average the heuristic score with the model score
-    // to dampen outliers from either source.
-    score = (score + onnxScore) / 2;
-    reasons.push(`ONNX Calibrated (model score: ${onnxScore.toFixed(2)})`);
-  }
 
   let tier: "high" | "medium" | "low";
   if (score >= CONFIDENCE_CONFIG.edgeHighThreshold) {

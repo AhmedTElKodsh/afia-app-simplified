@@ -161,7 +161,7 @@ export class FusionScorer {
 
   private applyWeakOnnxSuppression(signals: AcceptedSignal[], features: Record<string, number>): void {
     const heuristic = signals.find(signal => signal.source === "heuristic" && signal.weight > 0);
-    const onnx = signals.find(signal => signal.source === "onnx" && signal.weight > 0);
+    const onnx = signals.find(signal => signal.source === "onnx");
     if (!heuristic || !onnx) return;
 
     if (
