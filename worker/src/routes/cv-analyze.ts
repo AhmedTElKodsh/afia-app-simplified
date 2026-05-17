@@ -3,7 +3,7 @@ import type { Env } from "../env.js";
 import { runPipeline } from "../cv/pipeline.js";
 
 const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
-const VALID_MIME_PREFIXES = ["data:image/jpeg", "data:image/png", "data:image/webp"];
+const VALID_MIME_PREFIXES = ["data:image/jpeg", "data:image/png"];
 
 export async function cvAnalyzeRoute(c: Context<{ Bindings: Env }>) {
   try {
@@ -16,7 +16,7 @@ export async function cvAnalyzeRoute(c: Context<{ Bindings: Env }>) {
     const mimePrefix = body.imageBase64.split(",")[0] ?? "";
     const hasValidMime = VALID_MIME_PREFIXES.some((p) => mimePrefix.startsWith(p));
     if (!hasValidMime) {
-      return c.json({ error: "Unsupported image format. Use JPEG, PNG, or WebP." }, 400);
+      return c.json({ error: "Unsupported image format. Use JPEG or PNG." }, 400);
     }
 
     // Check file size before decoding

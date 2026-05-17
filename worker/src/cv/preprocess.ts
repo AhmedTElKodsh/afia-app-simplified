@@ -50,9 +50,7 @@ function decodeImage(buf: Uint8Array): { data: Uint8Array; width: number; height
     };
   }
 
-  // Fallback: try JPEG
-  const decoded = decodeJpeg(buf, { useTArray: true });
-  return { data: new Uint8Array(decoded.data), width: decoded.width, height: decoded.height };
+  throw new Error(`Unsupported image format: ${mime}`);
 }
 
 export async function preprocess(imageData: ArrayBuffer): Promise<PreprocessedImage> {

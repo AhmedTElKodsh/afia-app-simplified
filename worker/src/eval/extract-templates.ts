@@ -2,7 +2,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import sharp from "sharp";
+// import sharp from "sharp";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "../../..");
@@ -20,12 +20,17 @@ for (let i = 0; i < sources.length; i++) {
   const imgPath = resolve(repoRoot, path);
 
   // Extract ROI using sharp, convert to grayscale, resize to template size
+  // NOTE: sharp was removed to ensure Worker compatibility (it's a native addon).
+  // If you need to re-run this, use a non-native alternative or run in a separate package.
+  throw new Error("sharp was removed for Worker compatibility. extract-templates.ts needs migration to a JS-only image library.");
+  /*
   const { data } = await sharp(imgPath)
     .extract({ left: x, top: y, width: w, height: h })
     .resize(80, 320, { fit: "fill" })
     .grayscale()
     .raw()
     .toBuffer({ resolveWithObject: true });
+  */
 
   // Save raw pixel data as base64
   const base64 = data.toString("base64");

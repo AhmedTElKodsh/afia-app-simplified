@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 // Unit-test the input validation logic from cv-analyze.ts
 // (Full HTTP integration requires a running Worker — not available in CI)
 
-const VALID_MIME_PREFIXES = ["data:image/jpeg", "data:image/png", "data:image/webp"];
+const VALID_MIME_PREFIXES = ["data:image/jpeg", "data:image/png"];
 const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
 
 function validateMime(base64: string): boolean {
@@ -24,6 +26,15 @@ function coerceBottleSizeMl(value: unknown): number | null {
 }
 
 describe("cv-analyze input validation", () => {
+  describe("runtime compatibility", () => {
+    it("does not include sharp in package.json", () => {
+      const pkgPath = join(process.cwd(), "package.json");
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
+      expect(pkg.dependencies?.sharp).toBeUndefined();
+      expect(pkg.devDependencies?.sharp).toBeUndefined();
+    });
+  });
+
   describe("MIME type validation", () => {
     it("accepts JPEG", () => {
       expect(validateMime("data:image/jpeg;base64,/9j/4AAQ")).toBe(true);
@@ -31,8 +42,8 @@ describe("cv-analyze input validation", () => {
     it("accepts PNG", () => {
       expect(validateMime("data:image/png;base64,iVBORw0KG")).toBe(true);
     });
-    it("accepts WebP", () => {
-      expect(validateMime("data:image/webp;base64,UklGR")).toBe(true);
+    it("rejects WebP", () => {
+      expect(validateMime("data:image/webp;base64,UklGR")).toBe(false);
     });
     it("rejects GIF", () => {
       expect(validateMime("data:image/gif;base64,R0lGODlh")).toBe(false);
