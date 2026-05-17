@@ -1851,3 +1851,46 @@ The CV pipeline provides on-device analysis capability (OpenCV.js WASM). It can 
 | 11 | Camera State Machine | §6.6.4 (CaptureShell.tsx) | `stateDiagram-v2` | Starting → ready/blocked/missing → analyzing → success/error with retry |
 | 12 | ResultShell State Machine | §6.6.5 (ResultShell.tsx) | `stateDiagram-v2` | Loading/error/normal/no_data states driven by sessionStorage |
 | 13 | Admin Component Structure | §6.6.6 (AdminShell.tsx) | `graph TD` | Two-tab admin: review queue with correction forms, manual upload |
+
+---
+
+## 18. Current Documentation Update - 2026-05-17
+
+This section records the latest project-context refresh requested through BMad help. It is intentionally additive so historical Stage 1/Stage 2 notes above remain available for traceability.
+
+### 18.1 BMad Workflow Position
+
+The project is in implementation/documentation-maintenance mode. Relevant BMad actions are:
+
+| Menu | Skill | Use |
+|------|-------|-----|
+| SS | `bmad-sprint-status` | Summarize current implementation state, risks, and next story routing. |
+| CK | `bmad-checkpoint-preview` | Human-in-the-loop branch review before merging. |
+| DP | `bmad-document-project` | Regenerate broad project documentation after significant code movement. |
+| GPC | `bmad-generate-project-context` | Refresh the concise LLM-oriented project context. |
+
+### 18.2 Current Source Inventory
+
+- Root package scripts: `build`, `test`, `eval:dev`, `eval:holdout`, `eval:dev-quick`, `eval:edge`, and `signoff`.
+- Worker scripts: `eval:cv`, `gate:rss`, `probe:gemini`, `build-manifest`, and `baseline:capture` in addition to test/build.
+- Worker routes: `analyze`, `cv-analyze`, `admin`, and `onnx-probe`.
+- Worker subsystems: LLM provider orchestration, prompt loading/hashing, eval runner, CV pipeline, ONNX feasibility/runtime helpers, scoring/fusion, and Supabase storage.
+- Web subsystems: scan shell, capture shell, result shell, admin shell, mock QR page, theme/language controls, session state.
+- Shared package: bottle constants, product-link helpers, schemas, and TypeScript contracts used by web and Worker.
+
+### 18.3 Accuracy and Evaluation Notes
+
+- The 55ml quarter-cup bucket remains the primary correction/evaluation unit.
+- `eval:dev-quick` is a fast 12-fixture Gemini regression guardrail; a deliberate break produced 0/12 exact accuracy and confirmed that the probe exposes systematic failures.
+- API-backed Gemini evals must respect rate limits. This branch documents and preserves a 13-second inter-call delay for Gemini eval calls.
+- Phase 2 found heuristic-only scoring insufficient for the empty/full confusion target; ONNX regression is the recommended next accuracy path.
+- ONNX feasibility passed binary-size, p95 latency, and cold-start thresholds locally. RSS remains conditional until measured in the Worker isolate environment.
+
+### 18.4 Documentation Ownership
+
+- `README.md` is the contributor quick start and current-scope summary.
+- `docs/project-context.md` is the compact AI/BMad operating context.
+- `docs/COMPREHENSIVE-DOCUMENTATION.md` is the long-form project reference.
+- `docs/cv-pipeline-architecture.md`, `docs/phase-02-summary.md`, and `docs/decision-gate-onnx.md` are the current CV/ONNX reference documents.
+
+When these files disagree, prefer the newest dated section and then reconcile the stale section in a follow-up documentation task.

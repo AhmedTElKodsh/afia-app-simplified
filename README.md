@@ -101,16 +101,44 @@ afia-app-simplified/
         └── bottle.ts         # Constants
 ```
 
-## Stage 1 Scope
+## Current Scope
 
-- ✅ 1.5L bottle support only
-- ✅ Single Gemini API key with Grok fallback
-- ✅ In-memory results (no persistence)
-- ✅ Manual capture (no auto-capture)
-- ❌ No image storage
-- ❌ No admin corrections
-- ❌ No local model support
+The repository currently combines two Stage 1 workstreams:
 
-## Next Steps
+- **Consumer validation app:** 1.5L-only QR/capture/result/admin shells backed by Cloudflare Worker routes and shared result schemas.
+- **Research/evaluation track:** Gemini eval runner, CV pipeline, heuristic scoring, ONNX feasibility spike, and regression guardrails.
 
-See `.kiro/specs/afia-oil-scanner-stage1/tasks.md` for the complete implementation plan.
+Current boundaries:
+
+- ✅ 1.5L bottle analysis is the only supported analysis path.
+- ✅ Gemini remains the API-first LLM target, with multi-key rotation and Grok fallback support in Worker code.
+- ✅ Manual capture and correction workflows are part of the validation loop.
+- ✅ Supabase is the target persistence/storage path for accepted/corrected records and future training data.
+- ✅ CV/heuristic/ONNX experiments exist to support future accuracy improvements.
+- ❌ 2.5L analysis, local-only inference, and production local-model training remain out of scope until evidence gates justify them.
+
+## Evaluation and Guardrails
+
+Useful commands:
+
+```bash
+pnpm test
+pnpm --filter worker eval:dev-quick
+pnpm --filter worker eval:cv
+pnpm --filter worker gate:rss
+```
+
+Notes:
+
+- `eval:dev-quick` is the fast Gemini regression probe using the 12-fixture manifest.
+- Gemini evals are rate-limit sensitive; preserve the branch's 13-second inter-call delay when running API-backed evaluation.
+- CV/ONNX evidence and historical results are documented under `docs/phase-02-summary.md`, `docs/decision-gate-onnx.md`, and `runs/`.
+
+## Project Documentation
+
+Start with:
+
+- `docs/project-context.md` - concise LLM/project state and BMad routing context.
+- `docs/COMPREHENSIVE-DOCUMENTATION.md` - detailed architecture, runbooks, contracts, and directory map.
+- `docs/cv-pipeline-architecture.md` - CV pipeline design.
+- `docs/phase-02-summary.md` and `docs/decision-gate-onnx.md` - heuristic/ONNX feasibility outcomes.
