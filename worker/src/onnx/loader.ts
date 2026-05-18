@@ -55,6 +55,14 @@ export async function runOnnxInference(
   return results;
 }
 
+export async function disposeOnnxModel(): Promise<void> {
+  if (!session) return;
+  const currentSession = session;
+  session = null;
+  modelName = null;
+  await currentSession.release();
+}
+
 export function isModelLoaded(): boolean {
   return session !== null;
 }
