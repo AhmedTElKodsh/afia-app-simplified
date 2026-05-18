@@ -47,11 +47,18 @@ export async function cvAnalyzeRoute(c: Context<{ Bindings: Env }>) {
       llmScore: body.llmScore,
     });
 
+    const hasLlmSignal = 
+      body.llmRemainingMl !== undefined || 
+      body.llmFillRatio !== undefined || 
+      body.llmConfidence !== undefined || 
+      body.llmScore !== undefined;
+
     return c.json({
       remainingMl: result.fillRatio !== null ? Math.round(result.fillRatio * bottleSizeMl) : null,
       category: result.category,
       confidence: result.confidence,
       tier: result.tier,
+      provider: hasLlmSignal ? "cv_llm" : "cv",
       diagnostics: result.diagnostics,
       errors: result.errors.length > 0 ? result.errors : undefined,
     });
