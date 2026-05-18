@@ -65,14 +65,45 @@ describe("scan analysis schemas", () => {
       consumedMl: 620,
       provider: "gemini",
     });
+
+    expect(AnalysisResultSchema.parse({
+      remainingMl: 500,
+      consumedMl: 1000,
+      redLineYRatio: 0.3,
+      confidence: 0.9,
+      warnings: [],
+      provider: "cv",
+      rawMetadata: {
+        promptVersion: "v1",
+        modelId: "opencv-v1",
+      },
+    })).toMatchObject({
+      provider: "cv",
+    });
+
+    expect(AnalysisResultSchema.parse({
+      remainingMl: 400,
+      consumedMl: 1100,
+      redLineYRatio: 0.25,
+      confidence: 0.85,
+      warnings: [],
+      provider: "cv_llm",
+      rawMetadata: {
+        promptVersion: "v1",
+        modelId: "opencv-llm-v1",
+      },
+    })).toMatchObject({
+      provider: "cv_llm",
+    });
   });
 
   it("defines provider, warning, and correction enums for Supabase records", () => {
-    expect(PROVIDERS).toEqual(["gemini", "grok"]);
+    expect(PROVIDERS).toEqual(["gemini", "grok", "cv", "cv_llm"]);
     expect(ScanWarningSchema.parse("wrong_side")).toBe("wrong_side");
     expect(CorrectionStatusSchema.parse("manual_corrected")).toBe("manual_corrected");
     expect(AdminFlagSchema.parse("too_big")).toBe("too_big");
     expect(AdminFlagSchema.parse("too_small")).toBe("too_small");
+    expect(() => ProviderSchema.parse("unknown")).toThrow();
   });
 
   it("validates product analysis records", () => {

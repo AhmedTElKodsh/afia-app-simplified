@@ -1,6 +1,6 @@
 import { SUPPORTED_BOTTLE_SIZES, type BottleSize } from "./bottle.js";
 
-export const PROVIDERS = ["gemini", "grok"] as const;
+export const PROVIDERS = ["gemini", "grok", "cv", "cv_llm"] as const;
 export const SCAN_WARNINGS = [
   "blur",
   "glare",
