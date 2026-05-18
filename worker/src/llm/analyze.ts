@@ -1,13 +1,23 @@
 import { readFile } from "node:fs/promises";
 import { dirname, extname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { callGemini } from "./gemini.js";
 import { buildGeminiKeyPool, selectGeminiKey } from "./rotation.js";
 import { loadPrompt } from "../prompt/load.js";
 import { parseEvidenceResponse } from "../eval/parse-response.js";
 import type { Env } from "../env.js";
 
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+// Skip fileURLToPath in Workers environment
+let repoRoot: string;
+if (typeof process !== "undefined" && process.env) {
+  try {
+    const { fileURLToPath } = await import("node:url");
+    repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+  } catch {
+    repoRoot = ".";
+  }
+} else {
+  repoRoot = ".";
+}
 
 function mimeType(path: string) {
   const ext = extname(path).toLowerCase();

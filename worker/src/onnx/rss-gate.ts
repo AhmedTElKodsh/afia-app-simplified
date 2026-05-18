@@ -5,7 +5,6 @@
 
 import { readFileSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import * as ort from "onnxruntime-web";
 
 const THRESHOLD_MB = 100; // 80% of 128MB Workers isolate limit
@@ -34,7 +33,7 @@ async function measureRSS(modelPath: string): Promise<{ loadRssMb: number; peakR
 
 async function main() {
   const models = ["constant.onnx", "identity.onnx", "regression.onnx"];
-  const modelDir = resolve(dirname(fileURLToPath(import.meta.url)), "models");
+  const modelDir = "src/onnx/models";
 
   console.log(`=== ONNX RSS Budget Gate ===`);
   console.log(`Threshold: ${THRESHOLD_MB}MB (80% of Workers 128MB isolate)\n`);

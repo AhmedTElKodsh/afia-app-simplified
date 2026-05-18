@@ -1,13 +1,12 @@
 import * as ort from "onnxruntime-web";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 
 let session: ort.InferenceSession | null = null;
 let modelName: string | null = null;
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const workerRoot = resolve(__dirname, "../..");
+// Hardcoded root for now to avoid fileURLToPath issues in Miniflare if they persist
+const workerRoot = ".";
 
 async function firstExistingPath(paths: string[]): Promise<string> {
   for (const path of paths) {

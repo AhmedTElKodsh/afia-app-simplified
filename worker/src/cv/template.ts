@@ -1,9 +1,20 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import { cv, ensureCv } from "./index.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// Skip fileURLToPath in Workers environment
+let templatesDir: string;
+if (typeof process !== "undefined" && process.env) {
+  try {
+    const { fileURLToPath } = await import("node:url");
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    templatesDir = join(__dirname, "templates");
+  } catch {
+    templatesDir = "src/cv/templates";
+  }
+} else {
+  templatesDir = "src/cv/templates";
+}
 
 export interface TemplateMatch {
   found: boolean;
@@ -25,7 +36,6 @@ export async function initTemplates(): Promise<void> {
   if (loaded) return;
   await ensureCv();
 
-  const templatesDir = join(__dirname, "templates");
   let files: string[];
   try {
     files = (await readdir(templatesDir)).filter((f) => f.endsWith(".json")).sort();

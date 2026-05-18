@@ -1,9 +1,17 @@
 import { config } from "dotenv";
 import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-config({ path: resolve(__dirname, "../../.env") });
+// Skip fileURLToPath in Workers environment (Miniflare handles env via bindings)
+if (typeof process !== "undefined" && process.env) {
+  try {
+    const { fileURLToPath } = await import("node:url");
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    config({ path: resolve(__dirname, "../../.env") });
+  } catch {
+    // Fallback if fileURLToPath fails
+    config({ path: "../../.env" });
+  }
+}
 
 export interface Env {
   ASSETS?: {

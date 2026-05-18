@@ -1,9 +1,19 @@
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
-import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// Skip fileURLToPath in Workers environment
+let baseDir: string;
+if (typeof process !== "undefined" && process.env) {
+  try {
+    const { fileURLToPath } = await import("node:url");
+    baseDir = dirname(fileURLToPath(import.meta.url));
+  } catch {
+    baseDir = "src/prompt";
+  }
+} else {
+  baseDir = "src/prompt";
+}
 
 export interface FewShot {
   imagePath: string;
