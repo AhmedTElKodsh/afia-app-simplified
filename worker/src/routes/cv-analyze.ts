@@ -28,10 +28,12 @@ export async function cvAnalyzeRoute(c: Context<{ Bindings: Env }>) {
 
     const buffer = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0)).buffer;
 
-    // Coerce and validate bottleSizeMl
-    const bottleSizeMl = Number(body.bottleSizeMl) || 1500;
+    const bottleSizeMl = body.bottleSizeMl === undefined ? 1500 : Number(body.bottleSizeMl);
     if (!Number.isFinite(bottleSizeMl) || bottleSizeMl <= 0) {
       return c.json({ error: "Invalid bottleSizeMl" }, 400);
+    }
+    if (bottleSizeMl !== 1500) {
+      return c.json({ error: "Unsupported bottleSizeMl. Stage 1 CV supports 1500ml only." }, 422);
     }
 
     const result = await runPipeline({

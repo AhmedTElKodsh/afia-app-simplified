@@ -7,6 +7,7 @@ export interface FusionConfig {
   nearZeroOnnxMl: number;
   weakOnnxHeuristicMl: number;
   disagreementMl: number;
+  singleSignalConfidenceCap: number;
 }
 
 const DEFAULT_CONFIG: FusionConfig = {
@@ -16,6 +17,7 @@ const DEFAULT_CONFIG: FusionConfig = {
   nearZeroOnnxMl: 5,
   weakOnnxHeuristicMl: 40,
   disagreementMl: 50,
+  singleSignalConfidenceCap: 0.69,
 };
 
 const SOURCE_BASE_WEIGHTS: Record<string, number> = {
@@ -90,8 +92,14 @@ export class FusionScorer {
     const weightedScore = valid.reduce((sum, signal) => sum + signal.score * signal.weight, 0) / totalWeight;
     const disagreementPenalty = this.disagreementPenalty(valid, features);
     const confidenceBoost = valid.length > 1 && disagreementPenalty === 0 ? 0.08 : 0;
-    const confidence = clamp01(weightedConfidence + confidenceBoost - disagreementPenalty);
-    const score = clamp01(weightedScore + confidenceBoost - disagreementPenalty);
+    let confidence = clamp01(weightedConfidence + confidenceBoost - disagreementPenalty);
+    let score = clamp01(weightedScore + confidenceBoost - disagreementPenalty);
+    if (valid.length === 1) {
+      features._fusionReason_singleValidSignal = 1;
+      features._fusionSingleSignalConfidenceCap = this.config.singleSignalConfidenceCap;
+      confidence = Math.min(confidence, this.config.singleSignalConfidenceCap);
+      score = Math.min(score, this.config.singleSignalConfidenceCap);
+    }
 
     return {
       remainingMl: round1(weightedMl),

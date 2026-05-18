@@ -41,6 +41,19 @@ export interface CvEvalSummary {
   evaluatedCount: number;
   exact: { count: number; pct: number };
   close: { count: number; pct: number };
+  quality: {
+    meanSignedErrorMl: number | null;
+    meanAbsErrorMl: number | null;
+    maxAbsErrorMl: number | null;
+    errorBuckets: Record<string, number>;
+    groundTruthBands: Record<string, {
+      count: number;
+      exactPct: number;
+      closePct: number;
+      meanSignedErrorMl: number | null;
+    }>;
+    highConfidenceWrongCount: number;
+  };
   fusion: {
     sourceCounts: Record<string, number>;
     ignoredReasonCounts: Record<string, number>;
@@ -100,7 +113,7 @@ export async function runCvEval(options: {
     if (row.closeBucketPass) close++;
     results.push(row);
 
-    log.log(`[${n}/${fixtures.length}] ${row.imageId.split("/").pop()} gt=${groundTruthMl} cv=${row.cvMl ?? "ERR"} err=${row.absErrorMl ?? "?"} conf=${row.tier} fusion=${row.fusionSource ?? "N/A"} onnx=${row.onnxScore?.toFixed(2) ?? "N/A"} ${row.exactBucketPass ? "✓" : "✗"}`);
+    log.log(`[${n}/${fixtures.length}] ${row.imageId.split("/").pop()} gt=${groundTruthMl} cv=${row.cvMl ?? "ERR"} err=${row.absErrorMl ?? "?"} conf=${row.tier} fusion=${row.fusionSource ?? "N/A"} onnx=${row.onnxScore?.toFixed(2) ?? "N/A"} ${row.exactBucketPass ? "PASS" : "FAIL"}`);
     latencies.push(Date.now() - t0);
     if (shouldDelay && n < fixtures.length) await new Promise((r) => setTimeout(r, perImageDelayMs));
   }
@@ -160,6 +173,7 @@ export function summarizeCvEval(results: CvEvalRow[], manifestCount = results.le
     evaluatedCount: results.length,
     exact: { count: exact, pct: pct(exact, results.length) },
     close: { count: close, pct: pct(close, results.length) },
+    quality: summarizeQuality(results),
     fusion: {
       sourceCounts: countBy(results, r => r.fusionSource ?? "missing"),
       ignoredReasonCounts: countIgnoredReasons(results),
@@ -173,6 +187,56 @@ export function summarizeCvEval(results: CvEvalRow[], manifestCount = results.le
       },
     },
   };
+}
+
+function summarizeQuality(results: CvEvalRow[]): CvEvalSummary["quality"] {
+  const measured = results.filter((r) => r.cvMl !== null && r.absErrorMl !== null);
+  const signedErrors = measured.map((r) => (r.cvMl as number) - r.groundTruthMl);
+  const absErrors = measured.map((r) => r.absErrorMl as number);
+  return {
+    meanSignedErrorMl: signedErrors.length ? round1(signedErrors.reduce((s, v) => s + v, 0) / signedErrors.length) : null,
+    meanAbsErrorMl: absErrors.length ? round1(absErrors.reduce((s, v) => s + v, 0) / absErrors.length) : null,
+    maxAbsErrorMl: absErrors.length ? round1(Math.max(...absErrors)) : null,
+    errorBuckets: countBy(results, (r) => errorBucket(r.absErrorMl)),
+    groundTruthBands: summarizeGroundTruthBands(results),
+    highConfidenceWrongCount: results.filter((r) => r.confidenceScore >= 0.82 && !r.exactBucketPass).length,
+  };
+}
+
+function summarizeGroundTruthBands(results: CvEvalRow[]): CvEvalSummary["quality"]["groundTruthBands"] {
+  const groups = new Map<string, CvEvalRow[]>();
+  for (const row of results) {
+    const band = groundTruthBand(row.groundTruthMl);
+    groups.set(band, [...(groups.get(band) ?? []), row]);
+  }
+  const out: CvEvalSummary["quality"]["groundTruthBands"] = {};
+  for (const [band, rows] of [...groups.entries()].sort()) {
+    const measured = rows.filter((r) => r.cvMl !== null);
+    const signedErrors = measured.map((r) => (r.cvMl as number) - r.groundTruthMl);
+    out[band] = {
+      count: rows.length,
+      exactPct: pct(rows.filter((r) => r.exactBucketPass).length, rows.length),
+      closePct: pct(rows.filter((r) => r.closeBucketPass).length, rows.length),
+      meanSignedErrorMl: signedErrors.length ? round1(signedErrors.reduce((s, v) => s + v, 0) / signedErrors.length) : null,
+    };
+  }
+  return out;
+}
+
+function errorBucket(absErrorMl: number | null): string {
+  if (absErrorMl === null) return "missing";
+  if (absErrorMl <= 55) return "0-55";
+  if (absErrorMl <= 110) return "56-110";
+  if (absErrorMl <= 220) return "111-220";
+  return ">220";
+}
+
+function groundTruthBand(ml: number): string {
+  if (ml <= 110) return "empty";
+  if (ml <= 440) return "low";
+  if (ml <= 990) return "mid";
+  if (ml <= 1390) return "high";
+  return "full";
 }
 
 function signalPresence(features: Record<string, number>): Record<string, boolean> {
@@ -226,8 +290,8 @@ function tierFromScore(score: number): "high" | "medium" | "low" { return score 
 function printSummary(log: Pick<Console, "log">, results: CvEvalRow[], summary: CvEvalSummary, latencies: number[], outPath: string): void {
   const n = results.length;
   log.log(`\n=== CV Pipeline Results (${summary.manifestCount} manifest rows; ${n} evaluated) ===`);
-  log.log(`exact (±55ml): ${summary.exact.count}/${n} = ${summary.exact.pct.toFixed(1)}%`);
-  log.log(`close (±110ml): ${summary.close.count}/${n} = ${summary.close.pct.toFixed(1)}%`);
+  log.log(`exact (+/-55ml): ${summary.exact.count}/${n} = ${summary.exact.pct.toFixed(1)}%`);
+  log.log(`close (+/-110ml): ${summary.close.count}/${n} = ${summary.close.pct.toFixed(1)}%`);
   const contourFoundCount = results.filter(r => r.contourFound).length;
   log.log(`contour found: ${contourFoundCount}/${n} = ${pct(contourFoundCount, n).toFixed(1)}%`);
 
@@ -242,6 +306,7 @@ function printSummary(log: Pick<Console, "log">, results: CvEvalRow[], summary: 
   log.log(`Fusion disagreement buckets: ${JSON.stringify(summary.fusion.disagreementPenaltyBuckets)}`);
   log.log(`Fusion tier distribution: ${JSON.stringify(summary.fusion.tierDistribution)}`);
   log.log(`ONNX vs heuristic delta: ${JSON.stringify(summary.fusion.onnxHeuristicDeltaMl)}`);
+  log.log(`Quality diagnostics: ${JSON.stringify(summary.quality)}`);
 
   const worst = results.filter((r) => r.absErrorMl !== null).sort((a, b) => (b.absErrorMl ?? 0) - (a.absErrorMl ?? 0)).slice(0, 5);
   log.log(`\nWorst misses:`);
@@ -263,12 +328,12 @@ async function maybeCompareBaseline(log: Pick<Console, "log" | "error">, results
     log.log(`  Delta:    ${deltaPct > 0 ? "+" : ""}${deltaPct.toFixed(1)}pp`);
     const regressionThreshold = Number(process.env.REGRESSION_THRESHOLD_PCT) || 2.0;
     if (deltaPct < -regressionThreshold) {
-      log.error(`\n❌ REGRESSION DETECTED: Exact accuracy dropped by ${Math.abs(deltaPct).toFixed(1)}pp (threshold: ${regressionThreshold}pp)`);
+      log.error(`\nREGRESSION DETECTED: Exact accuracy dropped by ${Math.abs(deltaPct).toFixed(1)}pp (threshold: ${regressionThreshold}pp)`);
       process.exit(1);
     }
-    log.log(`\n✅ No regression (threshold: ${regressionThreshold}pp)`);
+    log.log(`\nNo regression (threshold: ${regressionThreshold}pp)`);
   } catch (e) {
-    log.error(`\n⚠ Could not read baseline: ${(e as Error).message}`);
+    log.error(`\nCould not read baseline: ${(e as Error).message}`);
   }
 }
 
