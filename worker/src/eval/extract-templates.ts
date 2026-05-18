@@ -33,13 +33,15 @@ for (let i = 0; i < sources.length; i++) {
   */
 
   // Save raw pixel data as base64
-  const base64 = data.toString("base64");
+  // const base64 = data.toString("base64");
 
+  /*
   await writeFile(join(outDir, `template-${i}.json`), JSON.stringify({
     width: 80, height: 320, data: base64, source: path
   }));
 
   console.log(`Extracted template ${i}: ${path} (${data.length} bytes)`);
+  */
 }
 
 console.log(`Done — ${sources.length} templates to ${outDir}`);
