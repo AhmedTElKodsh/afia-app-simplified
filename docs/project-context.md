@@ -68,7 +68,7 @@ Recommended panels:
 - Dataset/admin loop: Mary, Murat, Winston, Paige.
 - Delivery readiness: Amelia, Murat, Winston.
 
-## Current Implementation Reality (2026-05-17)
+## Current Implementation Reality (2026-05-18)
 
 BMad help review places this project in the BMad Method implementation phase with documentation/project-context maintenance as an anytime support activity. The relevant next BMad options are:
 
@@ -76,28 +76,28 @@ BMad help review places this project in the BMad Method implementation phase wit
 - [CK] Checkpoint (`bmad-checkpoint-preview`) before human review of this branch.
 - [DP] Document Project (`bmad-document-project`) or [GPC] Generate Project Context (`bmad-generate-project-context`) when code and docs drift again.
 
-The codebase now contains both the Stage 1 consumer app skeleton and the evaluation/CV research track. Treat the current product as an API-first validation system whose UI, Worker routes, Supabase admin loop, and CV/ONNX experiments are present in-repo, but whose go/no-go depends on the eval and field-pilot evidence gates below.
+The codebase now contains the Stage 1 consumer app skeleton, the Supabase-integrated admin review loop, and a hybrid CV/Heuristic evaluation track. Stage 1.5 validation concluded with a documented **NO-GO** on accuracy, but passing marks on runtime compatibility, diagnostics, and route integration.
 
 ### Research and Evaluation Track
 
 - Gemini eval runner lives in `worker/src/eval/run.ts` with manifest loading, JSONL writing, response parsing, model-version tracking, and sign-off helpers.
-- `eval:dev-quick` runs the 12-fixture probe manifest and was verified as a regression guardrail by intentionally breaking analysis and observing 0/12 exact accuracy before reverting.
-- Gemini calls are rate-limit sensitive; eval execution should preserve the 13-second inter-call delay used on this branch to reduce quota/rate failures.
-- CV evaluation artifacts are under `runs/cv-eval-200/`; generated run outputs are runtime evidence and should not be treated as source documentation unless intentionally promoted.
+- `eval:dev-quick` runs the 12-fixture probe manifest and was verified as a regression guardrail.
+- CV evaluation artifacts are under `runs/cv-eval-200/`.
+- Stage 1.5 sign-off report lives in `runs/stage15-signoff/stage15-signoff.md`, recording a **NO-GO** verdict (13.3% exact accuracy) while confirming Worker compatibility and diagnostic health.
 
 ### CV, Heuristic, and ONNX Track
 
 - CV pipeline modules live under `worker/src/cv/` and cover validation, preprocessing, contour/meniscus detection, confidence, geometry, scoring, templates, diagnostics, and typed errors.
-- Phase 2 heuristic tuning improved the baseline but did not meet the empty/full confusion target; ONNX regression remains the recommended Phase 3 path.
-- ONNX feasibility modules live under `worker/src/onnx/`; local benchmark evidence supports proceeding, with Worker-isolate RSS still requiring deployment validation.
-- Fusion scorer code exists under `worker/src/scoring/` and has tests, but multi-contour fusion should stay disabled unless a later ONNX/fusion phase proves it helps the primary confusion target.
+- Stage 1.5 improvements removed the Worker-incompatible `sharp` dependency, narrowing the CV endpoint to supported JPEG/PNG inputs.
+- Phase 2 heuristic tuning improved the baseline but did not meet targets; ONNX regression remains the recommended path.
+- ONNX feasibility modules live under `worker/src/onnx/`; local benchmark evidence supports proceeding.
 
 ### App and Data Loop
 
-- Worker routes include `/api/analyze`, `/api/cv-analyze`, `/api/admin/*`, and `/api/onnx-probe`.
-- Web routes/components cover scan landing, camera capture, result review, mock QR generation, floating controls, and admin review.
-- Supabase integration is the target persistence path for accepted/corrected records, image storage, and admin correction workflows.
-- The future training dataset depends on preserving accepted/corrected image records with model/prompt metadata and 55ml-aligned corrections.
+- Worker routes include `/api/analyze`, `/api/cv-analyze` (with app-level Hono integration), `/api/admin/*`, and `/api/onnx-probe`.
+- Web routes/components cover scan landing, camera capture, result review, mock QR generation, and the admin review queue.
+- Supabase integration is the active persistence path for accepted/corrected records, image storage, and admin correction workflows.
+- Stage 1.5 introduced a non-interactive sign-off command (`pnpm signoff:stage15`) to automate quality gate verification.
 
 ### Documentation Maintenance Rule
 

@@ -39,7 +39,17 @@ Stage 1 exits when **all** of:
 | Database | @supabase/supabase-js | 2.49.4 |
 | Computer Vision | @techstark/opencv-js | 4.12.0 |
 | Image Decoding | jpeg-js, pngjs | — |
-| Image Processing | sharp | 0.34.5 |
+| Image Processing | sharp (Dev-only/Eval) | 0.34.5 |
+
+### 2.1 Stage 1.5 Readiness Verdict
+
+| Gate | Status | Evidence |
+|---|---|---|
+| **Accuracy** | **NO-GO** | 13.3% exact accuracy (target 90%) in `runs/stage15-signoff/stage15-signoff.md` |
+| **Diagnostics** | **Pass** | 0 rows missing fusion fields; valid signal in all rows |
+| **Runtime Compatibility** | **Pass** | `sharp` removed from Worker runtime paths; compatible image decoders in use |
+| **Route Integration** | **Pass** | `/api/cv-analyze` integrated into Hono app entrypoint |
+| **Artifact Shape** | **Pass** | Sign-off command successfully consumed eval results and produced reports |
 | Validation | zod | 3.23.8 |
 | Testing | Vitest, Testing Library (React) | 2.1.4 |
 | CLI Runner | tsx | 4.19.2 |
@@ -168,7 +178,9 @@ afia-app-simplified/
     │   │   ├── errors.ts             # Pipeline error types
     │   │   └── templates/            # Extracted bottle templates
     │   ├── eval/
-    │   │   ├── run.ts                # Eval runner CLI
+    │   │   ├── run.ts                # LLM Eval runner CLI
+    │   │   ├── cv-eval.ts            # CV pipeline eval runner
+    │   │   ├── stage15-signoff.ts    # Stage 1.5 readiness sign-off logic
     │   │   ├── manifest.ts           # Fixture manifest sampler
     │   │   ├── build-manifest.ts     # Manifest builder script
     │   │   ├── compare.ts            # ML comparator
@@ -348,7 +360,7 @@ Uses Hono framework to define routes:
 |-------|---------|-------------|
 | `GET /api/health` | Inline | Returns `{ ok: true }` |
 | `POST /api/analyze` | `analyzeRoute` | LLM-based oil level analysis |
-| `POST /api/cv-analyze` | `cvAnalyzeRoute` | CV pipeline analysis |
+| `POST /api/cv-analyze` | `cvAnalyzeRoute` | CV pipeline analysis (Worker-compatible) |
 | `GET /api/admin/analyses` | `listAnalysesRoute` | List persisted analyses |
 | `PATCH /api/admin/analyses/:id` | `patchAnalysisRoute` | Correct an analysis |
 | `POST /api/admin/upload` | `manualUploadRoute` | Manual upload with ground truth |
