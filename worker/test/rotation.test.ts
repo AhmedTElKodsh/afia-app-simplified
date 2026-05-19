@@ -6,11 +6,14 @@ describe("Gemini key rotation", () => {
     expect(buildGeminiKeyPool({
       GEMINI_API_KEY: "primary",
       GEMINI_API_KEYS: " pooled-a, pooled-b ",
+      GEMINI_API_KEYS2: "pooled-c",
+      GEMINI_API_KEYS3: "pooled-d",
+      GEMINI_API_KEYS4: "pooled-e",
       GEMINI_API_KEY2: "second",
       GEMINI_API_KEY3: "third",
       GEMINI_API_KEY4: "fourth",
       MODEL_ID: "gemini-test",
-    })).toEqual(["pooled-a", "pooled-b", "primary", "second", "third", "fourth"]);
+    })).toEqual(["pooled-a", "pooled-b", "pooled-c", "pooled-d", "pooled-e", "primary", "second", "third", "fourth"]);
   });
 
   it("removes duplicate and empty keys", () => {

@@ -3,6 +3,9 @@ import type { Env } from "../env.js";
 export function buildGeminiKeyPool(env: Env): string[] {
   return unique([
     ...splitKeys(env.GEMINI_API_KEYS),
+    ...splitKeys(env.GEMINI_API_KEYS2),
+    ...splitKeys(env.GEMINI_API_KEYS3),
+    ...splitKeys(env.GEMINI_API_KEYS4),
     env.GEMINI_API_KEY,
     env.GEMINI_API_KEY2,
     env.GEMINI_API_KEY3,
