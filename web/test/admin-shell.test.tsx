@@ -133,4 +133,25 @@ describe("admin shell", () => {
       );
     });
   });
+
+  it("shows an admin token message when the review queue is unauthorized", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 }));
+
+    renderAdmin();
+
+    expect(await screen.findByText(/admin token is missing or invalid/i)).toBeInTheDocument();
+  });
+
+  it("shows a correction save message when admin update fails", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(new Response(JSON.stringify({ analyses: [analysis] }), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 }));
+
+    renderAdmin();
+
+    expect(await screen.findByText(/900 ml remaining/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /save correction/i }));
+
+    expect(await screen.findByText(/could not save correction: admin token is missing or invalid/i)).toBeInTheDocument();
+  });
 });

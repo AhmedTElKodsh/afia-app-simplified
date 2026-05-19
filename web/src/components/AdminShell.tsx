@@ -72,7 +72,11 @@ function ReviewQueue({ token }: { token: string }) {
     setMessage("Loading analyses...");
     try {
       const res = await fetch("/api/admin/analyses?limit=100", { headers: adminHeaders(token) });
-      if (!res.ok) throw new Error(`List failed with ${res.status}`);
+      if (!res.ok) {
+        setRecords([]);
+        setMessage(adminFailureMessage(res.status, "load analyses"));
+        return;
+      }
       const data = await res.json() as { analyses: AnalysisRecord[] };
       setRecords(data.analyses);
       setMessage(data.analyses.length === 0 ? "No analyses found." : "");
@@ -96,7 +100,7 @@ function ReviewQueue({ token }: { token: string }) {
       headers: { ...adminHeaders(token), "content-type": "application/json" },
       body: JSON.stringify(patch),
     });
-    if (!res.ok) throw new Error(`Patch failed with ${res.status}`);
+    if (!res.ok) throw new Error(adminFailureMessage(res.status, "save correction"));
     const data = await res.json() as { analysis: AnalysisRecord };
     setRecords((current) => current.map((record) => record.id === id ? data.analysis : record));
   }
@@ -149,10 +153,12 @@ function AnalysisCard({
   const [adminCorrectedMl, setAdminCorrectedMl] = useState(record.adminCorrectedMl?.toString() ?? "");
   const [adminNote, setAdminNote] = useState(record.adminNote ?? "");
   const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
 
   async function submit(event: FormEvent) {
     event.preventDefault();
     setSaving(true);
+    setMessage("");
     try {
       await onSave(record.id, {
         correctionStatus,
@@ -160,6 +166,9 @@ function AnalysisCard({
         adminCorrectedMl: adminCorrectedMl === "" ? null : Number(adminCorrectedMl),
         adminNote: adminNote === "" ? null : adminNote,
       });
+      setMessage("Correction saved.");
+    } catch (error) {
+      setMessage(error instanceof Error ? `Could not ${error.message}.` : "Could not save correction.");
     } finally {
       setSaving(false);
     }
@@ -210,6 +219,7 @@ function AnalysisCard({
         <button className="rounded-md bg-amber-300 px-4 py-2 font-semibold text-neutral-950 disabled:bg-neutral-600 disabled:text-neutral-300" disabled={saving} type="submit">
           {saving ? "Saving..." : "Save correction"}
         </button>
+        {message ? <p className="text-sm text-neutral-300">{message}</p> : null}
       </form>
     </article>
   );
@@ -235,7 +245,10 @@ function ManualUpload({ token }: { token: string }) {
           adminNote: adminNote || null,
         }),
       });
-      if (!res.ok) throw new Error(`Upload failed with ${res.status}`);
+      if (!res.ok) {
+        setMessage(adminFailureMessage(res.status, "save manual upload"));
+        return;
+      }
       setMessage("Manual upload saved.");
       setImageBase64("");
       setAdminNote("");
@@ -283,6 +296,13 @@ function tabClass(active: boolean): string {
 
 function adminHeaders(token: string): HeadersInit {
   return token ? { authorization: `Bearer ${token}` } : {};
+}
+
+function adminFailureMessage(status: number, action: string): string {
+  if (status === 401) return `${action}: admin token is missing or invalid`;
+  if (status === 403) return `${action}: admin token is not authorized`;
+  if (status >= 500) return `${action}: server or persistence failure`;
+  return `${action}: request failed with ${status}`;
 }
 
 function readFileAsDataUrl(file: File): Promise<string> {
