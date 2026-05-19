@@ -35,6 +35,27 @@ coverage/
 # Eval run outputs (keep .gitkeep and signoffs)
 runs/*.jsonl
 !runs/signoffs.jsonl
+runs/cv-eval-*/
+runs/stage15-signoff/
+
+# Local image/model datasets are too large for GitHub.
+# Keep small hand-authored assets tracked explicitly when needed.
+images-databse/
+oil-bottle-augmented/
+oil-bottle-images/
+oil-bottle-frames/**
+!oil-bottle-frames/
+!oil-bottle-frames/afia-bottle-clean.svg
+
+# Local agent/tool state and generated migration logs
+.agent/
+.claude/
+.cline/
+.bob/
+.opencode/
+.trae/
+.gsd.migrating/
+agent-os/
 
 # ── GSD baseline (auto-generated) ──
 .gsd
