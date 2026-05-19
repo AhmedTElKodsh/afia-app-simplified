@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
+import { loadBundledPrompt } from "./bundled.js";
 
 // Skip fileURLToPath in Workers environment
 let baseDir: string;
@@ -54,25 +55,37 @@ function hash16(s: string): string {
 }
 
 export async function loadPrompt(version: string): Promise<LoadedPrompt> {
-  const root = join(baseDir, version);
-  const systemText = await readFile(join(root, "system.md"), "utf8");
-  const userText = await readFile(join(root, "bottle-reference.md"), "utf8");
-  const fewshotDir = join(root, "few-shots");
-  const manifest = JSON.parse(await readFile(join(fewshotDir, "manifest.json"), "utf8")) as FewShotManifest;
-  if (manifest.version !== version) {
-    throw new Error(`Few-shot manifest version ${manifest.version} does not match prompt version ${version}`);
+  try {
+    const root = join(baseDir, version);
+    const systemText = await readFile(join(root, "system.md"), "utf8");
+    const userText = await readFile(join(root, "bottle-reference.md"), "utf8");
+    const fewshotDir = join(root, "few-shots");
+    const manifest = JSON.parse(await readFile(join(fewshotDir, "manifest.json"), "utf8")) as FewShotManifest;
+    if (manifest.version !== version) {
+      throw new Error(`Few-shot manifest version ${manifest.version} does not match prompt version ${version}`);
+    }
+    const fewShots: FewShot[] = [];
+    for (const entry of manifest.entries) {
+      fewShots.push(JSON.parse(await readFile(join(fewshotDir, entry.path), "utf8")));
+    }
+    return {
+      systemText,
+      userText,
+      fewShots,
+      promptHash: hash16(systemText + "\n---\n" + userText),
+      fewshotHash: hash16(JSON.stringify({ entries: manifest.entries, fewShots })),
+      promptVersion: version,
+      fewShotManifest: manifest.entries,
+    };
+  } catch (error) {
+    if (isFilesystemUnavailable(error)) {
+      return loadBundledPrompt(version);
+    }
+    throw error;
   }
-  const fewShots: FewShot[] = [];
-  for (const entry of manifest.entries) {
-    fewShots.push(JSON.parse(await readFile(join(fewshotDir, entry.path), "utf8")));
-  }
-  return {
-    systemText,
-    userText,
-    fewShots,
-    promptHash: hash16(systemText + "\n---\n" + userText),
-    fewshotHash: hash16(JSON.stringify({ entries: manifest.entries, fewShots })),
-    promptVersion: version,
-    fewShotManifest: manifest.entries,
-  };
+}
+
+function isFilesystemUnavailable(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /fs\.readFile is not implemented|ENOENT|no such file/i.test(message);
 }

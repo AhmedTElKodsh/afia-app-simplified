@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { FewShot } from "../prompt/load.js";
 
 export interface GeminiReferenceImage {
@@ -54,25 +53,15 @@ function isRetryableQuotaError(error: unknown): boolean {
 }
 
 export async function callGemini(args: CallArgs): Promise<string> {
-  const client = new GoogleGenerativeAI(args.apiKey);
-  const model = client.getGenerativeModel({
-    model: args.modelId,
-    systemInstruction: args.systemText,
-    generationConfig: {
-      temperature: 0,
-      maxOutputTokens: 4096,
-    },
-  });
-
   const referenceLabels = (args.referenceImages ?? [])
     .map((image, i) => `Reference image ${i + 1}: ${image.label}`)
     .join("\n");
 
-  const parts = [
+  const parts: GeminiPart[] = [
     ...(args.referenceImages ?? []).map((image) => ({
-      inlineData: { mimeType: image.mimeType, data: image.data },
+      inline_data: { mime_type: image.mimeType, data: image.data },
     })),
-    { inlineData: { mimeType: args.targetMimeType ?? "image/jpeg", data: args.imageBase64 } },
+    { inline_data: { mime_type: args.targetMimeType ?? "image/jpeg", data: args.imageBase64 } },
     {
       text: [
         args.userText,
@@ -85,8 +74,15 @@ export async function callGemini(args: CallArgs): Promise<string> {
   const maxAttempts = 4;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const result = await model.generateContent(parts);
-      return result.response.text();
+      const result = await fetchGemini(args.apiKey, args.modelId, {
+        systemInstruction: { parts: [{ text: args.systemText }] },
+        contents: [{ role: "user", parts }],
+        generationConfig: {
+          temperature: 0,
+          maxOutputTokens: 4096,
+        },
+      });
+      return readGeminiText(result);
     } catch (error) {
       if (!isRetryableQuotaError(error) || attempt === maxAttempts) {
         throw error;
@@ -97,4 +93,53 @@ export async function callGemini(args: CallArgs): Promise<string> {
   }
 
   throw new Error("Gemini call failed after retries");
+}
+
+type GeminiPart =
+  | { text: string }
+  | { inline_data: { mime_type: string; data: string } };
+
+interface GeminiGenerateRequest {
+  systemInstruction: { parts: Array<{ text: string }> };
+  contents: Array<{ role: "user"; parts: GeminiPart[] }>;
+  generationConfig: {
+    temperature: number;
+    maxOutputTokens: number;
+  };
+}
+
+interface GeminiGenerateResponse {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{ text?: string }>;
+    };
+  }>;
+}
+
+async function fetchGemini(apiKey: string, modelId: string, body: GeminiGenerateRequest): Promise<GeminiGenerateResponse> {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelId)}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    },
+  );
+
+  if (!response.ok) {
+    const error = new Error(`Gemini API failed with ${response.status}: ${await response.text()}`) as Error & { status?: number };
+    error.status = response.status;
+    throw error;
+  }
+
+  return response.json() as Promise<GeminiGenerateResponse>;
+}
+
+function readGeminiText(response: GeminiGenerateResponse): string {
+  const text = response.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text)
+    .filter((value): value is string => Boolean(value))
+    .join("");
+  if (!text) throw new Error("Gemini response did not include text");
+  return text;
 }

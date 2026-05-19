@@ -39,7 +39,7 @@ export async function analyzeRoute(c: Context<{ Bindings: Env }>) {
     analysis = await analyzeWithFallback(c.env, keyPool, body.imageBase64);
   } catch (error) {
     console.error(error);
-    return c.json({ error: "LLM analysis failed" }, 502);
+    return c.json({ error: "LLM analysis failed", detail: publicErrorDetail(error) }, 502);
   }
 
   const parsed = parseEvidenceResponse(analysis.rawModelText);
@@ -71,7 +71,7 @@ export async function analyzeRoute(c: Context<{ Bindings: Env }>) {
     analysisId = saved.id;
   } catch (error) {
     console.error(error);
-    return c.json({ error: "Analysis persistence failed" }, 500);
+    return c.json({ error: "Analysis persistence failed", detail: publicErrorDetail(error) }, 500);
   }
 
   return c.json({
@@ -81,7 +81,7 @@ export async function analyzeRoute(c: Context<{ Bindings: Env }>) {
 }
 
 async function callGeminiWithRetry(env: Env, keyPool: string[], imageBase64: string, prompt: LoadedPrompt): Promise<string> {
-  const attempts = Math.min(2, Math.max(1, keyPool.length));
+  const attempts = Math.max(1, keyPool.length);
   let lastError: unknown;
 
   for (let attempt = 0; attempt < attempts; attempt += 1) {
@@ -162,4 +162,23 @@ function stripDataUrlPrefix(value: string): string {
 function readMimeType(value: string): string {
   const match = /^data:([^;]+);base64,/.exec(value);
   return match?.[1] ?? "image/jpeg";
+}
+
+function publicErrorDetail(error: unknown): { status?: number; message: string } {
+  if (!error || typeof error !== "object") {
+    return { message: "Unknown provider error" };
+  }
+
+  const maybeError = error as { status?: number; message?: string };
+  return {
+    status: maybeError.status,
+    message: redactKeyLikeText(maybeError.message ?? "Provider request failed"),
+  };
+}
+
+function redactKeyLikeText(value: string): string {
+  return value
+    .replace(/AIza[0-9A-Za-z_-]{20,}/g, "[redacted-google-key]")
+    .replace(/xai-[0-9A-Za-z_-]{20,}/g, "[redacted-xai-key]")
+    .slice(0, 500);
 }
