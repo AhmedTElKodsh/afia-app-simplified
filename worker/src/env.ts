@@ -20,6 +20,9 @@ export interface Env {
   ADMIN_TOKEN?: string;
   GEMINI_API_KEY: string;
   GEMINI_API_KEYS?: string;
+  GEMINI_API_KEYS2?: string;
+  GEMINI_API_KEYS3?: string;
+  GEMINI_API_KEYS4?: string;
   GEMINI_API_KEY2?: string;
   GEMINI_API_KEY3?: string;
   GEMINI_API_KEY4?: string;
@@ -39,6 +42,9 @@ export function loadEnv(): Env {
   return {
     GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
     GEMINI_API_KEYS: process.env.GEMINI_API_KEYS,
+    GEMINI_API_KEYS2: process.env.GEMINI_API_KEYS2,
+    GEMINI_API_KEYS3: process.env.GEMINI_API_KEYS3,
+    GEMINI_API_KEYS4: process.env.GEMINI_API_KEYS4,
     GEMINI_API_KEY2: process.env.GEMINI_API_KEY2,
     GEMINI_API_KEY3: process.env.GEMINI_API_KEY3,
     GEMINI_API_KEY4: process.env.GEMINI_API_KEY4,
