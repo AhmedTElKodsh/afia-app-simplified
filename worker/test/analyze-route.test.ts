@@ -159,6 +159,42 @@ describe("POST /api/analyze", () => {
     expect(mocks.callGemini).toHaveBeenNthCalledWith(2, expect.objectContaining({ apiKey: "secondary" }));
   });
 
+  it("tries every configured Gemini key before falling back", async () => {
+    mocks.callGemini
+      .mockRejectedValueOnce(new Error("invalid first"))
+      .mockRejectedValueOnce(new Error("invalid second"))
+      .mockResolvedValueOnce(JSON.stringify({
+        readingPossible: true,
+        meniscusVisible: "yes",
+        oilSurfaceYRatio: 0.5,
+        nearestReferenceMl: 750,
+        qualityFlags: [],
+        confidence: 0.7,
+      }));
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEYS: "bad-a,bad-b",
+        GEMINI_API_KEY: "primary",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(200);
+    expect(mocks.callGemini).toHaveBeenNthCalledWith(1, expect.objectContaining({ apiKey: "bad-a" }));
+    expect(mocks.callGemini).toHaveBeenNthCalledWith(2, expect.objectContaining({ apiKey: "bad-b" }));
+    expect(mocks.callGemini).toHaveBeenNthCalledWith(3, expect.objectContaining({ apiKey: "primary" }));
+    expect(mocks.callGrok).not.toHaveBeenCalled();
+  });
+
   it("falls back to Grok when Gemini retries fail", async () => {
     mocks.callGemini.mockRejectedValue(new Error("quota"));
 
@@ -200,5 +236,62 @@ describe("POST /api/analyze", () => {
     expect(mocks.saveAnalysis).toHaveBeenCalledWith(expect.objectContaining({
       result: expect.objectContaining({ provider: "grok" }),
     }));
+  });
+
+  it("returns sanitized provider diagnostics when all LLM providers fail", async () => {
+    const error = new Error("Gemini API failed with 403: invalid key AIzaTESTSECRET1234567890");
+    Object.assign(error, { status: 403 });
+    mocks.callGemini.mockRejectedValue(error);
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(502);
+    await expect(res.json()).resolves.toEqual({
+      error: "LLM analysis failed",
+      detail: {
+        status: 403,
+        message: "Gemini API failed with 403: invalid key [redacted-google-key]",
+      },
+    });
+  });
+
+  it("returns sanitized persistence diagnostics when Supabase save fails", async () => {
+    mocks.saveAnalysis.mockRejectedValue(new Error("Supabase image upload failed: bucket missing"));
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(500);
+    await expect(res.json()).resolves.toEqual({
+      error: "Analysis persistence failed",
+      detail: {
+        message: "Supabase image upload failed: bucket missing",
+      },
+    });
   });
 });
