@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - button "language" [ref=e4] [cursor=pointer]: ع
+    - button "theme" [ref=e5] [cursor=pointer]: 🌙
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - heading "Mock QR links" [level=1] [ref=e8]
+      - generic [ref=e9]:
+        - article [ref=e10]:
+          - img "Mock QR for Afia 1.5L" [ref=e12]:
+            - generic [ref=e18]: http://localhost:5174/scan?size=1.5L
+          - heading "Afia 1.5L" [level=2] [ref=e19]
+          - link "Scan Afia 1.5L" [ref=e20] [cursor=pointer]:
+            - /url: /scan?size=1.5L
+        - article [ref=e21]:
+          - img "Mock QR for Afia 2.5L" [ref=e23]:
+            - generic [ref=e29]: http://localhost:5174/scan?size=2.5L
+          - heading "Afia 2.5L" [level=2] [ref=e30]
+          - link "Scan Afia 2.5L" [ref=e31] [cursor=pointer]:
+            - /url: /scan?size=2.5L

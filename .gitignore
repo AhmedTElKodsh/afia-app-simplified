@@ -1,0 +1,78 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.wrangler/
+
+# Environment variables
+.env
+.env.local
+.dev.vars
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Eval run outputs (keep .gitkeep and signoffs)
+runs/*.jsonl
+!runs/signoffs.jsonl
+runs/cv-eval-*/
+runs/stage15-signoff/
+
+# Local image/model datasets are too large for GitHub.
+# Keep small hand-authored assets tracked explicitly when needed.
+images-databse/
+oil-bottle-augmented/
+oil-bottle-images/
+oil-bottle-frames/**
+!oil-bottle-frames/
+!oil-bottle-frames/afia-bottle-clean.svg
+
+# Local agent/tool state and generated migration logs
+.agent/
+.claude/
+.cline/
+.bob/
+.opencode/
+.trae/
+.gsd.migrating/
+agent-os/
+
+# ── GSD baseline (auto-generated) ──
+.gsd
+.gsd-id
+.mcp.json
+.bg-shell/
+*~
+*.code-workspace
+.env.*
+!.env.example
+.next/
+build/
+__pycache__/
+*.pyc
+.venv/
+venv/
+target/
+vendor/
+.cache/
+tmp/

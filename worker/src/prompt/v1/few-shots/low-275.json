@@ -1,0 +1,11 @@
+{
+  "imagePath": "oil-bottle-frames/275ml/275ml_t0002.50s_f0005.jpg",
+  "expected": {
+    "readingPossible": true,
+    "meniscusVisible": "yes",
+    "oilSurfaceYRatio": 0.82,
+    "nearestReferenceMl": 275,
+    "qualityFlags": [],
+    "confidence": 0.88
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "afia-app-simplified",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "eval:dev": "pnpm --filter worker eval:dev",
+    "eval:holdout": "pnpm --filter worker eval:holdout",
+    "eval:dev-quick": "pnpm --filter worker eval:dev-quick",
+    "eval:edge": "pnpm --filter worker eval:edge",
+    "signoff": "pnpm --filter worker signoff"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3",
+    "@types/node": "22.9.0"
+  },
+  "packageManager": "pnpm@9.12.3"
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "afia-stage1",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "rules": [
+    {
+      "type": "Data",
+      "globs": ["**/*.onnx"],
+      "fallthrough": true
+    }
+  ],
+  "assets": {
+    "directory": "../web/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": { "enabled": true }
+}
