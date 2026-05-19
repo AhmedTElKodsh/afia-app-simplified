@@ -17,6 +17,7 @@ export interface CaptureState {
 }
 
 export interface AnalysisState {
+  analysisId?: string;
   remainingMl: number | null;
   redLineYRatio?: number;
   tier: "success" | "error" | "degraded";
@@ -133,6 +134,7 @@ export function migrateFromOldKeys(): boolean {
         const parsed = JSON.parse(analysis);
         const tier = parsed.tier === "error" ? "error" : "success";
         state.analysis = {
+          analysisId: typeof parsed.analysisId === "string" ? parsed.analysisId : undefined,
           remainingMl: parsed.remainingMl ?? null,
           tier,
           confidence: parsed.confidence ?? 0,

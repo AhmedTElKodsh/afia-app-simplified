@@ -26,6 +26,7 @@ describe("camera capture shell", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
+        analysisId: "0d44aecc-8344-44c8-8b7f-201216f7c9f9",
         remainingMl: 900,
         consumedMl: 600,
         redLineYRatio: 0.42,
@@ -103,6 +104,7 @@ describe("camera capture shell", () => {
     expect(sessionStorage.getItem("afia.capture")).toBe("data:image/jpeg;base64,captured-frame");
     expect(sessionStorage.getItem("afia.captureSource")).toBe("camera");
     expect(sessionStorage.getItem("afia.analysis")).toContain("\"remainingMl\":900");
+    expect(sessionStorage.getItem("afia.state")).toContain("0d44aecc-8344-44c8-8b7f-201216f7c9f9");
     expect(screen.getByRole("slider", { name: /oil level/i })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /captured bottle/i })).toHaveAttribute(
       "src",

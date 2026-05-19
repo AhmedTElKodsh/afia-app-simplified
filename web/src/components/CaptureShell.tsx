@@ -85,8 +85,8 @@ export function CaptureShell() {
     setCameraState("analyzing");
 
     try {
-      const analysis = await analyzeCapture(dataUrl);
-      writeState({ analysis: { ...analysis, tier: "success" as const } });
+      const { analysis, analysisId } = await analyzeCapture(dataUrl);
+      writeState({ analysis: { ...analysis, analysisId, tier: "success" as const } });
       writeLegacySessionValue("afia.analysis", JSON.stringify(analysis));
       navigate(`/result?size=${encodeURIComponent(DEFAULT_BOTTLE_SIZE)}`);
     } catch (err) {
@@ -195,7 +195,7 @@ export function CaptureShell() {
   );
 }
 
-async function analyzeCapture(imageBase64: string): Promise<AnalysisResultContract> {
+async function analyzeCapture(imageBase64: string): Promise<{ analysis: AnalysisResultContract; analysisId?: string }> {
   const response = await fetch("/api/analyze", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -206,7 +206,11 @@ async function analyzeCapture(imageBase64: string): Promise<AnalysisResultContra
   });
 
   if (!response.ok) throw new Error(`Analysis failed with ${response.status}`);
-  return AnalysisResultSchema.parse(await response.json());
+  const body = await response.json();
+  return {
+    analysis: AnalysisResultSchema.parse(body),
+    analysisId: typeof body?.analysisId === "string" ? body.analysisId : undefined,
+  };
 }
 
 function writeLegacySessionValue(key: string, value: string): void {
