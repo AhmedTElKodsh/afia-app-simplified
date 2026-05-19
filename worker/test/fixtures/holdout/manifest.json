@@ -377,5 +377,5 @@
     }
   ],
   "sealed": true,
-  "holdoutTouches": 0
+  "holdoutTouches": 3
 }
