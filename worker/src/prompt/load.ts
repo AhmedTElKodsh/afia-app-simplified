@@ -54,7 +54,7 @@ function hash16(s: string): string {
 }
 
 export async function loadPrompt(version: string): Promise<LoadedPrompt> {
-  const root = join(__dirname, version);
+  const root = join(baseDir, version);
   const systemText = await readFile(join(root, "system.md"), "utf8");
   const userText = await readFile(join(root, "bottle-reference.md"), "utf8");
   const fewshotDir = join(root, "few-shots");
