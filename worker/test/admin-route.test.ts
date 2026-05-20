@@ -141,15 +141,45 @@ describe("admin routes", () => {
     );
 
     expect(res.status).toBe(200);
-    const body = await res.json() as { trustedOnly: boolean; rows: Array<{ id: string; trustedLabel: boolean; labelSource: string; remainingMl: number }> };
+    const body = await res.json() as { trustedOnly: boolean; rows: Array<{ id: string; trustedLabel: boolean; labelSource: string; correctionSource: string; remainingMl: number }> };
     expect(body.trustedOnly).toBe(true);
     expect(body.rows).toHaveLength(2);
     expect(body.rows.map((row) => row.id)).toEqual([
       "11111111-1111-4111-8111-111111111111",
       "22222222-2222-4222-8222-222222222222",
     ]);
-    expect(body.rows[0]).toMatchObject({ trustedLabel: true, labelSource: "model_prediction", remainingMl: 900 });
-    expect(body.rows[1]).toMatchObject({ trustedLabel: true, labelSource: "admin_correction", remainingMl: 825 });
+    expect(body.rows[0]).toMatchObject({ trustedLabel: true, labelSource: "model_prediction", correctionSource: "model_prediction", remainingMl: 900 });
+    expect(body.rows[1]).toMatchObject({ trustedLabel: true, labelSource: "admin_correction", correctionSource: "admin_correction", remainingMl: 825 });
+  });
+
+  it("preserves user-submitted correction provenance in dataset exports", async () => {
+    mocks.listAnalyses.mockResolvedValueOnce([
+      {
+        ...sampleRecord,
+        id: "55555555-5555-4555-8555-555555555555",
+        correctionStatus: "manual_corrected",
+        adminFlag: "manual",
+        adminCorrectedMl: 715,
+        adminNote: "User submitted correction: Slider adjustment",
+      },
+    ]);
+
+    const res = await app.request(
+      "/api/admin/dataset/export?limit=100",
+      { headers: { authorization: "Bearer secret" } },
+      { ADMIN_TOKEN: "secret" },
+    );
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { rows: Array<{ labelSource: string; correctionSource: string; remainingMl: number; originalRemainingMl: number }> };
+    expect(body.rows).toEqual([
+      expect.objectContaining({
+        labelSource: "user_submitted_correction",
+        correctionSource: "user_submitted_correction",
+        remainingMl: 715,
+        originalRemainingMl: 900,
+      }),
+    ]);
   });
 
   it("can include diagnostic-only records in the dataset export", async () => {

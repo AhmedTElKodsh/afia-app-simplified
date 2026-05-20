@@ -119,6 +119,12 @@ Verification:
 - Sample export generated from fixture data.
 - Manual inspection of exported fields.
 
+Implemented local evidence:
+
+- `GET /api/admin/dataset/export` now preserves a separate `correctionSource` field so trusted labels distinguish model predictions, user-submitted corrections, admin corrections, manual ground-truth uploads, and diagnostic-only records.
+- The admin dataset tab shows the export rows in a reviewable table with label source, correction source, trusted status, and remaining ml while preserving the raw JSON manifest for training-script handoff.
+- The tracked bottle outline asset required by `CaptureShell` is present in the maintained tree so web tests and production builds can resolve the capture guide.
+
 ### S22 - Field Pilot Collection Plan
 
 Deliverables:

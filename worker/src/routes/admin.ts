@@ -90,14 +90,20 @@ type ManualUploadBody = {
   adminNote: string | null;
 };
 
-type DatasetLabelSource = "model_prediction" | "admin_correction" | "manual_ground_truth" | "diagnostic_only";
+type DatasetCorrectionSource =
+  | "model_prediction"
+  | "user_submitted_correction"
+  | "admin_correction"
+  | "manual_ground_truth"
+  | "diagnostic_only";
 
 type DatasetExportRow = {
   id: string;
   imageUrl: string;
   bottleSize: BottleSize;
   trustedLabel: boolean;
-  labelSource: DatasetLabelSource;
+  labelSource: DatasetCorrectionSource;
+  correctionSource: DatasetCorrectionSource;
   remainingMl: number | null;
   consumedMl: number | null;
   redLineYRatio: number | null;
@@ -202,7 +208,8 @@ function toDatasetRow(record: AnalysisRecord): DatasetExportRow {
     imageUrl: record.imageUrl,
     bottleSize: record.bottleSize,
     trustedLabel,
-    labelSource: trustedLabel ? labelSource(record) : "diagnostic_only",
+    labelSource: trustedLabel ? correctionSource(record) : "diagnostic_only",
+    correctionSource: correctionSource(record),
     remainingMl: trustedLabel ? labelMl : null,
     consumedMl: trustedLabel ? BOTTLE_1_5L.capacityMl - labelMl : null,
     redLineYRatio: trustedLabel ? mlToYRatio(labelMl) : null,
@@ -236,10 +243,12 @@ function finalLabelMl(record: AnalysisRecord): number | null {
   return null;
 }
 
-function labelSource(record: AnalysisRecord): DatasetLabelSource {
+function correctionSource(record: AnalysisRecord): DatasetCorrectionSource {
   if (record.provider === "manual") return "manual_ground_truth";
+  if (record.adminNote?.startsWith("User submitted correction")) return "user_submitted_correction";
   if (record.adminCorrectedMl !== null) return "admin_correction";
-  return "model_prediction";
+  if (record.correctionStatus === "approved") return "model_prediction";
+  return "diagnostic_only";
 }
 
 function mlToYRatio(remainingMl: number): number {

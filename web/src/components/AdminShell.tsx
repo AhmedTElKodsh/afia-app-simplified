@@ -305,6 +305,7 @@ type DatasetExportResponse = {
     imageUrl: string;
     trustedLabel: boolean;
     labelSource: string;
+    correctionSource: string;
     remainingMl: number | null;
     excludeReason: string | null;
   }>;
@@ -357,6 +358,30 @@ function DatasetExport({ token }: { token: string }) {
           <p className="text-sm text-neutral-300">
             Version {manifest.datasetVersion} - {manifest.trustedOnly ? "trusted labels only" : "trusted and diagnostic records"}
           </p>
+          <div className="overflow-x-auto rounded-md border border-white/15">
+            <table className="w-full min-w-[720px] text-left text-sm">
+              <thead className="bg-black/40 text-xs uppercase text-neutral-400">
+                <tr>
+                  <th className="px-3 py-2 font-semibold">Record</th>
+                  <th className="px-3 py-2 font-semibold">Label</th>
+                  <th className="px-3 py-2 font-semibold">Correction Source</th>
+                  <th className="px-3 py-2 font-semibold">Remaining ml</th>
+                  <th className="px-3 py-2 font-semibold">Export Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {manifest.rows.map((row) => (
+                  <tr key={row.id}>
+                    <td className="max-w-56 truncate px-3 py-2 text-neutral-300">{row.id}</td>
+                    <td className="px-3 py-2 text-neutral-200">{row.labelSource}</td>
+                    <td className="px-3 py-2 text-neutral-200">{row.correctionSource}</td>
+                    <td className="px-3 py-2 text-neutral-200">{row.remainingMl ?? "diagnostic"}</td>
+                    <td className="px-3 py-2 text-neutral-200">{row.trustedLabel ? "trusted" : row.excludeReason ?? "excluded"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <pre className="max-h-96 overflow-auto rounded-md bg-black/40 p-3 text-xs text-neutral-200">
             {JSON.stringify(manifest, null, 2)}
           </pre>

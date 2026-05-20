@@ -68,6 +68,7 @@ describe("admin shell", () => {
             imageUrl: analysis.imageUrl,
             trustedLabel: true,
             labelSource: "model_prediction",
+            correctionSource: "user_submitted_correction",
             remainingMl: 900,
             excludeReason: null,
           }],
@@ -157,6 +158,7 @@ describe("admin shell", () => {
 
     expect(await screen.findByText(/1 records ready/i)).toBeInTheDocument();
     expect(screen.getByText(/trusted labels only/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/user_submitted_correction/i).length).toBeGreaterThan(0);
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
         "/api/admin/dataset/export?limit=200",
