@@ -8,7 +8,7 @@ import {
   type CorrectionStatus,
 } from "@afia/shared";
 
-type Tab = "queue" | "upload";
+type Tab = "queue" | "upload" | "dataset";
 
 const ADMIN_TOKEN_KEY = "afia.adminToken";
 
@@ -55,9 +55,18 @@ export function AdminShell() {
           >
             Manual Upload
           </button>
+          <button
+            className={tabClass(tab === "dataset")}
+            type="button"
+            onClick={() => setTab("dataset")}
+          >
+            Dataset Export
+          </button>
         </div>
 
-        {tab === "queue" ? <ReviewQueue token={token} /> : <ManualUpload token={token} />}
+        {tab === "queue" ? <ReviewQueue token={token} /> : null}
+        {tab === "upload" ? <ManualUpload token={token} /> : null}
+        {tab === "dataset" ? <DatasetExport token={token} /> : null}
       </section>
     </main>
   );
@@ -285,6 +294,75 @@ function ManualUpload({ token }: { token: string }) {
       </button>
       {message ? <p className="text-sm text-neutral-300">{message}</p> : null}
     </form>
+  );
+}
+
+type DatasetExportResponse = {
+  datasetVersion: string;
+  trustedOnly: boolean;
+  rows: Array<{
+    id: string;
+    imageUrl: string;
+    trustedLabel: boolean;
+    labelSource: string;
+    remainingMl: number | null;
+    excludeReason: string | null;
+  }>;
+};
+
+function DatasetExport({ token }: { token: string }) {
+  const [includeDiagnostics, setIncludeDiagnostics] = useState(false);
+  const [manifest, setManifest] = useState<DatasetExportResponse | null>(null);
+  const [message, setMessage] = useState("");
+
+  async function loadExport() {
+    setMessage("Loading dataset export...");
+    const suffix = includeDiagnostics ? "?limit=200&includeDiagnostics=true" : "?limit=200";
+    try {
+      const res = await fetch(`/api/admin/dataset/export${suffix}`, { headers: adminHeaders(token) });
+      if (!res.ok) {
+        setManifest(null);
+        setMessage(adminFailureMessage(res.status, "load dataset export"));
+        return;
+      }
+      const data = await res.json() as DatasetExportResponse;
+      setManifest(data);
+      setMessage(`${data.rows.length} records ready.`);
+    } catch {
+      setManifest(null);
+      setMessage("Could not load dataset export.");
+    }
+  }
+
+  return (
+    <section className="grid gap-4 rounded-md border border-white/15 bg-white/8 p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <label className="flex items-center gap-3 text-sm text-neutral-300">
+          <input
+            checked={includeDiagnostics}
+            className="h-4 w-4 accent-amber-300"
+            type="checkbox"
+            onChange={(event) => setIncludeDiagnostics(event.currentTarget.checked)}
+          />
+          Include diagnostic records
+        </label>
+        <button className="rounded-md bg-amber-300 px-4 py-2 font-semibold text-neutral-950" type="button" onClick={loadExport}>
+          Load export
+        </button>
+      </div>
+
+      {message ? <p className="text-sm text-neutral-300">{message}</p> : null}
+      {manifest ? (
+        <div className="grid gap-3">
+          <p className="text-sm text-neutral-300">
+            Version {manifest.datasetVersion} - {manifest.trustedOnly ? "trusted labels only" : "trusted and diagnostic records"}
+          </p>
+          <pre className="max-h-96 overflow-auto rounded-md bg-black/40 p-3 text-xs text-neutral-200">
+            {JSON.stringify(manifest, null, 2)}
+          </pre>
+        </div>
+      ) : null}
+    </section>
   );
 }
 

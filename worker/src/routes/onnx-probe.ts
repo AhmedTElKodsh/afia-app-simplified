@@ -18,7 +18,7 @@ export async function onnxProbeRoute(c: Context<{ Bindings: Env }>) {
       // Run a single inference
       const t1 = Date.now();
       const results = await runOnnxInference({
-        input: new ort.Tensor(new Float32Array(4).fill(0.5), [1, 4]),
+        input: new ort.Tensor(readProbeInput(c.req.query("input")), [1, 4]),
       });
       const inferenceTime = Date.now() - t1;
 
@@ -36,7 +36,7 @@ export async function onnxProbeRoute(c: Context<{ Bindings: Env }>) {
     // Warm inference
     const t1 = Date.now();
     const results = await runOnnxInference({
-      input: new ort.Tensor(new Float32Array(4).fill(0.5), [1, 4]),
+      input: new ort.Tensor(readProbeInput(c.req.query("input")), [1, 4]),
     });
     const inferenceTime = Date.now() - t1;
 
@@ -51,4 +51,15 @@ export async function onnxProbeRoute(c: Context<{ Bindings: Env }>) {
   } catch (e) {
     return c.json({ error: (e as Error).message }, 500);
   }
+}
+
+function readProbeInput(raw: string | undefined): Float32Array {
+  if (!raw) return new Float32Array(4).fill(0.5);
+
+  const values = raw.split(",").map((value) => Number(value.trim()));
+  if (values.length !== 4 || values.some((value) => !Number.isFinite(value))) {
+    throw new Error("input must contain four comma-separated numbers");
+  }
+
+  return new Float32Array(values);
 }

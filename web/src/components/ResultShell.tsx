@@ -33,6 +33,28 @@ export function ResultShell() {
   );
   const consumedMl = BOTTLE_1_5L.capacityMl - remainingMl;
   const cupDisplay = formatCups(consumedMl);
+  const [feedbackState, setFeedbackState] = useState<"idle" | "saving" | "saved" | "failed">("idle");
+  const canSubmitFeedback = initialResult != null && !isErrorResult(initialResult) && Boolean(initialResult.analysisId);
+
+  async function submitCorrection() {
+    if (!initialResult || isErrorResult(initialResult) || !initialResult.analysisId) return;
+    setFeedbackState("saving");
+    try {
+      const res = await fetch(`/api/analyses/${encodeURIComponent(initialResult.analysisId)}/user-correction`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          correctedRemainingMl: remainingMl,
+          acceptedEstimate: remainingMl === modelRemainingMl,
+          note: remainingMl === modelRemainingMl ? null : "Customer adjusted slider on result screen",
+        }),
+      });
+      if (!res.ok) throw new Error(`Correction failed with HTTP ${res.status}`);
+      setFeedbackState("saved");
+    } catch {
+      setFeedbackState("failed");
+    }
+  }
 
   return (
     <main className="min-h-screen bg-neutral-950 px-5 py-16 text-white">
@@ -109,6 +131,24 @@ export function ResultShell() {
                   <Metric label="Remaining" value={`${remainingMl} ml`} />
                   <Metric label="Consumed" value={`${consumedMl} ml`} />
                 </div>
+                {canSubmitFeedback && (
+                  <div className="mt-4 border-t border-white/10 pt-4">
+                    <button
+                      className="w-full rounded-md bg-amber-300 px-4 py-3 text-sm font-semibold text-neutral-950 disabled:cursor-not-allowed disabled:opacity-60"
+                      disabled={feedbackState === "saving"}
+                      type="button"
+                      onClick={submitCorrection}
+                    >
+                      {remainingMl === modelRemainingMl ? "Accept estimate" : "Submit correction"}
+                    </button>
+                    {feedbackState === "saved" && (
+                      <p className="mt-2 text-center text-xs text-emerald-300">Saved for review</p>
+                    )}
+                    {feedbackState === "failed" && (
+                      <p className="mt-2 text-center text-xs text-red-300">Could not save correction</p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )
@@ -297,6 +337,7 @@ function readStoredResult(): StoredAnalysisResult | null {
   // Normal analysis path
   if (typeof a.remainingMl !== "number" || typeof a.redLineYRatio !== "number") return null;
   return {
+    analysisId: typeof a.analysisId === "string" ? a.analysisId : undefined,
     remainingMl: a.remainingMl,
     redLineYRatio: clamp(a.redLineYRatio, 0, 1),
   };

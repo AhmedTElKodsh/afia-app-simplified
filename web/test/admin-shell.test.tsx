@@ -59,6 +59,20 @@ describe("admin shell", () => {
       if (url === "/api/admin/upload") {
         return new Response(JSON.stringify({ analysis }), { status: 201 });
       }
+      if (url.startsWith("/api/admin/dataset/export")) {
+        return new Response(JSON.stringify({
+          datasetVersion: "2026-05-20",
+          trustedOnly: !url.includes("includeDiagnostics=true"),
+          rows: [{
+            id: analysis.id,
+            imageUrl: analysis.imageUrl,
+            trustedLabel: true,
+            labelSource: "model_prediction",
+            remainingMl: 900,
+            excludeReason: null,
+          }],
+        }), { status: 200 });
+      }
       return new Response("not found", { status: 404 });
     }));
   });
@@ -130,6 +144,23 @@ describe("admin shell", () => {
             adminNote: "Ground truth",
           }),
         }),
+      );
+    });
+  });
+
+  it("loads the dataset export from the admin dashboard", async () => {
+    renderAdmin();
+
+    fireEvent.click(screen.getByRole("button", { name: /dataset export/i }));
+    fireEvent.change(screen.getByLabelText(/^token$/i), { target: { value: "secret" } });
+    fireEvent.click(screen.getByRole("button", { name: /load export/i }));
+
+    expect(await screen.findByText(/1 records ready/i)).toBeInTheDocument();
+    expect(screen.getByText(/trusted labels only/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(
+        "/api/admin/dataset/export?limit=200",
+        expect.objectContaining({ headers: expect.objectContaining({ authorization: "Bearer secret" }) }),
       );
     });
   });

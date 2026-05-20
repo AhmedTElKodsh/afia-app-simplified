@@ -6,7 +6,7 @@ import { I18nProvider } from "../src/i18n";
 import { ThemeProvider } from "../src/theme";
 
 describe("mock QR page", () => {
-  it("renders product-specific scan links for 1.5L and 2.5L bottles", () => {
+  it("renders the 1.5L scan link and keeps 2.5L as mock-only identity", () => {
     render(
       <I18nProvider>
         <ThemeProvider>
@@ -18,7 +18,8 @@ describe("mock QR page", () => {
     );
 
     expect(screen.getByRole("link", { name: /scan afia 1\.5l/i })).toHaveAttribute("href", "/scan?size=1.5L");
-    expect(screen.getByRole("link", { name: /scan afia 2\.5l/i })).toHaveAttribute("href", "/scan?size=2.5L");
+    expect(screen.queryByRole("link", { name: /scan afia 2\.5l/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/mock qr only\. 2\.5l scan flow is delayed/i)).toBeInTheDocument();
     expect(screen.getAllByRole("img", { name: /mock qr for afia/i })).toHaveLength(2);
   });
 });

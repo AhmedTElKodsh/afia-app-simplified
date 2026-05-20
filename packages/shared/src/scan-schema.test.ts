@@ -10,8 +10,10 @@ import {
   SupabaseAnalysisRecordSchema,
   toSupabaseAnalysisRecord,
   PROVIDERS,
+  ProviderSchema,
   ProductIdentitySchema,
   ScanWarningSchema,
+  UserCorrectionRequestSchema,
   isSupportedAnalysisSize,
   getBottleSpec,
 } from "./index";
@@ -98,12 +100,31 @@ describe("scan analysis schemas", () => {
   });
 
   it("defines provider, warning, and correction enums for Supabase records", () => {
-    expect(PROVIDERS).toEqual(["gemini", "grok", "cv", "cv_llm"]);
+    expect(PROVIDERS).toEqual(["gemini", "grok", "cv", "cv_llm", "manual"]);
     expect(ScanWarningSchema.parse("wrong_side")).toBe("wrong_side");
+    expect(ScanWarningSchema.parse("poor_lighting")).toBe("poor_lighting");
+    expect(ProviderSchema.parse("manual")).toBe("manual");
     expect(CorrectionStatusSchema.parse("manual_corrected")).toBe("manual_corrected");
     expect(AdminFlagSchema.parse("too_big")).toBe("too_big");
     expect(AdminFlagSchema.parse("too_small")).toBe("too_small");
     expect(() => ProviderSchema.parse("unknown")).toThrow();
+  });
+
+  it("validates user correction payloads on the shared 55 ml scale", () => {
+    expect(UserCorrectionRequestSchema.parse({
+      correctedRemainingMl: 715,
+      acceptedEstimate: false,
+      note: "slider adjustment",
+    })).toMatchObject({
+      correctedRemainingMl: 715,
+      acceptedEstimate: false,
+    });
+
+    expect(() => UserCorrectionRequestSchema.parse({
+      correctedRemainingMl: 1500,
+      acceptedEstimate: false,
+      note: null,
+    })).toThrow(/55 ml step/);
   });
 
   it("validates product analysis records", () => {

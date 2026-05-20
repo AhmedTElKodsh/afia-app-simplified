@@ -108,4 +108,64 @@ describe("Supabase analysis storage", () => {
       admin_flag: null,
     });
   });
+
+  it("updates user slider corrections as pending admin review", async () => {
+    const update = vi.fn(() => ({
+      eq: vi.fn(() => ({
+        select: vi.fn(() => ({
+          single: vi.fn(async () => ({
+            data: {
+              id: "0d44aecc-8344-44c8-8b7f-201216f7c9f9",
+              created_at: "2026-05-10T09:00:00.000Z",
+              bottle_size: "1.5L",
+              image_url: "https://example.supabase.co/storage/test.jpg",
+              remaining_ml: 900,
+              consumed_ml: 600,
+              red_line_y_ratio: 0.42,
+              confidence: 0.8,
+              warnings: [],
+              provider: "gemini",
+              prompt_version: "v1",
+              model_id: "gemini-test",
+              raw_model_text: "{}",
+              correction_status: "pending_review",
+              admin_flag: "manual",
+              admin_corrected_ml: 715,
+              admin_note: "User submitted correction: Slider adjustment",
+            },
+            error: null,
+          })),
+        })),
+      })),
+    }));
+    const client = {
+      storage: { from: vi.fn() },
+      from: vi.fn(() => ({ update })),
+    };
+    const storage = createAnalysisStorage(
+      {
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+        SUPABASE_STORAGE_BUCKET: "analysis-images",
+        GEMINI_API_KEY: "gemini",
+        MODEL_ID: "gemini-test",
+      },
+      () => client as never,
+    );
+
+    const record = await storage.saveUserCorrection({
+      id: "0d44aecc-8344-44c8-8b7f-201216f7c9f9",
+      correctedRemainingMl: 715,
+      acceptedEstimate: false,
+      note: "Slider adjustment",
+    });
+
+    expect(update).toHaveBeenCalledWith({
+      correction_status: "pending_review",
+      admin_flag: "manual",
+      admin_corrected_ml: 715,
+      admin_note: "User submitted correction: Slider adjustment",
+    });
+    expect(record.adminCorrectedMl).toBe(715);
+  });
 });

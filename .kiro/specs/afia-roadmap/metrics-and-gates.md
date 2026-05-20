@@ -22,6 +22,19 @@ The system should reject, flag, or route to fallback when it detects:
 - Unsupported bottle size.
 - Confidence below the stage-specific threshold.
 
+Minimum Stage 1 client-side checks:
+
+- Reject very low-resolution captures before analysis.
+- Reject very dark or overexposed frames when browser canvas data is available.
+- Reject very blurry or visually flat frames when a simple focus/variance check is available.
+- Preserve quality warnings from API, CV diagnostics, user correction, and admin review so M006 can decide which records are training labels and which are diagnostics only.
+
+Functional outline and auto-capture gates:
+
+- Red/orange/green guidance must be treated as prototype guidance until real-phone tests prove stability.
+- Auto-capture is allowed in Stage 1 only as a fallback-safe prototype with manual capture still available.
+- Production auto-capture requires field evidence that it improves accepted capture rate without increasing surprise captures, missed bottles, or user corrections.
+
 ## Stage Progression Gates
 
 ### Stage 1 to Stage 2
@@ -34,6 +47,8 @@ Stage 2 cannot begin until Stage 1 has:
 - Field pilot coverage across common capture conditions.
 - 55ml accuracy evidence for valid 1.5L images.
 - A decision note approving local-model development.
+- One deployed phone-to-admin trace with persisted analysis id, admin review, and correction proof.
+- Dataset inclusion/exclusion rules for user corrections, admin corrections, manual uploads, rejected captures, and uncertain labels.
 
 ### Stage 2 to Stage 3
 
@@ -67,7 +82,7 @@ Across all stages, scan and evaluation records should preserve enough informatio
 - Confidence and warnings.
 - Provider/model/runtime used.
 - Prompt/model/dataset version where applicable.
-- User/admin correction.
+- Original prediction, user-submitted correction, admin correction, and final accepted label as distinct fields.
+- Correction source and review status.
 - Capture quality tags.
 - Final accepted label status.
-

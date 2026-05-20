@@ -22,12 +22,18 @@ export function MockQrPage() {
                 dangerouslySetInnerHTML={{ __html: buildMockQrSvg(origin, size) }}
               />
               <h2 className="mt-5 text-xl font-semibold">Afia {size}</h2>
-              <Link
-                className="mt-3 inline-flex rounded-md bg-neutral-950 px-4 py-2 text-sm font-medium text-white dark:bg-amber-300 dark:text-neutral-950"
-                to={toRelativeScanUrl(size)}
-              >
-                Scan Afia {size}
-              </Link>
+              {size === DEFAULT_BOTTLE_SIZE ? (
+                <Link
+                  className="mt-3 inline-flex rounded-md bg-neutral-950 px-4 py-2 text-sm font-medium text-white dark:bg-amber-300 dark:text-neutral-950"
+                  to={toRelativeScanUrl(size)}
+                >
+                  Scan Afia {size}
+                </Link>
+              ) : (
+                <p className="mt-3 rounded-md border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm font-medium text-amber-800 dark:text-amber-200">
+                  Mock QR only. 2.5L scan flow is delayed.
+                </p>
+              )}
             </article>
           ))}
         </div>

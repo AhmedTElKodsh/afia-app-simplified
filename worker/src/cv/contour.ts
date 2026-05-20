@@ -1,7 +1,7 @@
 export const CONTOUR_CONFIG = {
-  // Min contour area (pixels) — smaller values capture more candidates
+  // Min contour area (pixels): smaller values capture more candidates.
   minContourArea: 100,
-  // Max bottle contour area as fraction of frame — reject > this ratio
+  // Max bottle contour area as fraction of frame: reject > this ratio.
   maxBottleAreaRatio: 0.45,
 };
 
@@ -14,9 +14,9 @@ import type { ContourRect } from "./scoring.js";
 
 // Fusion config: set to true to enable multi-contour fusion
 export const FUSION_CONFIG = {
-  // Fusion disabled: testing showed it increased empty↔full confusion (6 vs 4 flips on 30 edge-case)
+  // Fusion disabled: testing showed it increased empty/full confusion (6 vs 4 flips on 30 edge-case)
   // despite improving overall exact accuracy (20% vs 13.3%). Reverted to single best-contour.
-  // See runs/heuristic-tuning/fusion-decision.md for detailed comparison.
+  // See .kiro/specs/afia-project-reference/technical-reference.md for the summarized decision.
   enabled: false,
   topN: 3,
 };

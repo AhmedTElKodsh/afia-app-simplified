@@ -16,6 +16,7 @@ import { createAnalysisStorage } from "../storage/supabase.js";
 const PROMPT_VERSION = "v1";
 const DEFAULT_MODEL_ID = "gemini-2.5-flash";
 const DEFAULT_GROK_MODEL_ID = "grok-2-vision-1212";
+const DEFAULT_GROK_FALLBACK_CONFIDENCE = 0.5;
 
 export async function analyzeRoute(c: Context<{ Bindings: Env }>) {
   let body: ReturnType<typeof AnalysisRequestSchema.parse>;
@@ -115,15 +116,37 @@ type ModelAnalysis = {
   promptVersion: string;
   promptHash: string;
   fewshotHash: string;
-  fallbackReason?: "gemini_failed";
+  fallbackReason?: "gemini_failed" | "gemini_low_confidence";
 };
 
 async function analyzeWithFallback(env: Env, keyPool: string[], imageBase64: string): Promise<ModelAnalysis> {
   const prompt = await loadPrompt(PROMPT_VERSION);
 
   try {
+    const geminiRaw = await callGeminiWithRetry(env, keyPool, imageBase64, prompt);
+    const geminiParsed = parseEvidenceResponse(geminiRaw);
+    if (env.GROK_API_KEY && geminiParsed.confidence < readGrokFallbackConfidence(env)) {
+      const modelId = env.GROK_MODEL_ID ?? DEFAULT_GROK_MODEL_ID;
+      return {
+        rawModelText: await callGrok({
+          apiKey: env.GROK_API_KEY,
+          modelId,
+          systemText: prompt.systemText,
+          userText: prompt.userText,
+          imageBase64,
+          targetMimeType: readMimeType(imageBase64),
+        }),
+        provider: "grok",
+        modelId,
+        promptVersion: prompt.promptVersion,
+        promptHash: prompt.promptHash,
+        fewshotHash: prompt.fewshotHash,
+        fallbackReason: "gemini_low_confidence",
+      };
+    }
+
     return {
-      rawModelText: await callGeminiWithRetry(env, keyPool, imageBase64, prompt),
+      rawModelText: geminiRaw,
       provider: "gemini",
       modelId: env.MODEL_ID ?? DEFAULT_MODEL_ID,
       promptVersion: prompt.promptVersion,
@@ -152,6 +175,13 @@ async function analyzeWithFallback(env: Env, keyPool: string[], imageBase64: str
       fallbackReason: "gemini_failed",
     };
   }
+}
+
+function readGrokFallbackConfidence(env: Env): number {
+  const configured = Number(env.GROK_FALLBACK_CONFIDENCE);
+  return Number.isFinite(configured) && configured >= 0 && configured <= 1
+    ? configured
+    : DEFAULT_GROK_FALLBACK_CONFIDENCE;
 }
 
 function stripDataUrlPrefix(value: string): string {

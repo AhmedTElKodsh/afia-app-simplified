@@ -1,14 +1,17 @@
-import { SUPPORTED_BOTTLE_SIZES, type BottleSize } from "./bottle.js";
+import { BOTTLE_1_5L, ML_PER_CUP_QUARTER, SUPPORTED_BOTTLE_SIZES, type BottleSize } from "./bottle.js";
 
-export const PROVIDERS = ["gemini", "grok", "cv", "cv_llm"] as const;
+export const PROVIDERS = ["gemini", "grok", "cv", "cv_llm", "manual"] as const;
 export const SCAN_WARNINGS = [
   "blur",
   "glare",
   "mild_glare",
+  "poor_lighting",
   "wrong_side",
   "partial_bottle",
   "poor_framing",
   "unknown_product",
+  "unsupported_product",
+  "uncertain_label",
   "low_confidence",
 ] as const;
 export const CORRECTION_STATUSES = ["pending_review", "approved", "rejected", "manual_corrected"] as const;
@@ -25,6 +28,12 @@ export interface ProductIdentity {
 
 export interface AnalysisRequest extends ProductIdentity {
   imageBase64: string;
+}
+
+export interface UserCorrectionRequest {
+  correctedRemainingMl: number;
+  acceptedEstimate: boolean;
+  note: string | null;
 }
 
 export interface ProviderEvidence {
@@ -117,6 +126,17 @@ export const AnalysisRequestSchema: Schema<AnalysisRequest> = {
     return {
       bottleSize: BottleSizeSchema.parse(record.bottleSize),
       imageBase64: nonEmptyString(record.imageBase64, "imageBase64"),
+    };
+  },
+};
+
+export const UserCorrectionRequestSchema: Schema<UserCorrectionRequest> = {
+  parse(value) {
+    const record = objectValue(value, "userCorrectionRequest");
+    return {
+      correctedRemainingMl: correctionMlValue(record.correctedRemainingMl, "correctedRemainingMl"),
+      acceptedEstimate: booleanValue(record.acceptedEstimate, "acceptedEstimate"),
+      note: nullable(record.note ?? null, (v) => stringValue(v, "note"), "note"),
     };
   },
 };
@@ -291,6 +311,13 @@ function integerAtLeast(value: unknown, min: number, label: string): number {
   const n = numberAtLeast(value, min, label);
   if (Number.isInteger(n)) return n;
   throw new Error(`${label} must be an integer`);
+}
+
+function correctionMlValue(value: unknown, label: string): number {
+  const maxCorrectionMl = Math.floor(BOTTLE_1_5L.capacityMl / ML_PER_CUP_QUARTER) * ML_PER_CUP_QUARTER;
+  const n = integerAtLeast(value, 0, label);
+  if (n <= maxCorrectionMl && n % ML_PER_CUP_QUARTER === 0) return n;
+  throw new Error(`${label} must be a ${ML_PER_CUP_QUARTER} ml step between 0 and ${maxCorrectionMl}`);
 }
 
 function stringArray(value: unknown, label: string): string[] {

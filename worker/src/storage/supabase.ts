@@ -1,12 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import {
   AnalysisRecordSchema,
+  BOTTLE_1_5L,
   type AnalysisRecord,
   type AnalysisResultContract,
   type AdminFlag,
   type BottleSize,
   type CorrectionStatus,
   type SupabaseAnalysisRecord,
+  type UserCorrectionRequest,
   SupabaseAnalysisRecordSchema,
   toSupabaseAnalysisRecord,
 } from "@afia/shared";
@@ -51,6 +53,10 @@ interface ManualUploadInput {
   adminNote: string | null;
 }
 
+interface UserCorrectionInput extends UserCorrectionRequest {
+  id: string;
+}
+
 export function createAnalysisStorage(env: Env, clientFactory: SupabaseClientFactory = createClient) {
   const url = required(env.SUPABASE_URL, "SUPABASE_URL");
   const serviceRoleKey = required(env.SUPABASE_SERVICE_ROLE_KEY, "SUPABASE_SERVICE_ROLE_KEY");
@@ -84,6 +90,26 @@ export function createAnalysisStorage(env: Env, clientFactory: SupabaseClientFac
         .select()
         .single();
       if (error) throw new Error(`Supabase analysis correction update failed: ${error.message}`);
+
+      return fromSupabaseAnalysisRecord(SupabaseAnalysisRecordSchema.parse(data));
+    },
+
+    async saveUserCorrection(input: UserCorrectionInput): Promise<AnalysisRecord> {
+      const adminNote = input.acceptedEstimate
+        ? "User accepted estimate"
+        : ["User submitted correction", input.note].filter(Boolean).join(": ");
+      const { data, error } = await client
+        .from(ANALYSES_TABLE)
+        .update({
+          correction_status: "pending_review",
+          admin_flag: input.acceptedEstimate ? null : "manual",
+          admin_corrected_ml: input.correctedRemainingMl,
+          admin_note: adminNote,
+        })
+        .eq("id", input.id)
+        .select()
+        .single();
+      if (error) throw new Error(`Supabase user correction update failed: ${error.message}`);
 
       return fromSupabaseAnalysisRecord(SupabaseAnalysisRecordSchema.parse(data));
     },
@@ -138,11 +164,11 @@ export function createAnalysisStorage(env: Env, clientFactory: SupabaseClientFac
         bottleSize: input.bottleSize,
         imageUrl: publicUrl,
         remainingMl: input.remainingMl,
-        consumedMl: Math.max(0, 1500 - input.remainingMl),
-        redLineYRatio: 0,
+        consumedMl: Math.max(0, BOTTLE_1_5L.capacityMl - input.remainingMl),
+        redLineYRatio: mlToYRatio(input.remainingMl),
         confidence: 1,
         warnings: [],
-        provider: "gemini",
+        provider: "manual",
         promptVersion: "manual",
         modelId: "manual-upload",
         rawModelText: JSON.stringify({ source: "manual_upload", remainingMl: input.remainingMl }),
@@ -229,4 +255,9 @@ function extensionForMimeType(mimeType: string): string {
   if (mimeType === "image/png") return "png";
   if (mimeType === "image/webp") return "webp";
   return "jpg";
+}
+
+function mlToYRatio(remainingMl: number): number {
+  const fillFraction = remainingMl / BOTTLE_1_5L.capacityMl;
+  return BOTTLE_1_5L.fillBottomY - fillFraction * (BOTTLE_1_5L.fillBottomY - BOTTLE_1_5L.fillTopY);
 }

@@ -4,7 +4,7 @@
 
 Stage 2 introduces a lightweight local model that can run in mobile browsers while LLM APIs remain available as fallback, evaluator, and development helper. The user-facing result contract should remain stable from Stage 1 so the analysis engine can change without redesigning the workflow.
 
-Stage 2 should not begin until Stage 1 has a disciplined correction dataset.
+Stage 2 should not begin until Stage 1 has a disciplined correction dataset and a live M005 proof that the deployed API/admin loop can persist a real scan.
 
 ## Levels
 
@@ -18,6 +18,8 @@ Deliverables:
 - Clean labels for remaining ml, consumed ml, red-line ratio, product size, capture quality, and approval status.
 - Train/validation/test split with 1.5L coverage across fill levels, lighting, angle, distance, and background.
 - Augmentation rules for lighting, crop, blur, angle, and background variation.
+- Label-source rules that keep model predictions, user slider corrections, admin corrections, and manual ground truth distinct.
+- Exclusion rules for rejected, uncertain, wrong-side, unsupported, and low-quality samples.
 
 Exit gate:
 
@@ -70,21 +72,22 @@ Exit gate:
 
 - New corrections measurably improve evaluation metrics or expose clear failure modes.
 
-### Stage 2.4: Functional Outline, Quality Detection, and Auto-Capture Candidate
+### Stage 2.4: Capture Guidance Calibration and Auto-Capture Hardening
 
-Use local image understanding to improve capture quality.
+Use the Stage 1 field data and model signals to improve capture quality without making the phone UX brittle.
 
 Deliverables:
 
 - Quality checks for blur, glare, wrong side, partial bottle, poor framing, and tilt.
-- Functional outline guidance for move closer, move farther, align bottle, and adjust angle.
-- Optional auto-lock/auto-capture candidate only after guidance is reliable.
+- Calibrated functional outline thresholds for move closer, move farther, align bottle, and adjust downward phone angle.
+- Auto-lock/auto-capture thresholds compared against manual fallback outcomes.
 - Capture quality metadata stored with every scan.
 
 Exit gate:
 
 - Quality guidance reduces bad captures without blocking valid users unnecessarily.
 - Auto-capture is allowed only if it improves accepted capture rate and does not reduce trust.
+- Real-device evidence shows Android/iOS camera behavior is understood before guidance changes are promoted.
 
 ### Stage 2.5: Controlled 2.5L Expansion
 
@@ -105,4 +108,3 @@ Exit gate:
 - Removing API support from normal user scans.
 - Launching local-only behavior without fallback.
 - Treating 2.5L as equal to 1.5L before it has independent evidence.
-

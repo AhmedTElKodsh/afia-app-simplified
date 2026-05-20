@@ -49,7 +49,7 @@ export interface ErrorResult {
 
 /** Union type for stored analysis results — success or error */
 export type StoredAnalysisResult =
-  | { remainingMl: number; redLineYRatio: number }
+  | { analysisId?: string; remainingMl: number; redLineYRatio: number }
   | ErrorResult;
 
 /**

@@ -60,6 +60,7 @@ describe("camera capture shell", () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
     sessionStorage.clear();
@@ -78,7 +79,7 @@ describe("camera capture shell", () => {
     expect(screen.getByText(/photograph the front of the bottle/i)).toBeInTheDocument();
     expect(screen.getByText(/aim slightly downward/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/1\.5l bottle distance and downward phone angle guide/i)).toBeInTheDocument();
-    expect(screen.getByText(/phone angled down, bottle fully visible/i)).toBeInTheDocument();
+    expect(screen.getByText(/place the bottle inside the outline|align the bottle with the outline/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /capture/i })).toBeDisabled();
   });
 
@@ -144,4 +145,35 @@ describe("camera capture shell", () => {
     );
     expect(screen.getByRole("link", { name: /contact support/i })).toBeInTheDocument();
   });
+
+  it("turns the outline green and auto-captures after a stable match", async () => {
+    const sample = new Uint8ClampedArray(96 * 128 * 4);
+    for (let y = 0; y < 128; y += 1) {
+      for (let x = 0; x < 96; x += 1) {
+        const i = (y * 96 + x) * 4;
+        const insideBottle = x >= 29 && x <= 67 && y >= 19 && y <= 90;
+        const value = insideBottle ? 40 : 220;
+        sample[i] = value;
+        sample[i + 1] = value;
+        sample[i + 2] = value;
+        sample[i + 3] = 255;
+      }
+    }
+    vi.mocked(HTMLCanvasElement.prototype.getContext).mockReturnValue({
+      drawImage,
+      getImageData: vi.fn(() => ({ data: sample })),
+    } as unknown as CanvasRenderingContext2D);
+
+    renderScan();
+
+    await waitFor(() => {
+      expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalled();
+    });
+    fireEvent.canPlay(document.querySelector("video")!);
+
+    expect(await screen.findByText(/locked - capturing automatically/i, undefined, { timeout: 2500 })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith("/api/analyze", expect.objectContaining({ method: "POST" }));
+    }, { timeout: 2500 });
+  }, 6000);
 });

@@ -35,7 +35,7 @@ export function ScanShell() {
           <div className="rounded-lg border border-amber-300/40 bg-amber-300/10 p-5">
             <p className="text-lg font-medium">Analysis for this size is pending</p>
             <p className="mt-2 text-sm text-neutral-200">
-              This product identity is preserved, but 2.5L analysis is not enabled in Stage 1.
+              This product identity is preserved for later, but the 2.5L scan flow is delayed.
             </p>
           </div>
         )}

@@ -238,6 +238,44 @@ describe("POST /api/analyze", () => {
     }));
   });
 
+  it("falls back to Grok when Gemini succeeds with low confidence", async () => {
+    mocks.callGemini.mockResolvedValueOnce(JSON.stringify({
+      readingPossible: true,
+      meniscusVisible: "uncertain",
+      oilSurfaceYRatio: 0.5,
+      nearestReferenceMl: 750,
+      qualityFlags: ["low_confidence"],
+      confidence: 0.35,
+    }));
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        GROK_API_KEY: "grok-secret",
+        GROK_MODEL_ID: "grok-test",
+        GROK_FALLBACK_CONFIDENCE: "0.5",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({
+      provider: "grok",
+      rawMetadata: expect.objectContaining({
+        fallbackReason: "gemini_low_confidence",
+      }),
+    });
+    expect(mocks.callGrok).toHaveBeenCalledWith(expect.objectContaining({ apiKey: "grok-secret" }));
+  });
+
   it("returns sanitized provider diagnostics when all LLM providers fail", async () => {
     const error = new Error("Gemini API failed with 403: invalid key AIzaTESTSECRET1234567890");
     Object.assign(error, { status: 403 });

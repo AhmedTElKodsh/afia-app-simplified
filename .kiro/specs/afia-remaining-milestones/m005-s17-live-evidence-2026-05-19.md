@@ -11,7 +11,7 @@ S17 target: prove the deployed Stage 1 Worker can serve the web app, accept a re
 - Worker bundle size after deploy fixes: `531.09 KiB` upload, `102.06 KiB` gzip.
 - `GET /api/health` returned `{"ok":true}`.
 - `GET /api/admin/analyses?limit=5` without admin credentials returned `401 Unauthorized`.
-- A real local 1.5L raster frame, `oil-bottle-frames/1.5L_refs/750ml.jpg`, reached `/api/analyze`.
+- A real local 1.5L raster frame from the uncommitted frame dataset reached `/api/analyze`; the large frame dataset is no longer kept in the source tree after cleanup.
 - The deployed LLM path now passes the Worker runtime boundary after replacing filesystem prompt loading with a bundled prompt fallback.
 - The deployed LLM path now passes the provider boundary after moving Gemini calls to direct REST fetch.
 

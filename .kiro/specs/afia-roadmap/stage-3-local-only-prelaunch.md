@@ -60,6 +60,7 @@ Deliverables:
 - Local quality detection blocks or warns on bad captures.
 - Correction flow works even if network is delayed, with sync when available if persistence is required.
 - Admin receives enough metadata to investigate edge cases.
+- Camera guidance remains usable without relying on color alone; red/orange/green states must have text or equivalent accessibility signals.
 
 Exit gate:
 
@@ -74,15 +75,17 @@ Deliverables:
 - Admin monitoring for model errors, drift, correction rate, rejected captures, and unsupported product attempts.
 - Launch dashboard or report covering accuracy, latency, correction rate, fallback/API usage if any, and device reliability.
 - Privacy and retention decisions for stored images and correction data.
+- Production-calibrated functional outline and optional auto-capture behavior.
+- Controlled 2.5L expansion prerequisites.
 - Final launch/no-launch decision record.
 
 Exit gate:
 
 - Product is launch-ready only when accuracy, performance, reliability, admin monitoring, and privacy gates are all satisfied.
+- 2.5L is not treated as supported until it has independent geometry, dataset, metrics, and sign-off.
 
 ## Out of Stage 3
 
 - New speculative model architectures without evidence from Stage 2.
 - Expanding product sizes before launch candidate reliability is proven.
 - Relying on LLM APIs for normal supported scans.
-

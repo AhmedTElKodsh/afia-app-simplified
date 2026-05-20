@@ -28,6 +28,7 @@ export interface Env {
   GEMINI_API_KEY4?: string;
   GROK_API_KEY?: string;
   GROK_MODEL_ID?: string;
+  GROK_FALLBACK_CONFIDENCE?: string;
   HF_API_KEY?: string;
   OPENROUTER_API_KEY?: string;
   OPENROUTER_MODEL_ID?: string;
@@ -38,7 +39,6 @@ export interface Env {
 }
 
 export function loadEnv(): Env {
-  console.log(`[env] process.env keys: ${Object.keys(process.env).filter(k => k.includes("API_KEY") || k.includes("MODEL")).join(", ")}`);
   return {
     GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
     GEMINI_API_KEYS: process.env.GEMINI_API_KEYS,
@@ -48,10 +48,16 @@ export function loadEnv(): Env {
     GEMINI_API_KEY2: process.env.GEMINI_API_KEY2,
     GEMINI_API_KEY3: process.env.GEMINI_API_KEY3,
     GEMINI_API_KEY4: process.env.GEMINI_API_KEY4,
+    ADMIN_TOKEN: process.env.ADMIN_TOKEN,
     GROK_API_KEY: process.env.GROK_API_KEY,
+    GROK_MODEL_ID: process.env.GROK_MODEL_ID,
+    GROK_FALLBACK_CONFIDENCE: process.env.GROK_FALLBACK_CONFIDENCE,
     HF_API_KEY: process.env.HF_API_KEY,
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
     OPENROUTER_MODEL_ID: process.env.OPENROUTER_MODEL_ID,
     MODEL_ID: process.env.MODEL_ID ?? "gemini-2.5-flash",
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET,
+    SUPABASE_URL: process.env.SUPABASE_URL,
   };
 }

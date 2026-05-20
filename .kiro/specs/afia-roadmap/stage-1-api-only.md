@@ -6,6 +6,8 @@ Stage 1 uses only LLM/API-based analysis for oil-level estimation. Its job is to
 
 Stage 1.0 preserves the current eval-only Gemini capability spike. Later Stage 1 levels add the product shell, API service, result UI, Supabase/Admin loop, and field-quality gates while analysis remains API-driven.
 
+Current review position, 2026-05-19: the user-facing outline is no longer planned as static-only. A functional guidance prototype exists and must be proven on real phones before it is treated as demo-ready. This does not change the Stage 1 analysis strategy: measurement remains API-first, and local/CV/ONNX paths are diagnostic until later gates pass.
+
 ## Levels
 
 ### Stage 1.0: Eval-Only Gemini Capability Spike
@@ -31,34 +33,39 @@ Create the minimal deployed shell for scanning a product-specific link.
 
 Deliverables:
 
-- Mock QR/barcode generation for 1.5L and 2.5L.
+- Mock QR/barcode generation for 1.5L, plus a 2.5L mock identity card that does not continue into the scan flow.
 - Cloudflare-hosted scan URL that preserves product size.
 - 1.5L as the only supported analysis path.
-- 2.5L route displays a clear unsupported/pending message.
+- 2.5L scan entry remains delayed; direct legacy 2.5L scan URLs must not analyze.
 
 Exit gate:
 
 - A phone can scan a 1.5L mock QR and reach the capture shell.
 - Product identity is preserved through the flow.
 
-### Stage 1.2: Camera Capture With Static 1.5L Outline
+### Stage 1.2: Camera Capture With Functional 1.5L Outline
 
-Capture usable front-side bottle images manually from a modest distance, with the bottle fully visible while the phone is angled slightly downward toward a lower table surface.
+Capture usable front-side bottle images from a modest distance, with the bottle fully visible while the phone is angled slightly downward toward a lower table surface.
 
 Deliverables:
 
 - Environment-facing camera request.
 - Front-side instruction text.
-- Static upright 1.5L bottle outline guide that is smaller than the preview and leaves visible margin around the bottle.
+- Upright 1.5L bottle outline guide that is smaller than the preview and leaves visible margin around the bottle.
 - Instruction text that tells the user to hold the phone at standing hand height and angle it downward toward the bottle on the table.
 - Layout that keeps outline clear of the camera button, upper text, language toggle, and theme toggle.
-- Manual capture button and retake path.
+- Live guidance for move closer, move farther, lateral alignment, and phone angle adjustment.
+- Red/orange/green guide state based on local frame analysis.
+- Auto-lock and auto-capture only after a stable green match.
+- Manual capture button and retake path as fallback.
+- Basic client-side quality checks for very low resolution, poor lighting, overexposure, and very blurry/flat frames.
 
 Exit gate:
 
 - Users can capture a front-side 1.5L image on target mobile browsers.
 - The guide does not imply a full-screen close-up or a sideways-tilted bottle; it encourages a smaller, fully visible bottle caused by the downward phone angle.
 - Bad permissions and missing camera states show clear recovery messages.
+- At least one Android and one iOS phone smoke confirm that the guide, floating controls, top copy, auto-capture, and manual fallback do not fight each other.
 
 ### Stage 1.3: API Analysis Service
 
@@ -90,11 +97,13 @@ Deliverables:
 - Slider stops at the last full 55ml step when remaining oil is less than the next full step.
 - Cup counter below the slider shows quarter, half, three-quarter, and full cup states.
 - User can accept, retake, or flag/correct the result.
+- Submitted user corrections are stored for admin review when the analysis has a persisted record id.
 
 Exit gate:
 
 - Result screen communicates the model estimate clearly.
 - A correction can be represented in the same 55ml unit system used by evaluation.
+- Moving the slider never moves the fixed detected red line; it only records a correction candidate.
 
 ### Stage 1.5: Supabase/Admin Correction Dataset Loop
 
@@ -106,7 +115,9 @@ Deliverables:
 - Admin review queue with image, product size, API result, confidence, warnings, and correction status.
 - Admin actions for too high, too low, manual corrected ml, reject, and approve.
 - Admin manual upload with product metadata and ground-truth ml.
-- Dataset export or query path for Stage 2 training.
+- User-submitted slider corrections routed into pending admin review.
+- Quality tags and label-source metadata preserved for training filters.
+- Dataset export or query path for Stage 2 training, with trusted labels separated from rejected, pending, uncertain, or low-quality diagnostic records.
 
 Exit gate:
 
@@ -129,6 +140,7 @@ Exit gate:
 - Stage 1 has a disciplined correction dataset.
 - Valid 1.5L images meet the agreed 55ml accuracy threshold.
 - Invalid or low-quality images are rejected, flagged, or routed to fallback.
+- The field pilot records Android/iOS camera behavior, permission failures, auto-capture reliability, manual fallback usage, lighting, glare, background, and wrong-side examples.
 
 ## Out of Stage 1
 
@@ -136,4 +148,4 @@ Exit gate:
 - Local model training.
 - Local-only user path.
 - Serious 2.5L analysis expansion beyond QR/product identity readiness.
-- Auto-capture as a required behavior.
+- Production-grade auto-capture claims before real-phone calibration and field evidence.
