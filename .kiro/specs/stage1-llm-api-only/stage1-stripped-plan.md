@@ -1,14 +1,16 @@
 # Afia Oil Level Scanner - Stage 1 Stripped Plan
 
+> Historical note, 2026-05-19: this document is preserved as the original eval-only stripped plan. It is no longer the active implementation source of truth when it conflicts with the live repo or `.kiro/specs/afia-roadmap/stage-1-api-only.md`. The implemented project now includes QR/product identity, camera capture, `/api/analyze`, result UI, Supabase persistence targets, and admin review surfaces. Use `.kiro/specs/afia-remaining-milestones/remaining-milestones-plan.md` for current continuation planning.
+
 ## Summary
 
-Stage 1 is an eval-only Gemini API capability spike. It is not a deployed product slice.
+This file documents the older eval-only Stage 1 decision point. It is retained for project history, but the active Stage 1 plan has moved beyond this stripped scope.
 
 The core question is:
 
 > Can Gemini estimate remaining oil ml from real Afia 1.5L bottle images accurately enough to justify productizing the QR, camera, result, and admin workflow?
 
-Stage 1 should prove or disprove the model-risk assumption before the project invests in browser UX, persistence, admin review, fallback providers, or local model work.
+The current planning set still preserves this model-risk lesson, but it now requires the deployed QR, camera, result, Supabase, and admin-review workflow to be proven before dataset or local-model milestones advance.
 
 ## Current Achieved State
 
@@ -22,8 +24,8 @@ The current repo already matches the stripped Stage 1 direction more closely tha
 - Dev and holdout fixture manifests for repeatable evaluation.
 - Eval runner that writes JSONL run records.
 - Signoff gate for aggregate accuracy, per-stratum accuracy, byte-stability, and reviewer decision.
-- Worker surface remains minimal with `/api/health` only.
-- Web app remains placeholder-level and should not be treated as Stage 1 product scope.
+- At the time of this stripped plan, the Worker surface remained minimal with `/api/health` only.
+- At the time of this stripped plan, the web app remained placeholder-level. The current Stage 1 product scope is now defined in `requirements.md`, `design.md`, `tasks.md`, and the roadmap docs.
 - Test suite has been verified with `pnpm.cmd test` passing worker and web tests.
 
 ## Stage 1 Core Deliverables
@@ -59,7 +61,7 @@ The Stage 1 eval passes only if all of the following are true:
 
 ## Explicitly Deferred From Stage 1
 
-The following are valuable, but they are not Stage 1 core. They should not be implemented as part of the stripped Stage 1 plan:
+The following were explicitly deferred from the original stripped plan. They are no longer all deferred from the active Stage 1 planning set:
 
 - QR code scan flow.
 - Camera capture UI.
@@ -85,22 +87,21 @@ Prove model viability using real 1.5L images, fixture manifests, strict parsing,
 
 ### Stage 2: Minimal Product Shell
 
-Add the smallest browser workflow around the proven model: QR landing, camera capture, manual capture button, static 1.5L outline guidance, `POST /api/analyze`, and a result page with the detected red line.
+The active plan has already absorbed this product shell into Stage 1. Current planning requires QR/mock QR landing, 1.5L/2.5L product identity, camera capture, functional 1.5L outline guidance with stable-lock auto-capture and manual fallback, basic quality checks, `POST /api/analyze`, and a result page with the actual captured image and fixed detected red line.
 
 ### Stage 3: Persistence and Admin Review
 
-Add Supabase storage/database, Admin review queue, manual corrections, manual image upload, and dataset-building workflows for later model training.
+The active Stage 1.5/M006 plan now requires Supabase storage/database, admin review queue, user corrections, admin corrections, manual image upload, and dataset-building workflows before local-model work advances.
 
 ### Stage 4: Reliability and Fallbacks
 
-Add Gemini multi-key rotation, Grok fallback, retry policy, quota handling, monitoring, and deployment hardening after product usage justifies operational complexity.
+The active Stage 1 API path now includes Gemini multi-key rotation, bounded retry, low-confidence fallback handling, Grok fallback, sanitized diagnostics, and live Cloudflare/Supabase proof gates.
 
 ### Stage 5: Local Model
 
-Use the collected and corrected image dataset to train or refine a lightweight local model. The local model becomes the primary browser path only after it reaches acceptable accuracy, with LLM APIs kept as fallback.
+Use the collected and corrected image dataset to train or refine a lightweight local model. The local model becomes the primary browser path only after dataset quality, runtime compatibility, and 55ml accuracy gates pass, with Gemini/Grok APIs kept as fallback.
 
 ## Implementation Notes
 
 - Do not modify runtime APIs, schemas, or config for this documentation-only step.
-- Keep existing `requirements.md`, `design.md`, and `tasks.md` unchanged for comparison until the team decides whether to rewrite the full Kiro spec set.
-- Treat this document as the source of truth for stripped Stage 1 scope.
+- Treat this document as historical context only. Use `requirements.md`, `design.md`, `tasks.md`, `.kiro/specs/afia-roadmap/stage-1-api-only.md`, and `.kiro/specs/afia-remaining-milestones/remaining-milestones-plan.md` as the active workflow-planning surfaces.

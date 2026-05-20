@@ -1,6 +1,0 @@
-# Iteration 4 — Bilateral ON (d=9, σ_c=75, σ_s=75) — CLAHE 2.0
-## Exact accuracy: 13/198 = 6.6% (-0.5pp vs baseline)
-## Close accuracy: 23/198 = 11.6% (-3.0pp vs baseline)
-## Contour found: 171/198 = 86.4% (-9.1pp vs baseline — SEVERE)
-## Latency: avg 183ms (+75% vs baseline 104ms)
-## Decision: REJECT — bilateral filter degrades contour detection significantly

@@ -1,5 +1,0 @@
-# Iteration 3 — CLAHE 2.0 (12×12) — Gaussian blur
-## Exact accuracy: 13/198 = 6.6% (-0.5pp vs baseline)
-## Close accuracy: 28/198 = 14.1%
-## Contour found: 189/198 = 95.5%
-## Decision: REJECT — regression vs baseline

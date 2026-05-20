@@ -37,6 +37,10 @@ runs/*.jsonl
 !runs/signoffs.jsonl
 runs/cv-eval-*/
 runs/stage15-signoff/
+runs/ablation/
+runs/coverage-gap/
+runs/heuristic-tuning/
+runs/onnx-benchmark/
 
 # Local image/model datasets are too large for GitHub.
 # Keep small hand-authored assets tracked explicitly when needed.
@@ -48,16 +52,23 @@ oil-bottle-frames/**
 !oil-bottle-frames/afia-bottle-clean.svg
 
 # Local agent/tool state and generated migration logs
+.planning/
+docs/
 .agent/
+.agents/
 .claude/
 .cline/
 .bob/
 .opencode/
 .trae/
+.playwright-mcp/
+.symphony/
 .gsd.migrating/
 agent-os/
+_bmad/
+_bmad-output/
 
-# ── GSD baseline (auto-generated) ──
+# GSD baseline (auto-generated)
 .gsd
 .gsd-id
 .mcp.json
