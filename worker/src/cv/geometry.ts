@@ -1,3 +1,5 @@
+import { afia15lFillRatioFromMeniscus } from "../analysis/afia-15l-calibration.js";
+
 export interface BottleGeometry {
   sizeMl: number;
   fillTopY: number;   // Y-ratio at bottle shoulder (empty)
@@ -23,6 +25,9 @@ export function calibrateFillRatio(
   geometry: BottleGeometry,
 ): number {
   const clamped = Math.max(0, Math.min(1, meniscusYRatio));
+  if (geometry.sizeMl === 1500) {
+    return afia15lFillRatioFromMeniscus(clamped);
+  }
   const raw = 1 - (clamped - geometry.fillTopY) / (geometry.fillBottomY - geometry.fillTopY);
   return Math.max(0, Math.min(1, raw));
 }

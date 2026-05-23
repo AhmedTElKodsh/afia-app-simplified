@@ -20,7 +20,7 @@ Stage 1 is intentionally API-first. Local model inference, local model training,
 6. The guide moves through red, orange, and green states, with auto-capture only after a stable green lock.
 7. Manual capture remains available when auto-capture is unavailable or unreliable.
 8. The app rejects or flags very low-resolution, poorly lit, overexposed, or very blurry/flat captures when frame data is available.
-9. Stage 1 analysis uses Gemini first with key rotation and Grok fallback on provider failure or configured low-confidence paths.
+9. Stage 1 analysis uses Gemini first with key rotation, optional explicitly configured OpenRouter image-capable routing, and Grok fallback on provider failure or configured low-confidence paths.
 10. Supabase stores captured images, analysis rows, user corrections, admin corrections, manual uploads, label-source metadata, quality tags, and review status.
 11. The result screen shows the real captured image, fixed detected red line, remaining/consumed ml, a 55ml-step correction slider, and a quarter-cup counter.
 12. Stage 2 can promote a browser/mobile local model only after M006 dataset readiness and M007 accuracy gates pass.
@@ -30,7 +30,7 @@ Stage 1 is intentionally API-first. Local model inference, local model training,
 - Stage 1.0: Gemini eval capability spike with versioned prompts, fixture manifests, JSONL eval output, and 55ml tracking.
 - Stage 1.1: QR/product identity shell for 1.5L and unsupported 2.5L routing.
 - Stage 1.2: Camera capture with environment camera, functional outline, quality checks, stable-lock auto-capture, and manual fallback.
-- Stage 1.3: API analysis through Gemini rotation and Grok fallback.
+- Stage 1.3: API analysis through Gemini rotation, optional OpenRouter vision routing, and Grok fallback.
 - Stage 1.4: Result UI with actual image, fixed red line, correction slider, and cup counter.
 - Stage 1.5: Supabase storage/database plus admin correction and manual upload loop.
 - Stage 1.6: Field pilot with quality tags, accuracy report, and proceed/iterate/redesign decision.
@@ -44,7 +44,7 @@ Stage 1 is intentionally API-first. Local model inference, local model training,
 - Web package: React and Vite SPA.
 - Shared package: TypeScript constants, product link helpers, and result schemas.
 - Persistence target: Supabase PostgreSQL plus Storage.
-- LLM target: Gemini first, with multiple API keys, retry, low-confidence fallback handling, and Grok fallback.
+- LLM target: Gemini first, with multiple API keys, optional explicitly configured OpenRouter vision routing, retry, low-confidence fallback handling, and Grok fallback.
 - Local diagnostics: CV, heuristic, and ONNX experiments support future model work but are not Stage 1 production primary.
 
 ## Core Contracts

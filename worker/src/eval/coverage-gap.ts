@@ -19,6 +19,7 @@ import { readFile, readdir, writeFile, mkdir } from "node:fs/promises";
 import { extname, join, resolve, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
+import { resolveFramePath } from "./cv-eval.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "../../..");
@@ -26,10 +27,11 @@ const repoRoot = resolve(__dirname, "../../..");
 // ── Configuration ──
 
 const MANIFEST_PATH = resolve(repoRoot, "worker/test/fixtures/cv-edge-eval/manifest.json");
-const FRAMES_ROOT = resolve(repoRoot, "oil-bottle-frames");
+const FRAMES_ROOT = resolve(repoRoot, "oil-bottle-frames/oil-bottle-frames");
 const OUTPUT_DIR = resolve(repoRoot, "runs/coverage-gap");
 const OUTPUT_PATH = join(OUTPUT_DIR, "candidates.json");
 const SELECT_COUNT = 10;
+const INELIGIBLE_DIR_NAMES = new Set(["non_eligable", "non_eligible"]);
 
 const FEATURE_NAMES = ["brightness", "contrast", "edge", "blur", "reflection"];
 const BRIGHTNESS = 0;
@@ -99,6 +101,7 @@ async function listImages(dir: string): Promise<string[]> {
   for (const entry of entries) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) {
+      if (INELIGIBLE_DIR_NAMES.has(entry.name.toLowerCase())) continue;
       files.push(...(await listImages(path)));
     } else if (/\.(jpe?g|png|webp)$/i.test(entry.name)) {
       files.push(path);
@@ -368,7 +371,13 @@ async function main(): Promise<void> {
   }
 
   const existingFixtures = manifest.fixtures as Array<{ imagePath: string; groundTruthMl: number }>;
-  const existingPaths = new Set(existingFixtures.map((f) => f.imagePath));
+  const existingPaths = new Set(existingFixtures.flatMap((f) => {
+    const normalized = f.imagePath.replace(/\\/g, "/");
+    const nested = normalized.startsWith("oil-bottle-frames/")
+      ? `oil-bottle-frames/${normalized}`
+      : normalized;
+    return [normalized, nested];
+  }));
   console.log(`Loaded ${existingFixtures.length} existing edge-case fixtures`);
 
   // 4. List all images in the corpus
@@ -411,7 +420,7 @@ async function main(): Promise<void> {
   const existingFeatures: number[][] = [];
   for (let i = 0; i < existingFixtures.length; i++) {
     const fx = existingFixtures[i];
-    const absPath = resolve(repoRoot, fx.imagePath);
+    const absPath = await resolveFramePath(fx.imagePath);
     if (!existsSync(absPath)) {
       console.warn(`  [${i + 1}/${existingFixtures.length}] SKIP (not found): ${fx.imagePath}`);
       continue;

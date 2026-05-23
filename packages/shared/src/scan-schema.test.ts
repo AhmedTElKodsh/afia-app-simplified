@@ -7,6 +7,7 @@ import {
   BottleSizeSchema,
   CorrectionStatusSchema,
   DEFAULT_BOTTLE_SIZE,
+  VisualEvidenceSchema,
   SupabaseAnalysisRecordSchema,
   toSupabaseAnalysisRecord,
   PROVIDERS,
@@ -97,10 +98,67 @@ describe("scan analysis schemas", () => {
     })).toMatchObject({
       provider: "cv_llm",
     });
+
+    expect(AnalysisResultSchema.parse({
+      remainingMl: 715,
+      consumedMl: 785,
+      redLineYRatio: 0.52,
+      confidence: 0.76,
+      warnings: ["low_confidence"],
+      provider: "openrouter",
+      rawMetadata: {
+        promptVersion: "v1",
+        modelId: "meta-llama/llama-3.2-11b-vision-instruct",
+        fallbackReason: "gemini_failed",
+      },
+    })).toMatchObject({
+      provider: "openrouter",
+      rawMetadata: expect.objectContaining({ modelId: "meta-llama/llama-3.2-11b-vision-instruct" }),
+    });
+  });
+
+  it("validates visual evidence with bounded bottle and liquid-line coordinates", () => {
+    expect(VisualEvidenceSchema.parse({
+      schemaVersion: "afia_visual_evidence_v1",
+      bottleDetected: true,
+      bottleType: "afia_1_5l",
+      bottleTypeConfidence: 0.91,
+      topVisible: true,
+      bottomVisible: true,
+      frontLabelVisible: true,
+      liquidBoundaryVisible: true,
+      bottleBox: { yMin: 100, xMin: 250, yMax: 900, xMax: 750 },
+      liquidLine: {
+        kind: "line",
+        points: [{ x: 300, y: 500 }, { x: 700, y: 510 }],
+      },
+      qualityFlags: ["mild_glare"],
+      evidenceConfidence: 0.82,
+      refusalReason: null,
+    })).toMatchObject({
+      bottleType: "afia_1_5l",
+      liquidLine: { points: expect.arrayContaining([expect.objectContaining({ y: 500 })]) },
+    });
+
+    expect(() => VisualEvidenceSchema.parse({
+      schemaVersion: "afia_visual_evidence_v1",
+      bottleDetected: true,
+      bottleType: "afia_1_5l",
+      bottleTypeConfidence: 1,
+      topVisible: true,
+      bottomVisible: true,
+      frontLabelVisible: true,
+      liquidBoundaryVisible: true,
+      bottleBox: { yMin: 100, xMin: 250, yMax: 900, xMax: 750 },
+      liquidLine: { kind: "line", points: [{ x: 300, y: 1200 }] },
+      qualityFlags: [],
+      evidenceConfidence: 0.82,
+      refusalReason: null,
+    })).toThrow(/liquidLine.points.0.y/);
   });
 
   it("defines provider, warning, and correction enums for Supabase records", () => {
-    expect(PROVIDERS).toEqual(["gemini", "grok", "cv", "cv_llm", "manual"]);
+    expect(PROVIDERS).toEqual(["gemini", "openrouter", "grok", "cv", "cv_llm", "manual"]);
     expect(ScanWarningSchema.parse("wrong_side")).toBe("wrong_side");
     expect(ScanWarningSchema.parse("poor_lighting")).toBe("poor_lighting");
     expect(ProviderSchema.parse("manual")).toBe("manual");

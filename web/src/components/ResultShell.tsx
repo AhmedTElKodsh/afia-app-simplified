@@ -15,6 +15,7 @@ const DEFAULT_RED_LINE_Y_RATIO = mlToYRatio(snapMl(DEFAULT_REMAINING_ML));
 export function ResultShell() {
   const [params] = useSearchParams();
   const size = params.get("size") ?? DEFAULT_BOTTLE_SIZE;
+  const isSupportedResultSize = size === DEFAULT_BOTTLE_SIZE;
   const isRetry = params.get("retry") === "true";
   const capturedImage = readCapturedImage();
   const initialResult = readStoredResult();
@@ -64,7 +65,20 @@ export function ResultShell() {
           <h1 className="mt-3 text-4xl font-semibold">Afia {size}</h1>
         </div>
 
-        {capturedImage && initialResult ? (
+        {!isSupportedResultSize ? (
+          <div className="rounded-lg border border-red-300/40 bg-red-400/10 p-5">
+            <p className="text-lg font-medium">Unsupported bottle size</p>
+            <p className="mt-2 text-sm text-neutral-200">
+              Stage 1 analysis is only enabled for the 1.5L bottle.
+            </p>
+            <Link
+              className="mt-4 inline-block rounded-md border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/5 transition-colors"
+              to={`/scan?size=${encodeURIComponent(DEFAULT_BOTTLE_SIZE)}`}
+            >
+              Return to 1.5L scan
+            </Link>
+          </div>
+        ) : capturedImage && initialResult ? (
           isErrorResult(initialResult) ? (
             <>
               {/* Fatal error card (D-13): error description, error code, retry, contact support */}
@@ -313,8 +327,19 @@ function CupCounter({ display }: { display: CupDisplay }) {
 
 function readCapturedImage(): string | null {
   const state = readState();
-  const value = state?.capture?.captureBlob ?? readLegacySessionValue("afia.capture");
+  if (state?.capture) {
+    if (state.capture.captureSource !== "camera") return null;
+    return rasterDataUrlOrNull(state.capture.captureBlob);
+  }
+
+  const value = readLegacySessionValue("afia.capture");
+  const source = readLegacySessionValue("afia.captureSource");
   if (!value) return null;
+  if (source !== "camera") return null;
+  return rasterDataUrlOrNull(value);
+}
+
+function rasterDataUrlOrNull(value: string): string | null {
   return /^data:image\/(?:jpeg|jpg|png|webp);base64,/i.test(value) ? value : null;
 }
 

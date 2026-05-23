@@ -2,14 +2,14 @@
 
 ## Introduction
 
-The Afia Oil Level Scanner Stage 1 is a Cloudflare-deployed web application that enables consumers to scan a product QR/barcode link, preserve the bottle identity, capture a front-side photo using their phone camera with functional outline guidance, and receive an API-analyzed oil level showing consumed and remaining milliliters with a visual red line indicator. Stage 1 focuses on validating the API-first product workflow using Gemini API keys with multi-key rotation and Grok fallback, while persisting captures, results, user corrections, admin corrections, and manual uploads to Supabase for future model training.
+The Afia Oil Level Scanner Stage 1 is a Cloudflare-deployed web application that enables consumers to scan a product QR/barcode link, preserve the bottle identity, capture a front-side photo using their phone camera with functional outline guidance, and receive an API-analyzed oil level showing consumed and remaining milliliters with a visual red line indicator. Stage 1 focuses on validating the API-first product workflow using Gemini API keys with multi-key rotation, optional explicitly configured OpenRouter vision-capable routing, and Grok fallback, while persisting captures, results, user corrections, admin corrections, and manual uploads to Supabase for future model training.
 
 ## Glossary
 
 - **System**: The Afia Oil Level Scanner web application
 - **Worker**: The Cloudflare Worker serving both API and SPA via Static Assets
 - **SPA**: Single Page Application (React + Vite frontend)
-- **LLM**: Large Language Model (Gemini or Grok) used for image analysis
+- **LLM**: Large Language Model (Gemini, OpenRouter-routed vision model, or Grok) used for image analysis
 - **Supabase**: Backend-as-a-Service used for database (PostgreSQL) and storage (images)
 - **Orchestrator**: The component that manages LLM API calls with rotation and fallback logic
 - **Consumer**: End user scanning and analyzing their oil bottle
@@ -69,7 +69,7 @@ The Afia Oil Level Scanner Stage 1 is a Cloudflare-deployed web application that
 4. THE System SHALL preserve quality warning metadata for analysis records and training-data review.
 5. IF a browser does not expose enough frame data for a client-side quality check, THEN server/API quality warnings SHALL remain part of the result contract.
 
-### Requirement 3: LLM Image Analysis with Gemini and Grok Fallback
+### Requirement 3: LLM Image Analysis with Gemini, OpenRouter, and Grok Fallback
 
 **User Story:** As a consumer, I want my bottle photo analyzed by an LLM, so that I can see how much oil remains.
 
@@ -78,12 +78,13 @@ The Afia Oil Level Scanner Stage 1 is a Cloudflare-deployed web application that
 1. WHEN the System receives an analysis request with bottleSize and imageBase64, THE Orchestrator SHALL attempt to call Gemini API with the image and bottle reference prompt
 2. THE Orchestrator SHALL use a rotation pool of multiple Gemini API keys to avoid rate limits.
 3. IF Gemini API call fails, THEN THE Orchestrator SHALL retry across the configured key pool with bounded delay
-4. IF Gemini attempts fail, THEN THE Orchestrator SHALL fallback to Grok API with the same image and prompt
-5. IF Gemini returns a result below the configured confidence threshold and Grok is configured, THEN THE Orchestrator SHALL fallback to Grok and record the fallback reason
-6. WHEN either LLM returns a response, THE Parser SHALL extract JSON from the response text
-7. THE Parser SHALL validate the response contains remainingMl, consumedMl, redLineYRatio, and confidence fields
-8. THE Analysis_Result SHALL include the provider field indicating which LLM was used ("gemini" or "grok")
-9. THE Analysis_Result SHALL include model, prompt, few-shot, warning, and fallback metadata needed for later review.
+4. IF Gemini attempts fail and OpenRouter is configured, THEN THE Orchestrator SHALL attempt only configured OpenRouter models that are allowed for image input.
+5. IF Gemini and OpenRouter attempts fail, THEN THE Orchestrator SHALL fallback to Grok API with the same image and prompt when Grok is configured.
+6. IF Gemini or OpenRouter returns a result below the configured confidence threshold and a later provider is configured, THEN THE Orchestrator SHALL fallback to that provider and record the fallback reason.
+7. WHEN any LLM returns a response, THE Parser SHALL extract JSON from the response text.
+8. THE Parser SHALL validate the response contains remainingMl, consumedMl, redLineYRatio, and confidence fields.
+9. THE Analysis_Result SHALL include the provider field indicating which API provider was used ("gemini", "openrouter", or "grok").
+10. THE Analysis_Result SHALL include model, prompt, few-shot, warning, and fallback metadata needed for later review.
 
 ### Requirement 4: Persistence to Supabase
 

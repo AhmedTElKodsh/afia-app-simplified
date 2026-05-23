@@ -10,8 +10,8 @@ const m = await sampleManifest({
   devCount: 60,
   holdoutCount: 40,
   seed: 20260507,
-  framesRoot: resolve(repoRoot, "oil-bottle-frames"),
-  augRoot: resolve(repoRoot, "oil-bottle-augmented"),
+  framesRoot: resolve(repoRoot, "oil-bottle-frames/oil-bottle-frames"),
+  augRoot: resolve(repoRoot, "oil-bottle-frames/oil-bottle-augmented"),
 });
 
 const devManifest = resolve(repoRoot, "worker/test/fixtures/dev");

@@ -46,9 +46,9 @@ describe("FusionScorer contract", () => {
     const fused = await fusion.score(imageData);
 
     expect(fused.remainingMl).toBeGreaterThan(80);
-    expect(fused.confidence).toBeLessThanOrEqual(0.69);
+    expect(fused.confidence).toBeLessThanOrEqual(0.29);
     expect(fused.features._fusionReason_singleValidSignal).toBe(1);
-    expect(fused.features._fusionSingleSignalConfidenceCap).toBe(0.69);
+    expect(fused.features._fusionSingleSignalConfidenceCap).toBe(0.29);
   });
 
   it("increases trust when heuristic and ONNX agree", async () => {
@@ -79,8 +79,7 @@ describe("FusionScorer contract", () => {
     const fused = await fusion.score(imageData);
 
     expect(fused.remainingMl).toBeGreaterThan(80);
-    expect(fused.confidence).toBeGreaterThan(0.55);
-    expect(fused.confidence).toBeLessThan(0.7);
+    expect(fused.confidence).toBeLessThanOrEqual(0.29);
     expect(fused.features._fusionIgnored_onnx_nearZeroEstimate).toBe(1);
     expect(fused.features._fusionSignal_onnx_weight).toBe(0);
   });
@@ -144,7 +143,7 @@ describe("FusionScorer contract", () => {
     const fused = await fusion.score(imageData);
 
     expect(fused.remainingMl).toBeCloseTo(74, 1);
-    expect(fused.confidence).toBeGreaterThan(0.5);
+    expect(fused.confidence).toBeLessThanOrEqual(0.29);
     expect(fused.features[reasonKey]).toBe(1);
     expect(fused.features._fusionSignal_onnx_weight).toBe(0);
   });

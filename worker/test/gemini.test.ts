@@ -51,9 +51,22 @@ describe("callGemini", () => {
     expect(init.method).toBe("POST");
     const body = JSON.parse(String(init.body));
     expect(body.systemInstruction.parts[0].text).toBe("sys");
-    expect(body.generationConfig).toEqual({ temperature: 0, maxOutputTokens: 4096 });
+    expect(body.generationConfig).toMatchObject({
+      temperature: 0,
+      maxOutputTokens: 4096,
+      responseMimeType: "application/json",
+      responseSchema: expect.objectContaining({
+        type: "OBJECT",
+        required: expect.arrayContaining(["schemaVersion", "bottleBox", "liquidLine"]),
+        properties: expect.objectContaining({
+          schemaVersion: expect.objectContaining({ enum: ["afia_visual_evidence_v1"] }),
+          bottleType: expect.objectContaining({ enum: ["afia_1_5l", "afia_2_5l", "unknown"] }),
+        }),
+      }),
+    });
     expect(body.contents[0].parts.at(-1).text).toContain("user");
     expect(body.contents[0].parts.at(-1).text).toContain("Return exactly one JSON object");
+    expect(JSON.stringify(body.generationConfig.responseSchema)).not.toContain("additionalProperties");
   });
 
   it("retries 429 quota responses using server-provided retry delay", async () => {
@@ -84,7 +97,30 @@ describe("callGemini", () => {
       modelId: "gemini-2.5-flash",
       systemText: "sys",
       userText: "user",
-      fewShots: [],
+      fewShots: [
+        {
+          imagePath: "ref-a.jpg",
+          expected: {
+            readingPossible: true,
+            meniscusVisible: "yes",
+            oilSurfaceYRatio: 0.18,
+            nearestReferenceMl: 1500,
+            qualityFlags: [],
+            confidence: 0.95,
+          },
+        },
+        {
+          imagePath: "ref-b.jpg",
+          expected: {
+            readingPossible: true,
+            meniscusVisible: "yes",
+            oilSurfaceYRatio: 0.96,
+            nearestReferenceMl: 0,
+            qualityFlags: [],
+            confidence: 0.95,
+          },
+        },
+      ],
       imageBase64: "target",
       referenceImages: [
         { label: "Reference A: full 1500ml", mimeType: "image/jpeg", data: "ref-full" },
@@ -97,6 +133,7 @@ describe("callGemini", () => {
     const parts = body.contents[0].parts as Array<{ text?: string; inline_data?: { data: string } }>;
     expect(parts.slice(0, 3).map((part) => part.inline_data?.data)).toEqual(["ref-full", "ref-empty", "target"]);
     expect(parts.at(-1)?.text).toContain("Reference A: full 1500ml");
+    expect(parts.at(-1)?.text).toContain("expected oil surface y=180/1000");
     expect(parts.at(-1)?.text).toContain("user");
     expect(parts.at(-1)?.text).toContain("Return exactly one JSON object");
   });

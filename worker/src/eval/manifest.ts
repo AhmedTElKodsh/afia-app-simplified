@@ -1,6 +1,8 @@
 import { readdir } from "node:fs/promises";
 import { join, relative } from "node:path";
 
+const INELIGIBLE_DIR_NAMES = new Set(["non_eligable", "non_eligible"]);
+
 export type Source = "real" | "aug";
 export type FillBucket = "empty-low" | "mid-low" | "mid-high" | "high";
 export type FrameBucket = "early" | "late" | "aug";
@@ -76,6 +78,7 @@ async function listFixtures(root: string, source: Source): Promise<FixtureEntry[
   catch { return out; }
   for (const folder of folders) {
     if (!folder.isDirectory()) continue;
+    if (INELIGIBLE_DIR_NAMES.has(folder.name.toLowerCase())) continue;
     const ml = parseMlFolder(folder.name);
     if (ml === null) continue;
     const folderPath = join(root, folder.name);
@@ -83,6 +86,7 @@ async function listFixtures(root: string, source: Source): Promise<FixtureEntry[
     try { files = await readdir(folderPath); }
     catch { continue; }
     for (const f of files) {
+      if (INELIGIBLE_DIR_NAMES.has(f.toLowerCase())) continue;
       if (!/\.(jpg|jpeg|png)$/i.test(f)) continue;
       const frameSec = source === "real" ? parseFrameSeconds(f) : null;
       const frameBucket: FrameBucket =

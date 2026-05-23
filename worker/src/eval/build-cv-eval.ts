@@ -6,6 +6,7 @@ import { dirname } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "../../..");
+const INELIGIBLE_DIR_NAMES = new Set(["non_eligable", "non_eligible"]);
 
 function fillBucket(ml: number): string {
   if (ml === 0) return "empty-low";
@@ -20,7 +21,10 @@ async function listImages(dir: string): Promise<string[]> {
   const files: string[] = [];
   for (const entry of entries) {
     const path = join(dir, entry.name);
-    if (entry.isDirectory()) files.push(...await listImages(path));
+    if (entry.isDirectory()) {
+      if (INELIGIBLE_DIR_NAMES.has(entry.name.toLowerCase())) continue;
+      files.push(...await listImages(path));
+    }
     else if (/\.(jpe?g|png|webp)$/i.test(entry.name)) files.push(path);
   }
   return files;
@@ -34,7 +38,7 @@ function groundMlFromDir(path: string): number {
 }
 
 // Use real frames only (no augmentations) for cleaner evaluation
-const framesRoot = resolve(repoRoot, "oil-bottle-frames");
+const framesRoot = resolve(repoRoot, "oil-bottle-frames/oil-bottle-frames");
 const allImages = await listImages(framesRoot);
 const validImages = allImages.filter((p) => /[\\/](\d+ml|empty)[\\/]/i.test(p) && !p.includes("1.5L_refs") && !p.includes("Adobe Express"));
 

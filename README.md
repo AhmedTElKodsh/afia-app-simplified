@@ -9,14 +9,15 @@ A Cloudflare-deployed web application that enables consumers to scan product QR/
 - Web: React SPA using Vite and Tailwind CSS.
 - Shared: common bottle constants, schemas, and product link helpers.
 - Persistence: Supabase PostgreSQL and Storage.
-- LLM route: Gemini primary with key rotation and Grok fallback.
+- LLM route: Gemini key pool, optional explicitly configured OpenRouter vision model pool, then Grok fallback.
 
 ## Prerequisites
 
 - Node.js 18+ and pnpm.
 - Cloudflare account with Workers access.
-- Gemini API key.
-- Grok API key, when fallback is enabled.
+- Gemini, OpenRouter, or Grok API key for the API-only vision route.
+- OpenRouter model IDs must be configured explicitly and point to image-capable models. Do not rely on `openrouter/free` as an implicit production fallback.
+- For free OpenRouter experiments, use explicit `:free` IDs that advertise image input, for example `google/gemma-4-31b-it:free`, `google/gemma-4-26b-a4b-it:free`, `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`, or `nvidia/nemotron-nano-12b-v2-vl:free`; refresh the list from `https://openrouter.ai/api/v1/models` before a real accuracy run.
 - Supabase project and service-role configuration for persistence.
 
 ## Setup
@@ -31,6 +32,7 @@ Configure deployment secrets from the Worker directory:
 
 ```bash
 wrangler secret put GEMINI_API_KEY
+wrangler secret put OPENROUTER_API_KEY
 wrangler secret put GROK_API_KEY
 wrangler secret put ADMIN_TOKEN
 wrangler secret put SUPABASE_URL
@@ -98,7 +100,7 @@ afia-app-simplified/
 │   ├── src/
 │   │   ├── index.ts           # Hono app entry
 │   │   ├── routes/            # API endpoints
-│   │   ├── llm/               # Gemini/Grok clients and orchestration
+│   │   ├── llm/               # Gemini/OpenRouter/Grok clients and orchestration
 │   │   ├── prompt/            # Prompt assets and bundled Worker fallback
 │   │   ├── storage/           # Supabase persistence
 │   │   ├── cv/                # Local diagnostic CV pipeline
@@ -127,7 +129,7 @@ The repository currently combines two Stage 1 workstreams:
 Current boundaries:
 
 - 1.5L bottle analysis is the only supported analysis path.
-- Gemini remains the API-first LLM target, with multi-key rotation and Grok fallback support in Worker code.
+- Gemini remains the first API target, OpenRouter can provide an explicitly configured image-capable lane, and Grok remains fallback support in Worker code.
 - Manual capture and correction workflows are part of the validation loop.
 - Supabase is the target persistence/storage path for accepted/corrected records and future training data.
 - CV/heuristic/ONNX experiments exist to support future accuracy improvements.
@@ -139,7 +141,7 @@ Workflow commitments:
 - `/scan?size=1.5L` opens the camera, guides the user to photograph the front side, overlays a functional 1.5L bottle outline, gives closer/farther/angle guidance, turns green on a stable match, auto-captures, and runs basic image-quality checks before API analysis.
 - `/result` shows the real captured image, fixed detected red line, remaining/consumed ml, a 55ml-step correction slider, and quarter-cup counter.
 - Result corrections and admin/manual uploads are persisted for review, with an admin dataset export that keeps training-ready labels separate from diagnostic records.
-- Stage 2 promotes a local browser/mobile model only after M006 data readiness and M007 accuracy gates pass; Gemini/Grok remains the fallback path.
+- Stage 2 promotes a local browser/mobile model only after M006 data readiness and M007 accuracy gates pass; Gemini/OpenRouter/Grok remain API fallback paths.
 
 ## Evaluation And Guardrails
 
@@ -164,6 +166,7 @@ Start with:
 
 - `.kiro/specs/afia-roadmap/overview.md` - canonical roadmap and workflow target.
 - `.kiro/specs/afia-remaining-milestones/remaining-milestones-plan.md` - active continuation plan.
+- `.kiro/specs/afia-project-reference/ai-project-brief.md` - high-density AI-agent project brief.
 - `.kiro/specs/afia-project-reference/project-context.md` - consolidated project context and boundaries.
 - `.kiro/specs/afia-project-reference/technical-reference.md` - consolidated architecture, runbook, CV/ONNX, eval, deploy, and cleanup reference.
 - `.kiro/specs/afia-project-reference/legacy-planning-archive.md` - record of merged `.planning` and old `docs` decisions.

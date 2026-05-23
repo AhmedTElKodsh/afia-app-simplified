@@ -27,11 +27,20 @@ export interface Env {
   GEMINI_API_KEY3?: string;
   GEMINI_API_KEY4?: string;
   GROK_API_KEY?: string;
+  GROK_API_KEYS?: string;
+  GROK_API_KEY2?: string;
+  GROK_API_KEY3?: string;
+  GROK_API_KEY4?: string;
   GROK_MODEL_ID?: string;
   GROK_FALLBACK_CONFIDENCE?: string;
   HF_API_KEY?: string;
   OPENROUTER_API_KEY?: string;
+  OPENROUTER_API_KEYS?: string;
+  OPENROUTER_API_KEY2?: string;
+  OPENROUTER_API_KEY3?: string;
+  OPENROUTER_API_KEY4?: string;
   OPENROUTER_MODEL_ID?: string;
+  OPENROUTER_MODEL_IDS?: string;
   MODEL_ID: string;
   SUPABASE_SERVICE_ROLE_KEY?: string;
   SUPABASE_STORAGE_BUCKET?: string;
@@ -50,11 +59,20 @@ export function loadEnv(): Env {
     GEMINI_API_KEY4: process.env.GEMINI_API_KEY4,
     ADMIN_TOKEN: process.env.ADMIN_TOKEN,
     GROK_API_KEY: process.env.GROK_API_KEY,
+    GROK_API_KEYS: process.env.GROK_API_KEYS,
+    GROK_API_KEY2: process.env.GROK_API_KEY2,
+    GROK_API_KEY3: process.env.GROK_API_KEY3,
+    GROK_API_KEY4: process.env.GROK_API_KEY4,
     GROK_MODEL_ID: process.env.GROK_MODEL_ID,
     GROK_FALLBACK_CONFIDENCE: process.env.GROK_FALLBACK_CONFIDENCE,
     HF_API_KEY: process.env.HF_API_KEY,
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+    OPENROUTER_API_KEYS: process.env.OPENROUTER_API_KEYS,
+    OPENROUTER_API_KEY2: process.env.OPENROUTER_API_KEY2,
+    OPENROUTER_API_KEY3: process.env.OPENROUTER_API_KEY3,
+    OPENROUTER_API_KEY4: process.env.OPENROUTER_API_KEY4,
     OPENROUTER_MODEL_ID: process.env.OPENROUTER_MODEL_ID,
+    OPENROUTER_MODEL_IDS: process.env.OPENROUTER_MODEL_IDS,
     MODEL_ID: process.env.MODEL_ID ?? "gemini-2.5-flash",
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET,

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Afia Oil Level Scanner Stage 1 is a Cloudflare-deployed web application that enables consumers to scan product QR/barcode links, preserve 1.5L or 2.5L bottle identity, capture front-side 1.5L photos using their phone cameras with functional outline guidance, and receive API-analyzed oil level measurements. The system uses a rotation pool of Gemini API keys with Grok fallback for image analysis, and persists all useful data to Supabase for admin review and future model training.
+The Afia Oil Level Scanner Stage 1 is a Cloudflare-deployed web application that enables consumers to scan product QR/barcode links, preserve 1.5L or 2.5L bottle identity, capture front-side 1.5L photos using their phone cameras with functional outline guidance, and receive API-analyzed oil level measurements. The system uses a rotation pool of Gemini API keys, an optional OpenRouter vision-capable model pool, and Grok fallback for image analysis, then persists all useful data to Supabase for admin review and future model training.
 
 Stage 1 is still API-first. Functional guidance, client-side quality checks, and auto-capture improve the capture input, but they do not make CV/ONNX/local inference the primary production measurement path.
 
@@ -24,13 +24,15 @@ Stage 1 is still API-first. Functional guidance, client-side quality checks, and
 - Allows admin refinement loop from the start
 - Provides a source of truth for ground truth data ingestion
 
-### Decision 2: Multi-Key Gemini Rotation
+### Decision 2: Multi-Provider Vision API Routing
 
-**Chosen**: Round-robin rotation pool for Gemini API keys
+**Chosen**: Gemini key rotation first, explicitly configured OpenRouter vision routing second when configured, and Grok fallback after provider failure or low confidence.
 
 **Rationale**:
 - Increases quota and resilience
 - Avoids rate limiting during peak usage
+- Allows only explicitly configured OpenRouter image-capable models without making text-only or generic free aliases part of the bottle analysis path
+- Keeps provider, model, confidence, and fallback metadata available for admin review and later dataset filtering
 
 ### Decision 3: UI Layout - Slider on Left
 
@@ -72,7 +74,7 @@ Stage 1 is still API-first. Functional guidance, client-side quality checks, and
 | `consumed_ml` | `integer` | Detected consumed oil |
 | `red_line_y_ratio` | `float` | Y position of liquid surface |
 | `confidence` | `float` | LLM confidence |
-| `provider` | `text` | "gemini" or "grok" |
+| `provider` | `text` | "gemini", "openrouter", "grok", or local/diagnostic provider |
 | `raw_model_text` | `text` | Raw JSON from LLM |
 | `quality_flags` | `jsonb` | Capture/model quality warnings |
 | `correction_status` | `text` | Review state for label readiness |

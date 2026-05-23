@@ -75,6 +75,7 @@ Deliverables:
 
 - `POST /api/analyze` product API.
 - Gemini multi-key rotation for API-only analysis capacity.
+- Optional OpenRouter routing only for explicitly configured image-capable models.
 - Grok fallback for provider failure, quota exhaustion, or low-confidence API result.
 - Stable scan result contract with remaining ml, consumed ml, red-line ratio, confidence, warnings, provider, and raw metadata.
 - Logging of provider, prompt version, model version, and fallback reason.

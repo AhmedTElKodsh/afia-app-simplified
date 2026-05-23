@@ -35,10 +35,19 @@ The local model candidate must:
 
 - Target the 1.5L bottle first.
 - Predict remaining oil or the geometry needed to derive remaining oil.
+- Prefer geometry-first evidence over direct image-to-ml guessing: bottle mask, vertical axis, usable top/base bounds, top candidate liquid lines, selected line, and calibrated remaining-ml estimate.
+- Save debug overlays for bottle bounds, candidate liquid lines, selected line, rejected lines, confidence scores, and reject reasons.
 - Run in the chosen mobile browser or Worker-compatible runtime within size, memory, cold-start, and latency budgets.
 - Report confidence and quality diagnostics.
 - Include model version, dataset version, training configuration, and metrics.
 - Be evaluated against the same 55ml primary tolerance used by Stage 1.
+
+The LLM role in Stage 2 should be validation and explanation, not primary measurement:
+
+- Local/CV proposes candidate line geometry first.
+- The LLM receives the original image plus annotated candidates and returns selected candidate, accept/reject, visible evidence, visible issues, confidence, and explanation.
+- A numeric answer without candidate geometry must be treated as fallback evidence, not training ground truth.
+- If local geometry and LLM validation disagree beyond the configured threshold, the result should be queued for admin review or retake instead of silently averaged.
 
 ## Hybrid Runtime Requirements
 

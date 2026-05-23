@@ -19,9 +19,17 @@ export async function listAnalysesRoute(c: Context<AdminBindings>) {
   const unauthorized = requireAdmin(c);
   if (unauthorized) return unauthorized;
 
-  const limit = parseLimit(new URL(c.req.url).searchParams.get("limit"));
-  const records = await createAnalysisStorage(c.env).listAnalyses({ limit });
-  return c.json({ analyses: records });
+  const params = new URL(c.req.url).searchParams;
+  const limit = parseLimit(params.get("limit"));
+  const offset = parseOffset(params.get("offset"));
+  let status: CorrectionStatus | undefined;
+  try {
+    status = parseOptionalCorrectionStatus(params.get("status"));
+  } catch {
+    return c.json({ error: "Invalid correction status filter" }, 400);
+  }
+  const records = await createAnalysisStorage(c.env).listAnalyses({ limit, offset, status });
+  return c.json({ analyses: records, pagination: { limit, offset, fetchedCount: records.length } });
 }
 
 export async function exportDatasetRoute(c: Context<AdminBindings>) {
@@ -30,8 +38,9 @@ export async function exportDatasetRoute(c: Context<AdminBindings>) {
 
   const params = new URL(c.req.url).searchParams;
   const limit = parseLimit(params.get("limit"));
+  const offset = parseOffset(params.get("offset"));
   const includeDiagnostics = params.get("includeDiagnostics") === "true";
-  const records = await createAnalysisStorage(c.env).listAnalyses({ limit });
+  const records = await createAnalysisStorage(c.env).listAnalyses({ limit, offset });
   const rows = records
     .map(toDatasetRow)
     .filter((row) => includeDiagnostics || row.trustedLabel);
@@ -39,6 +48,7 @@ export async function exportDatasetRoute(c: Context<AdminBindings>) {
   return c.json({
     datasetVersion: new Date().toISOString().slice(0, 10),
     trustedOnly: !includeDiagnostics,
+    pagination: { limit, offset, fetchedCount: records.length },
     rows,
   });
 }
@@ -92,6 +102,7 @@ type ManualUploadBody = {
 
 type DatasetCorrectionSource =
   | "model_prediction"
+  | "user_accepted_estimate"
   | "user_submitted_correction"
   | "admin_correction"
   | "manual_ground_truth"
@@ -133,12 +144,23 @@ function parseLimit(value: string | null): number {
   return Number.isInteger(parsed) && parsed > 0 && parsed <= 200 ? parsed : 50;
 }
 
+function parseOffset(value: string | null): number {
+  if (value === null) return 0;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
+}
+
+function parseOptionalCorrectionStatus(value: string | null): CorrectionStatus | undefined {
+  if (!value || value === "all") return undefined;
+  return CorrectionStatusSchema.parse(value);
+}
+
 function parseAdminPatch(value: unknown): AdminPatchBody {
   const record = objectValue(value);
   return {
     correctionStatus: CorrectionStatusSchema.parse(record.correctionStatus),
     adminFlag: nullable(record.adminFlag, (v) => AdminFlagSchema.parse(v)),
-    adminCorrectedMl: nullable(record.adminCorrectedMl, correctionMlValue),
+    adminCorrectedMl: nullable(record.adminCorrectedMl, datasetLabelMlValue),
     adminNote: nullable(record.adminNote, stringValue),
   };
 }
@@ -149,7 +171,7 @@ function parseManualUpload(value: unknown): ManualUploadBody {
   return {
     bottleSize: DEFAULT_BOTTLE_SIZE,
     imageBase64: nonEmptyString(record.imageBase64),
-    remainingMl: boundedMlValue(record.remainingMl),
+    remainingMl: datasetLabelMlValue(record.remainingMl),
     adminNote: nullable(record.adminNote, stringValue),
   };
 }
@@ -175,17 +197,12 @@ function integerAtLeastZero(value: unknown): number {
   throw new Error("Expected integer at least zero");
 }
 
-function boundedMlValue(value: unknown): number {
-  const n = integerAtLeastZero(value);
-  if (n <= BOTTLE_1_5L.capacityMl) return n;
-  throw new Error(`Expected integer between 0 and ${BOTTLE_1_5L.capacityMl}`);
-}
-
-function correctionMlValue(value: unknown): number {
+function datasetLabelMlValue(value: unknown): number {
   const n = integerAtLeastZero(value);
   const maxCorrectionMl = Math.floor(BOTTLE_1_5L.capacityMl / ML_PER_CUP_QUARTER) * ML_PER_CUP_QUARTER;
+  if (n === BOTTLE_1_5L.capacityMl) return n;
   if (n <= maxCorrectionMl && n % ML_PER_CUP_QUARTER === 0) return n;
-  throw new Error(`Expected ${ML_PER_CUP_QUARTER} ml step between 0 and ${maxCorrectionMl}`);
+  throw new Error(`Expected ${ML_PER_CUP_QUARTER} ml step between 0 and ${maxCorrectionMl}, or full capacity ${BOTTLE_1_5L.capacityMl}`);
 }
 
 function toDatasetRow(record: AnalysisRecord): DatasetExportRow {
@@ -245,6 +262,7 @@ function finalLabelMl(record: AnalysisRecord): number | null {
 
 function correctionSource(record: AnalysisRecord): DatasetCorrectionSource {
   if (record.provider === "manual") return "manual_ground_truth";
+  if (record.adminNote === "User accepted estimate") return "user_accepted_estimate";
   if (record.adminNote?.startsWith("User submitted correction")) return "user_submitted_correction";
   if (record.adminCorrectedMl !== null) return "admin_correction";
   if (record.correctionStatus === "approved") return "model_prediction";

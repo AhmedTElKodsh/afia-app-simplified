@@ -8,6 +8,7 @@ interface CallGrokArgs {
   imageBase64: string;
   targetMimeType?: string;
   fetchImpl?: typeof fetch;
+  timeoutMs?: number;
 }
 
 interface GrokResponse {
@@ -18,6 +19,7 @@ export async function callGrok(args: CallGrokArgs): Promise<string> {
   const fetcher = args.fetchImpl ?? fetch;
   const response = await fetcher(GROK_API_URL, {
     method: "POST",
+    signal: timeoutSignal(args.timeoutMs ?? 30000),
     headers: {
       authorization: `Bearer ${args.apiKey}`,
       "content-type": "application/json",
@@ -57,4 +59,9 @@ export async function callGrok(args: CallGrokArgs): Promise<string> {
 
 function toDataUrl(imageBase64: string, mimeType: string): string {
   return imageBase64.startsWith("data:") ? imageBase64 : `data:${mimeType};base64,${imageBase64}`;
+}
+
+function timeoutSignal(timeoutMs: number): AbortSignal | undefined {
+  const timeout = (AbortSignal as typeof AbortSignal & { timeout?: (ms: number) => AbortSignal }).timeout;
+  return typeof timeout === "function" ? timeout(timeoutMs) : undefined;
 }

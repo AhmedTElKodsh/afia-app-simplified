@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   callGemini: vi.fn(async () => JSON.stringify({
@@ -38,8 +38,24 @@ vi.mock("../src/storage/supabase.js", () => ({
 
 import app from "../src/index.js";
 
+const openRouterEvidence = JSON.stringify({
+  readingPossible: true,
+  meniscusVisible: "yes",
+  oilSurfaceYRatio: 0.55,
+  nearestReferenceMl: 825,
+  qualityFlags: ["openrouter_review"],
+  confidence: 0.72,
+});
+
 describe("POST /api/analyze", () => {
   beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: openRouterEvidence } }],
+      }),
+      text: async () => "",
+    })));
     mocks.callGemini.mockClear();
     mocks.callGemini.mockResolvedValue(JSON.stringify({
       readingPossible: true,
@@ -60,6 +76,10 @@ describe("POST /api/analyze", () => {
     }));
     mocks.saveAnalysis.mockClear();
     mocks.saveAnalysis.mockResolvedValue({ id: "0d44aecc-8344-44c8-8b7f-201216f7c9f9" });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it("rejects invalid request bodies", async () => {
@@ -124,6 +144,89 @@ describe("POST /api/analyze", () => {
       imageBase64: "data:image/png;base64,abc",
       result: expect.objectContaining({ provider: "gemini" }),
     }));
+  });
+
+  it("computes the result from Gemini visual evidence coordinates", async () => {
+    mocks.callGemini.mockResolvedValueOnce(JSON.stringify({
+      schemaVersion: "afia_visual_evidence_v1",
+      bottleDetected: true,
+      bottleType: "afia_1_5l",
+      bottleTypeConfidence: 0.91,
+      topVisible: true,
+      bottomVisible: true,
+      frontLabelVisible: true,
+      liquidBoundaryVisible: true,
+      bottleBox: { yMin: 100, xMin: 250, yMax: 900, xMax: 750 },
+      liquidLine: { kind: "line", points: [{ x: 300, y: 500 }, { x: 700, y: 500 }] },
+      qualityFlags: ["mild_glare"],
+      evidenceConfidence: 0.82,
+      refusalReason: null,
+    }));
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "data:image/png;base64,abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({
+      remainingMl: 711,
+      consumedMl: 789,
+      redLineYRatio: 0.5,
+      confidence: 0.82,
+      warnings: ["mild_glare"],
+      provider: "gemini",
+      rawMetadata: expect.objectContaining({
+        rawModelText: expect.stringContaining("afia_visual_evidence_v1"),
+      }),
+    });
+    expect(mocks.saveAnalysis).toHaveBeenCalledWith(expect.objectContaining({
+      result: expect.objectContaining({ remainingMl: 711, consumedMl: 789 }),
+    }));
+  });
+
+  it("uses OpenRouter when no Gemini key is configured", async () => {
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "data:image/jpeg;base64,abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        OPENROUTER_API_KEY: "or-secret",
+        OPENROUTER_MODEL_ID: "meta-llama/llama-3.2-11b-vision-instruct",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({
+      remainingMl: 788,
+      provider: "openrouter",
+      rawMetadata: expect.objectContaining({
+        modelId: "meta-llama/llama-3.2-11b-vision-instruct",
+        fallbackReason: "gemini_unconfigured",
+      }),
+    });
+    expect(fetch).toHaveBeenCalledWith("https://openrouter.ai/api/v1/chat/completions", expect.objectContaining({
+      method: "POST",
+      headers: expect.objectContaining({ authorization: "Bearer or-secret" }),
+    }));
+    expect(mocks.callGemini).not.toHaveBeenCalled();
+    expect(mocks.callGrok).not.toHaveBeenCalled();
   });
 
   it("retries Gemini with the next rotated key when the first key fails", async () => {
@@ -238,6 +341,116 @@ describe("POST /api/analyze", () => {
     }));
   });
 
+  it("falls back to OpenRouter before Grok when Gemini retries fail", async () => {
+    mocks.callGemini.mockRejectedValue(new Error("quota"));
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        OPENROUTER_API_KEYS: "or-a,or-b",
+        OPENROUTER_MODEL_ID: "meta-llama/llama-3.2-11b-vision-instruct",
+        GROK_API_KEY: "grok-secret",
+        GROK_MODEL_ID: "grok-test",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({
+      provider: "openrouter",
+      rawMetadata: expect.objectContaining({
+        modelId: "meta-llama/llama-3.2-11b-vision-instruct",
+        fallbackReason: "gemini_failed",
+      }),
+    });
+    expect(fetch).toHaveBeenCalledWith("https://openrouter.ai/api/v1/chat/completions", expect.objectContaining({
+      headers: expect.objectContaining({ authorization: "Bearer or-a" }),
+    }));
+    expect(mocks.callGrok).not.toHaveBeenCalled();
+  });
+
+  it("rotates OpenRouter keys before falling through to Grok", async () => {
+    mocks.callGemini.mockRejectedValue(new Error("quota"));
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(new Response("rate limited", { status: 429 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({
+        choices: [{ message: { content: openRouterEvidence } }],
+      }), { status: 200 }));
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        OPENROUTER_API_KEYS: "or-a,or-b",
+        OPENROUTER_MODEL_ID: "meta-llama/llama-3.2-11b-vision-instruct",
+        GROK_API_KEY: "grok-secret",
+        GROK_MODEL_ID: "grok-test",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({ provider: "openrouter" });
+    expect(fetch).toHaveBeenNthCalledWith(1, "https://openrouter.ai/api/v1/chat/completions", expect.objectContaining({
+      headers: expect.objectContaining({ authorization: "Bearer or-a" }),
+    }));
+    expect(fetch).toHaveBeenNthCalledWith(2, "https://openrouter.ai/api/v1/chat/completions", expect.objectContaining({
+      headers: expect.objectContaining({ authorization: "Bearer or-b" }),
+    }));
+    expect(mocks.callGrok).not.toHaveBeenCalled();
+  });
+
+  it("rotates Grok keys after earlier providers fail", async () => {
+    mocks.callGemini.mockRejectedValue(new Error("quota"));
+    mocks.callGrok
+      .mockRejectedValueOnce(new Error("grok quota"))
+      .mockResolvedValueOnce(JSON.stringify({
+        readingPossible: true,
+        meniscusVisible: "yes",
+        oilSurfaceYRatio: 0.6,
+        nearestReferenceMl: 600,
+        qualityFlags: ["low_confidence"],
+        confidence: 0.62,
+      }));
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        GROK_API_KEYS: "grok-a,grok-b",
+        GROK_MODEL_ID: "grok-test",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({ provider: "grok" });
+    expect(mocks.callGrok).toHaveBeenNthCalledWith(1, expect.objectContaining({ apiKey: "grok-a" }));
+    expect(mocks.callGrok).toHaveBeenNthCalledWith(2, expect.objectContaining({ apiKey: "grok-b" }));
+  });
+
   it("falls back to Grok when Gemini succeeds with low confidence", async () => {
     mocks.callGemini.mockResolvedValueOnce(JSON.stringify({
       readingPossible: true,
@@ -274,6 +487,56 @@ describe("POST /api/analyze", () => {
       }),
     });
     expect(mocks.callGrok).toHaveBeenCalledWith(expect.objectContaining({ apiKey: "grok-secret" }));
+  });
+
+  it("does not use OpenRouter without an explicit vision model", async () => {
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        OPENROUTER_API_KEY: "or-secret",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(500);
+    await expect(res.json()).resolves.toMatchObject({
+      error: "No LLM vision provider key is configured",
+    });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("returns sanitized provider diagnostics when fallback output is malformed", async () => {
+    mocks.callGemini.mockRejectedValue(new Error("quota"));
+    mocks.callGrok.mockResolvedValueOnce("not-json");
+
+    const res = await app.request(
+      "/api/analyze",
+      {
+        method: "POST",
+        body: JSON.stringify({ bottleSize: "1.5L", imageBase64: "abc" }),
+        headers: { "content-type": "application/json" },
+      },
+      {
+        GEMINI_API_KEY: "primary",
+        GROK_API_KEY: "grok-secret",
+        MODEL_ID: "gemini-test",
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+      },
+    );
+
+    expect(res.status).toBe(502);
+    await expect(res.json()).resolves.toMatchObject({
+      error: "LLM analysis failed",
+      detail: expect.objectContaining({ message: expect.any(String) }),
+    });
   });
 
   it("returns sanitized provider diagnostics when all LLM providers fail", async () => {
@@ -328,7 +591,8 @@ describe("POST /api/analyze", () => {
     await expect(res.json()).resolves.toEqual({
       error: "Analysis persistence failed",
       detail: {
-        message: "Supabase image upload failed: bucket missing",
+        code: "PERSISTENCE_FAILED",
+        message: "Could not save analysis result",
       },
     });
   });

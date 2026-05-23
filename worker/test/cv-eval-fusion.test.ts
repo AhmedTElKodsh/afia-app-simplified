@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { rowFromPipelineResult, summarizeCvEval } from "../src/eval/cv-eval.js";
+import { rowFromPipelineResult, summarizeCvEval, resolveFramePath } from "../src/eval/cv-eval.js";
 import type { PipelineOutput } from "../src/cv/pipeline.js";
 
 function pipeline(overrides: Partial<PipelineOutput> = {}): PipelineOutput {
@@ -13,6 +13,22 @@ function pipeline(overrides: Partial<PipelineOutput> = {}): PipelineOutput {
     diagnostics: {
       contourFound: true,
       meniscusY: 100,
+      lineCandidates: [
+        {
+          id: "line-0",
+          y: 420,
+          yRatioInBottle: 0.5,
+          score: 0.82,
+          edgeStrength: 1200,
+          horizontalCoverage: 1,
+          source: "sobel_row",
+          angleDeg: 0,
+          inlierCount: null,
+          reason: "edge_strength+center_plausibility",
+        },
+      ],
+      selectedLineSource: "candidate",
+      measurementState: "measured",
       edgeStrength: 0.8,
       stages: ["validate", "preprocess", "contour", "confidence", "fusion", "complete"],
       onnxScore: 0.1,
@@ -42,6 +58,12 @@ function pipeline(overrides: Partial<PipelineOutput> = {}): PipelineOutput {
 }
 
 describe("CV eval fusion reporting", () => {
+  it("resolves curated frame paths in the nested local image checkout", async () => {
+    const resolved = await resolveFramePath("oil-bottle-frames/715ml/715ml_t0003.50s_f0007.jpg");
+
+    expect(resolved.replaceAll("\\", "/")).toMatch(/oil-bottle-frames\/oil-bottle-frames\/715ml\/715ml_t0003\.50s_f0007\.jpg$/);
+  });
+
   it("projects per-row fusion diagnostics without image payloads or NaN metrics", () => {
     const row = rowFromPipelineResult("sample.jpg", 800, pipeline());
 
@@ -57,9 +79,21 @@ describe("CV eval fusion reporting", () => {
       fusionIgnoredReasons: { onnx: ["nearZeroEstimate"] },
       onnxHeuristicDeltaMl: 615,
       onnxLoadStatus: "loaded (4ms)",
+      measurementState: "measured",
+      selectedLineSource: "candidate",
+      lineCandidateCount: 1,
+      bestLineCandidateY: 420,
+      bestLineCandidateScore: 0.82,
     });
     expect(JSON.stringify(row)).not.toContain("base64");
     expect(Object.values(row).some(v => typeof v === "number" && Number.isNaN(v))).toBe(false);
+  });
+
+  it("uses the fixture bottle capacity when converting fill ratio to ml", () => {
+    const row = rowFromPipelineResult("sample-2.5l.jpg", 1250, pipeline({ fillRatio: 0.5 }), 2500);
+
+    expect(row.cvMl).toBe(1250);
+    expect(row.exactBucketPass).toBe(true);
   });
 
   it("summarizes fusion counts and tolerates older or failed rows with missing diagnostics", () => {
@@ -90,6 +124,12 @@ describe("CV eval fusion reporting", () => {
     expect(summary.fusion.disagreementPenaltyBuckets).toEqual({ "0.1-0.25": 1, missing: 1 });
     expect(summary.fusion.tierDistribution).toEqual({ medium: 1, missing: 1 });
     expect(summary.fusion.onnxHeuristicDeltaMl).toEqual({ count: 1, avg: 615, max: 615 });
+    expect(summary.stageMetrics).toMatchObject({
+      stageCounts: { validate: 2 },
+      measurementStates: { measured: 1, missing: 1 },
+      selectedLineSources: { candidate: 1, missing: 1 },
+      candidateCountBuckets: { "1": 1, "0": 1 },
+    });
     expect(summary.quality).toMatchObject({
       meanSignedErrorMl: -20,
       meanAbsErrorMl: 20,

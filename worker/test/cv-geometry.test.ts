@@ -11,20 +11,20 @@ describe("calibrateFillRatio", () => {
     expect(calibrateFillRatio(1.5, geometry)).toBe(0);
   });
 
-  it("returns 0 for ratio at fillTopY (empty)", () => {
+  it("returns full for ratio at fillTopY", () => {
     const result = calibrateFillRatio(0.15, geometry);
     expect(result).toBeCloseTo(1.0, 5);
   });
 
-  it("returns 1 for ratio at fillBottomY (full)", () => {
+  it("returns empty for ratio at fillBottomY", () => {
     const result = calibrateFillRatio(0.85, geometry);
     expect(result).toBeCloseTo(0.0, 5);
   });
 
-  it("returns 0.5 for mid-range ratio", () => {
+  it("uses the 1.5L profile curve at the mid-range ratio", () => {
     const mid = (0.15 + 0.85) / 2;
     const result = calibrateFillRatio(mid, geometry);
-    expect(result).toBeCloseTo(0.5, 5);
+    expect(result).toBeCloseTo(0.4738, 4);
   });
 
   it("never returns outside [0, 1]", () => {

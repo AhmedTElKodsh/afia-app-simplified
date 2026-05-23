@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../src/App";
@@ -78,7 +78,13 @@ describe("camera capture shell", () => {
 
     expect(screen.getByText(/photograph the front of the bottle/i)).toBeInTheDocument();
     expect(screen.getByText(/aim slightly downward/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/1\.5l bottle distance and downward phone angle guide/i)).toBeInTheDocument();
+    const guide = screen.getByLabelText(/1\.5l bottle distance and downward phone angle guide/i);
+    expect(guide).toBeInTheDocument();
+    expect(guide).not.toHaveClass("border-4");
+    expect(screen.getByTestId("bottle-outline-mask")).toHaveStyle({
+      backgroundColor: "#f87171",
+      maskRepeat: "no-repeat",
+    });
     expect(screen.getByText(/place the bottle inside the outline|align the bottle with the outline/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /capture/i })).toBeDisabled();
   });
@@ -171,9 +177,103 @@ describe("camera capture shell", () => {
     });
     fireEvent.canPlay(document.querySelector("video")!);
 
-    expect(await screen.findByText(/locked - capturing automatically/i, undefined, { timeout: 2500 })).toBeInTheDocument();
+    expect(await screen.findByText(/capturing automatically/i, undefined, { timeout: 2500 })).toBeInTheDocument();
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith("/api/analyze", expect.objectContaining({ method: "POST" }));
     }, { timeout: 2500 });
   }, 6000);
+
+  it("does not auto-capture while the detected bottle bounds are still shifting", async () => {
+    const stable = makeGuideSample({ left: 29, right: 67, top: 19, bottom: 90 });
+    const shifted = makeGuideSample({ left: 35, right: 73, top: 19, bottom: 90 });
+    let calls = 0;
+    vi.mocked(HTMLCanvasElement.prototype.getContext).mockReturnValue({
+      drawImage,
+      getImageData: vi.fn(() => ({ data: calls++ % 2 === 0 ? stable : shifted })),
+    } as unknown as CanvasRenderingContext2D);
+
+    renderScan();
+
+    await waitFor(() => {
+      expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalled();
+    });
+    fireEvent.canPlay(document.querySelector("video")!);
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2200));
+    });
+
+    expect(screen.getByText(/hold steady/i)).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+  }, 7000);
+
+  it("keeps auto-capture blocked when the bottle is partially outside the frame", async () => {
+    const partial = makeGuideSample({ left: 0, right: 38, top: 0, bottom: 71 });
+    vi.mocked(HTMLCanvasElement.prototype.getContext).mockReturnValue({
+      drawImage,
+      getImageData: vi.fn(() => ({ data: partial })),
+    } as unknown as CanvasRenderingContext2D);
+
+    renderScan();
+
+    await waitFor(() => {
+      expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalled();
+    });
+    fireEvent.canPlay(document.querySelector("video")!);
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 900));
+    });
+
+    expect(screen.getByText(/show the full bottle/i)).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+  }, 5000);
+
+  it("rejects glare-heavy captures before analysis", async () => {
+    const glareFrame = makeQualityFrame({ width: 640, height: 480, base: 96, glareEvery: 4 });
+    vi.mocked(HTMLCanvasElement.prototype.getContext).mockReturnValue({
+      drawImage,
+      getImageData: vi.fn(() => ({ data: glareFrame })),
+    } as unknown as CanvasRenderingContext2D);
+
+    renderScan();
+
+    await waitFor(() => {
+      expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalled();
+    });
+    fireEvent.canPlay(document.querySelector("video")!);
+    fireEvent.click(screen.getByRole("button", { name: /capture/i }));
+
+    expect(await screen.findByText(/reduce glare/i)).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+  });
 });
+
+function makeGuideSample(bounds: { left: number; right: number; top: number; bottom: number }) {
+  const sample = new Uint8ClampedArray(96 * 128 * 4);
+  for (let y = 0; y < 128; y += 1) {
+    for (let x = 0; x < 96; x += 1) {
+      const i = (y * 96 + x) * 4;
+      const insideBottle = x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom;
+      const value = insideBottle ? 40 : 220;
+      sample[i] = value;
+      sample[i + 1] = value;
+      sample[i + 2] = value;
+      sample[i + 3] = 255;
+    }
+  }
+  return sample;
+}
+
+function makeQualityFrame(options: { width: number; height: number; base: number; glareEvery: number }) {
+  const sample = new Uint8ClampedArray(options.width * options.height * 4);
+  for (let pixel = 0; pixel < options.width * options.height; pixel += 1) {
+    const i = pixel * 4;
+    const value = pixel % options.glareEvery === 0 ? 255 : options.base;
+    sample[i] = value;
+    sample[i + 1] = value;
+    sample[i + 2] = value;
+    sample[i + 3] = 255;
+  }
+  return sample;
+}

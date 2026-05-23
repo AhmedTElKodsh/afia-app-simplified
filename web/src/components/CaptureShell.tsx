@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import bottleCleanOutlineUrl from "../../../oil-bottle-frames/afia-bottle-clean.svg";
 import { AnalysisResultSchema, DEFAULT_BOTTLE_SIZE, type AnalysisResultContract } from "@afia/shared";
@@ -12,6 +12,14 @@ interface FrameGuide {
   state: GuideState;
   message: string;
   score: number;
+  box?: GuideBox;
+}
+
+interface GuideBox {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
 }
 
 const GUIDE_TARGET = {
@@ -22,19 +30,27 @@ const GUIDE_TARGET = {
 };
 const GUIDE_SAMPLE_WIDTH = 96;
 const GUIDE_SAMPLE_HEIGHT = 128;
+const PREVIEW_ASPECT_RATIO = 3 / 4;
 const AUTO_CAPTURE_LOCK_MS = 900;
+const GUIDE_OUTLINE_PALETTE: Record<GuideState, { color: string; glow: string }> = {
+  searching: { color: "#f87171", glow: "rgba(248,113,113,0.62)" },
+  adjusting: { color: "#fdba74", glow: "rgba(253,186,116,0.56)" },
+  locked: { color: "#6ee7b7", glow: "rgba(110,231,183,0.65)" },
+};
 
 export function CaptureShell() {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
   const autoCaptureStartedRef = useRef(false);
   const greenSinceRef = useRef<number | null>(null);
+  const lockedBoxesRef = useRef<GuideBox[]>([]);
   const [cameraState, setCameraState] = useState<CameraState>("starting");
   const [guide, setGuide] = useState<FrameGuide>({
     state: "searching",
     message: "Place the bottle inside the outline",
     score: 0,
   });
+  const [autoCaptureArmed, setAutoCaptureArmed] = useState(false);
   const [qualityMessage, setQualityMessage] = useState<string | null>(null);
   const [videoReady, setVideoReady] = useState(false);
 
@@ -80,12 +96,13 @@ export function CaptureShell() {
     const video = videoRef.current;
     if (!video || !canCapture) return;
 
-    const width = video.videoWidth;
-    const height = video.videoHeight;
-    if (width <= 0 || height <= 0) {
+    const rawWidth = video.videoWidth;
+    const rawHeight = video.videoHeight;
+    if (rawWidth <= 0 || rawHeight <= 0) {
       setCameraState("capture-failed");
       return;
     }
+    const { width, height } = previewFrameSize(rawWidth, rawHeight);
 
     const canvas = document.createElement("canvas");
     canvas.width = width;
@@ -96,7 +113,7 @@ export function CaptureShell() {
       return;
     }
 
-    context.drawImage(video, 0, 0, width, height);
+    drawVideoPreviewFrame(video, context, width, height);
     const quality = assessFrameQuality(context, width, height);
     if (!quality.ok) {
       setQualityMessage(quality.message);
@@ -164,6 +181,8 @@ export function CaptureShell() {
     if (!canCapture || cameraState !== "ready") {
       greenSinceRef.current = null;
       autoCaptureStartedRef.current = false;
+      lockedBoxesRef.current = [];
+      setAutoCaptureArmed(false);
       return;
     }
 
@@ -183,15 +202,25 @@ export function CaptureShell() {
         setGuide(nextGuide);
 
         const now = Date.now();
-        if (nextGuide.state === "locked") {
-          greenSinceRef.current ??= now;
-          if (!autoCaptureStartedRef.current && now - greenSinceRef.current >= AUTO_CAPTURE_LOCK_MS) {
-            autoCaptureStartedRef.current = true;
-            void captureFrame();
-            return;
+        if (nextGuide.state === "locked" && nextGuide.box) {
+          lockedBoxesRef.current = [...lockedBoxesRef.current.slice(-2), nextGuide.box];
+          const boundsStable = lockedBoxesRef.current.length >= 3 && guideBoundsAreStable(lockedBoxesRef.current);
+          if (!boundsStable) {
+            greenSinceRef.current = null;
+            setAutoCaptureArmed(false);
+          } else {
+            greenSinceRef.current ??= now;
+            setAutoCaptureArmed(true);
+            if (!autoCaptureStartedRef.current && now - greenSinceRef.current >= AUTO_CAPTURE_LOCK_MS) {
+              autoCaptureStartedRef.current = true;
+              void captureFrame();
+              return;
+            }
           }
         } else {
           greenSinceRef.current = null;
+          lockedBoxesRef.current = [];
+          setAutoCaptureArmed(false);
         }
       }
       timeoutId = window.setTimeout(tick, 240);
@@ -204,16 +233,28 @@ export function CaptureShell() {
     };
   }, [cameraState, canCapture, captureFrame]);
 
-  const guideColorClass =
-    guide.state === "locked"
-      ? "border-emerald-300 shadow-[0_0_22px_rgba(110,231,183,0.65)]"
-      : guide.state === "adjusting"
-        ? "border-orange-300 shadow-[0_0_18px_rgba(253,186,116,0.45)]"
-        : "border-red-400 shadow-[0_0_16px_rgba(248,113,113,0.45)]";
+  const displayGuideState = guide.state === "locked" && !autoCaptureArmed ? "adjusting" : guide.state;
+  const guideMessage = guide.state === "locked"
+    ? autoCaptureArmed ? "Capturing automatically" : "Hold steady"
+    : guide.message;
+  const guideOutline = GUIDE_OUTLINE_PALETTE[displayGuideState];
+  const guideOutlineStyle: CSSProperties = {
+    backgroundColor: guideOutline.color,
+    filter: `drop-shadow(0 0 10px ${guideOutline.glow})`,
+    maskImage: `url(${bottleCleanOutlineUrl})`,
+    maskPosition: "center",
+    maskRepeat: "no-repeat",
+    maskSize: "contain",
+    transition: "background-color 160ms ease, filter 160ms ease",
+    WebkitMaskImage: `url(${bottleCleanOutlineUrl})`,
+    WebkitMaskPosition: "center",
+    WebkitMaskRepeat: "no-repeat",
+    WebkitMaskSize: "contain",
+  };
   const guideTintClass =
-    guide.state === "locked"
+    displayGuideState === "locked"
       ? "bg-emerald-400/90 text-neutral-950"
-      : guide.state === "adjusting"
+      : displayGuideState === "adjusting"
         ? "bg-orange-300/90 text-neutral-950"
         : "bg-red-500/90 text-white";
 
@@ -237,23 +278,22 @@ export function CaptureShell() {
         <div className="pointer-events-none absolute inset-x-[14%] bottom-[9%] h-px bg-white/20" />
         <div
           aria-label="1.5L bottle distance and downward phone angle guide"
-          className={`pointer-events-none absolute left-1/2 top-[15%] h-[56%] w-[40%] -translate-x-1/2 rounded-[28%] border-4 transition-colors ${guideColorClass}`}
-          data-guide-state={guide.state}
+          className="pointer-events-none absolute left-1/2 top-[15%] h-[56%] w-[40%] -translate-x-1/2"
+          data-guide-state={displayGuideState}
           data-guide-score={guide.score.toFixed(2)}
         >
-          <img
-            src={bottleCleanOutlineUrl}
-            alt=""
+          <div
             aria-hidden="true"
-            className="h-full w-full object-contain opacity-45"
-            draggable={false}
+            className="h-full w-full opacity-95"
+            data-testid="bottle-outline-mask"
+            style={guideOutlineStyle}
           />
         </div>
         <div
           className={`pointer-events-none absolute bottom-4 left-3 right-3 rounded px-3 py-2 text-center text-xs font-semibold transition-colors ${guideTintClass}`}
           aria-live="polite"
         >
-          {guide.state === "locked" ? "Locked - capturing automatically" : guide.message}
+          {guideMessage}
         </div>
       </div>
 
@@ -284,7 +324,7 @@ export function CaptureShell() {
         disabled={!canCapture}
         onClick={captureFrame}
       >
-        {cameraState === "analyzing" ? "Analyzing..." : guide.state === "locked" ? "Locked" : "Capture"}
+        {cameraState === "analyzing" ? "Analyzing..." : autoCaptureArmed ? "Capturing..." : "Capture"}
       </button>
     </div>
   );
@@ -301,7 +341,7 @@ function analyzeGuideFrame(
   }
 
   try {
-    context.drawImage(video, 0, 0, width, height);
+    drawVideoPreviewFrame(video, context, width, height);
     const { data } = context.getImageData(0, 0, width, height);
     const luminance = new Float32Array(width * height);
     let sum = 0;
@@ -343,7 +383,7 @@ function analyzeGuideFrame(
       return { state: "searching", message: "Place the bottle inside the outline", score: 0 };
     }
 
-    const box = {
+    const box: GuideBox = {
       left: minX / width,
       top: minY / height,
       width: (maxX - minX + 1) / width,
@@ -357,6 +397,12 @@ function analyzeGuideFrame(
     const centerDy = boxCenterY - targetCenterY;
     const widthDiff = box.width - GUIDE_TARGET.width;
     const heightDiff = box.height - GUIDE_TARGET.height;
+    const touchesFrameEdge =
+      box.left <= 0.04 ||
+      box.top <= 0.04 ||
+      box.left + box.width >= 0.96 ||
+      box.top + box.height >= 0.96;
+    const pixelAspect = (box.height * height) / Math.max(1, box.width * width);
     const shapeScore = Math.max(
       Math.abs(centerDx) / 0.17,
       Math.abs(centerDy) / 0.16,
@@ -364,6 +410,23 @@ function analyzeGuideFrame(
       Math.abs(heightDiff) / 0.24,
     );
     const score = clamp(1 - shapeScore, 0, 1);
+
+    if (touchesFrameEdge) {
+      return {
+        state: "adjusting",
+        message: "Show the full bottle",
+        score,
+        box,
+      };
+    }
+    if (pixelAspect < 1.35) {
+      return {
+        state: "adjusting",
+        message: "Keep bottle upright",
+        score,
+        box,
+      };
+    }
 
     if (Math.abs(widthDiff) > 0.12 || Math.abs(heightDiff) > 0.14) {
       return {
@@ -388,11 +451,62 @@ function analyzeGuideFrame(
     }
 
     return score > 0.68
-      ? { state: "locked", message: "Locked - capturing automatically", score }
+      ? { state: "locked", message: "Locked - capturing automatically", score, box }
       : { state: "adjusting", message: "Match the bottle shape to the outline", score };
   } catch {
     return { state: "adjusting", message: "Align the bottle with the outline", score: 0.45 };
   }
+}
+
+function guideBoundsAreStable(boxes: GuideBox[]): boolean {
+  const latest = boxes[boxes.length - 1];
+  return boxes.every((box) =>
+    Math.abs(box.left - latest.left) <= 0.025 &&
+    Math.abs(box.top - latest.top) <= 0.025 &&
+    Math.abs(box.width - latest.width) <= 0.03 &&
+    Math.abs(box.height - latest.height) <= 0.03,
+  );
+}
+
+function previewFrameSize(rawWidth: number, rawHeight: number): { width: number; height: number } {
+  const rawAspect = rawWidth / rawHeight;
+  if (rawAspect > PREVIEW_ASPECT_RATIO) {
+    return {
+      width: Math.round(rawHeight * PREVIEW_ASPECT_RATIO),
+      height: rawHeight,
+    };
+  }
+
+  return {
+    width: rawWidth,
+    height: Math.round(rawWidth / PREVIEW_ASPECT_RATIO),
+  };
+}
+
+function drawVideoPreviewFrame(
+  video: HTMLVideoElement,
+  context: CanvasRenderingContext2D,
+  targetWidth: number,
+  targetHeight: number,
+): void {
+  const sourceWidth = video.videoWidth;
+  const sourceHeight = video.videoHeight;
+  const sourceAspect = sourceWidth / sourceHeight;
+  const targetAspect = targetWidth / targetHeight;
+  let sx = 0;
+  let sy = 0;
+  let sw = sourceWidth;
+  let sh = sourceHeight;
+
+  if (sourceAspect > targetAspect) {
+    sw = sourceHeight * targetAspect;
+    sx = (sourceWidth - sw) / 2;
+  } else if (sourceAspect < targetAspect) {
+    sh = sourceWidth / targetAspect;
+    sy = (sourceHeight - sh) / 2;
+  }
+
+  context.drawImage(video, sx, sy, sw, sh, 0, 0, targetWidth, targetHeight);
 }
 
 async function analyzeCapture(imageBase64: string): Promise<{ analysis: AnalysisResultContract; analysisId?: string }> {
@@ -438,6 +552,7 @@ function assessFrameQuality(
     let luminanceSum = 0;
     let luminanceSquares = 0;
     let focusSum = 0;
+    let glareCount = 0;
     let previous = 0;
 
     for (let index = 0; index < data.length; index += stride) {
@@ -445,6 +560,7 @@ function assessFrameQuality(
       luminanceSum += luminance;
       luminanceSquares += luminance * luminance;
       if (count > 0) focusSum += Math.abs(luminance - previous);
+      if (luminance > 248) glareCount += 1;
       previous = luminance;
       count += 1;
     }
@@ -453,8 +569,10 @@ function assessFrameQuality(
     const mean = luminanceSum / count;
     const variance = luminanceSquares / count - mean * mean;
     const focusScore = count > 1 ? focusSum / (count - 1) : 0;
+    const glareRatio = glareCount / count;
 
     if (mean < 32) return { ok: false, message: "Lighting is too dark. Move to brighter light and retake the photo." };
+    if (glareRatio > 0.12) return { ok: false, message: "Reduce glare and retake the photo." };
     if (mean > 245) return { ok: false, message: "The image is overexposed. Reduce glare and retake the photo." };
     if (variance < 18 || focusScore < 1.5) {
       return { ok: false, message: "The image is too blurry or flat. Hold the phone steady and retake the photo." };

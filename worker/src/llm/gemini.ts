@@ -1,4 +1,5 @@
 import type { FewShot } from "../prompt/load.js";
+import { geminiVisualEvidenceSchema } from "./visual-evidence-schema.js";
 
 export interface GeminiReferenceImage {
   label: string;
@@ -15,6 +16,8 @@ interface CallArgs {
   imageBase64: string;
   referenceImages?: GeminiReferenceImage[];
   targetMimeType?: string;
+  maxAttempts?: number;
+  retryBaseDelayMs?: number;
 }
 
 function sleep(ms: number): Promise<void> {
@@ -53,8 +56,12 @@ function isRetryableQuotaError(error: unknown): boolean {
 }
 
 export async function callGemini(args: CallArgs): Promise<string> {
-  const referenceLabels = (args.referenceImages ?? [])
-    .map((image, i) => `Reference image ${i + 1}: ${image.label}`)
+  const referenceLabels = args.fewShots
+    .map((shot, i) => {
+      const imageLabel = args.referenceImages?.[i]?.label;
+      const prefix = imageLabel ? `Reference image ${i + 1}: ${imageLabel}` : `Reference ${i + 1}`;
+      return `${prefix}; known remaining ${shot.expected.nearestReferenceMl}ml; expected oil surface y=${Math.round(shot.expected.oilSurfaceYRatio * 1000)}/1000`;
+    })
     .join("\n");
 
   const parts: GeminiPart[] = [
@@ -66,12 +73,12 @@ export async function callGemini(args: CallArgs): Promise<string> {
       text: [
         args.userText,
         referenceLabels ? `\nCalibrated reference images:\n${referenceLabels}` : "",
-        "\nThe target image is the final image before these instructions. Return exactly one JSON object. Put visual observations in the visualReasoning field.",
+        "\nThe target image is the final image before these instructions. Return exactly one JSON object matching schemaVersion afia_visual_evidence_v1.",
       ].join("\n"),
     },
   ];
 
-  const maxAttempts = 4;
+  const maxAttempts = args.maxAttempts ?? 4;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const result = await fetchGemini(args.apiKey, args.modelId, {
@@ -80,6 +87,8 @@ export async function callGemini(args: CallArgs): Promise<string> {
         generationConfig: {
           temperature: 0,
           maxOutputTokens: 4096,
+          responseMimeType: "application/json",
+          responseSchema: geminiVisualEvidenceSchema(),
         },
       });
       return readGeminiText(result);
@@ -87,7 +96,7 @@ export async function callGemini(args: CallArgs): Promise<string> {
       if (!isRetryableQuotaError(error) || attempt === maxAttempts) {
         throw error;
       }
-      const retryDelayMs = extractRetryDelayMs(error) ?? attempt * 15000;
+      const retryDelayMs = extractRetryDelayMs(error) ?? attempt * (args.retryBaseDelayMs ?? 15000);
       await sleep(retryDelayMs + 1000);
     }
   }
@@ -105,6 +114,8 @@ interface GeminiGenerateRequest {
   generationConfig: {
     temperature: number;
     maxOutputTokens: number;
+    responseMimeType?: string;
+    responseSchema?: Record<string, unknown>;
   };
 }
 

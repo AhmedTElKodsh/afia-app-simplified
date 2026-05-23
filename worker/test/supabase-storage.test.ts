@@ -86,6 +86,55 @@ describe("Supabase analysis storage", () => {
     expect(record.correctionStatus).toBe("pending_review");
   });
 
+  it("removes uploaded capture images if the analysis insert fails", async () => {
+    const upload = vi.fn(async () => ({ data: { path: "analyses/test.jpg" }, error: null }));
+    const getPublicUrl = vi.fn(() => ({ data: { publicUrl: "https://example.supabase.co/storage/test.jpg" } }));
+    const remove = vi.fn(async () => ({ data: null, error: null }));
+    const insert = vi.fn(() => ({
+      select: vi.fn(() => ({
+        single: vi.fn(async () => ({
+          data: null,
+          error: { message: "insert rejected" },
+        })),
+      })),
+    }));
+    const client = {
+      storage: { from: vi.fn(() => ({ upload, getPublicUrl, remove })) },
+      from: vi.fn(() => ({ insert })),
+    };
+
+    const storage = createAnalysisStorage(
+      {
+        SUPABASE_URL: "https://example.supabase.co",
+        SUPABASE_SERVICE_ROLE_KEY: "secret",
+        SUPABASE_STORAGE_BUCKET: "analysis-images",
+        GEMINI_API_KEY: "gemini",
+        MODEL_ID: "gemini-test",
+      },
+      () => client as never,
+    );
+
+    await expect(storage.saveAnalysis({
+      id: "0d44aecc-8344-44c8-8b7f-201216f7c9f9",
+      bottleSize: "1.5L",
+      imageBase64: "data:image/jpeg;base64,ZmFrZQ==",
+      result: {
+        remainingMl: 900,
+        consumedMl: 600,
+        redLineYRatio: 0.42,
+        confidence: 0.8,
+        warnings: [],
+        provider: "gemini",
+        rawMetadata: {
+          promptVersion: "v1",
+          modelId: "gemini-test",
+          rawModelText: "{}",
+        },
+      },
+    })).rejects.toThrow(/Supabase analysis insert failed/);
+    expect(remove).toHaveBeenCalledWith(["analyses/test.jpg"]);
+  });
+
   it("builds Supabase insert records from product analysis contracts", () => {
     expect(createSupabaseAnalysisRecord({
       id: "0d44aecc-8344-44c8-8b7f-201216f7c9f9",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { scoreContours } from "../src/cv/scoring.js";
+import { scoreBottleRoi, scoreContours } from "../src/cv/scoring.js";
 import type { ContourRect } from "../src/cv/scoring.js";
 
 const imgW = 640;
@@ -50,5 +50,20 @@ describe("scoreContours", () => {
     const small = rect(250, 100, 80, 140);  // area 11200
     const result = scoreContours([small, big], imgW, imgH);
     expect(result!.idx).toBe(1); // big wins
+  });
+
+  it("penalizes frame-filling ROI candidates that are likely counters or crop edges", () => {
+    const bottleLike = rect(250, 60, 120, 340);
+    const frameFilling = rect(5, 5, 620, 460);
+
+    expect(scoreBottleRoi(bottleLike, imgW, imgH)).toBeGreaterThan(scoreBottleRoi(frameFilling, imgW, imgH));
+  });
+
+  it("prefers a centered bottle-like ROI over an edge-touching candidate with similar aspect", () => {
+    const centered = rect(270, 60, 100, 340);
+    const edgeTouching = rect(0, 60, 100, 340);
+    const result = scoreContours([edgeTouching, centered], imgW, imgH);
+
+    expect(result?.idx).toBe(1);
   });
 });

@@ -10,6 +10,8 @@
     "eval:probe": "tsx src/eval/run.ts --manifest=worker/test/fixtures/dev/probe-manifest.json --label=probe",
     "eval:cv": "tsx src/eval/cv-eval.ts",
     "eval:dev-quick": "tsx src/eval/run.ts --manifest=worker/test/fixtures/dev/probe-manifest.json --label=dev-quick",
+    "eval:stage1-sample": "tsx src/eval/stage1-sample.ts",
+    "eval:stage1-sample:local": "tsx src/eval/cv-eval.ts worker/test/fixtures/stage1-sample/manifest.json --out=runs/stage1-sample/local-cv-results.json",
     "eval:edge": "tsx src/eval/cv-eval.ts worker/test/fixtures/cv-edge-eval/manifest.json",
     "gate:rss": "tsx src/onnx/rss-gate.ts",
     "probe:gemini": "tsx src/eval/probe-gemini-frame.ts",

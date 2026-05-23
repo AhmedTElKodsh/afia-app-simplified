@@ -11,7 +11,7 @@ The active workflow is API-first product validation:
 1. Product QR or barcode opens the Cloudflare scan page with bottle identity.
 2. Stage 1 analyzes only 1.5L.
 3. Camera capture uses front-side guidance, a functional outline, quality checks, stable-lock auto-capture, and manual fallback.
-4. API analysis uses Gemini key rotation and Grok fallback.
+4. API analysis uses Gemini key rotation, optional OpenRouter vision-capable routing, and Grok fallback.
 5. Supabase persistence stores images, analysis rows, corrections, manual uploads, quality tags, and review metadata.
 6. Results use the actual captured image, a fixed detected red line, remaining/consumed ml text, 55ml correction slider, and quarter-cup counter.
 7. CV/ONNX/local paths remain diagnostics or future-model work until gates pass.
@@ -27,7 +27,7 @@ The active workflow is API-first product validation:
 | Frontend | React, Vite, Tailwind CSS |
 | Validation | Zod |
 | Persistence | Supabase PostgreSQL and Storage |
-| LLM providers | Gemini primary, Grok fallback |
+| LLM providers | Gemini primary, optional explicit OpenRouter vision lane, Grok fallback |
 | Computer vision diagnostics | OpenCV.js |
 | Local model spike | ONNX Runtime Web |
 | Test framework | Vitest and Testing Library |
@@ -54,7 +54,7 @@ The active workflow is API-first product validation:
 
 ## Analysis Flow
 
-The primary analysis flow receives product size and image data, validates the request, loads the current prompt bundle, calls Gemini through the configured key pool, optionally calls Grok on provider failure or low confidence, validates the structured result, writes the image and row to Supabase, and returns analysis data plus an analysis id to the web app.
+The primary analysis flow receives product size and image data, validates the request, loads the current prompt bundle, calls Gemini through the configured key pool, optionally calls OpenRouter only when explicit image-capable model IDs are configured, optionally calls Grok on provider failure or low confidence, validates the structured result, writes the image and row to Supabase, and returns analysis data plus an analysis id to the web app.
 
 The response contract should keep:
 
@@ -105,6 +105,21 @@ The CV pipeline includes validation, preprocessing, contour/meniscus detection, 
 The ONNX feasibility spike showed that tiny constant, identity, and regression models can load in local tests with acceptable binary and latency margins. The memory/RSS evidence is not enough to treat ONNX as production-safe on Workers without deployment proof. Current planning therefore uses ONNX as a future local-model candidate, not the Stage 1 primary path.
 
 The Stage 1.5 verdict remains NO-GO on accuracy. Local model promotion requires a trusted dataset, runtime-compatible model package, browser/mobile performance evidence, and repeated 55ml accuracy sign-off.
+
+## Model Remediation Research Notes
+
+Research update, 2026-05-21: the stronger technical direction is geometry-first hybrid analysis. API-only is technically constrained now, but accuracy is still not good enough; the next best step is local/CV geometry proposing the liquid line, with the LLM validating or explaining evidence around that candidate.
+
+Source-grounded implications:
+
+- OpenCV remains the first-choice baseline for candidate evidence because it directly supports edge, contour, and Hough line workflows needed for liquid-line proposals: https://docs.opencv.org/4.x/d9/db0/tutorial_hough_lines.html
+- Transparent-liquid literature emphasizes perpendicular capture, meniscus/scale detection, parallax/lens correction, and the difficulty of transparent vessels; this supports capture-quality gates and calibrated geometry rather than prompt-only measurement: https://www.mdpi.com/1424-8220/21/8/2676 and https://www.mdpi.com/1424-8220/23/15/6656
+- ONNX Runtime Web is viable for browser experiments through WASM/WebGPU, but runtime proof must cover model size, cold start, memory, and device parity before promotion: https://onnxruntime.ai/docs/get-started/with-javascript/web.html
+- TensorFlow.js transfer learning can reduce data requirements for small browser models, but Afia should apply it to quality, segmentation, keypoint, or candidate-ranking heads before trusting direct image-to-ml regression: https://www.tensorflow.org/js/tutorials/transfer/what_is_transfer_learning
+- Augmentation tooling must transform masks, boxes, and keypoints together; otherwise modified images corrupt the geometry labels they are supposed to strengthen: https://albumentations.ai/docs/3-basic-usage/bounding-boxes-augmentations/
+- SAM/MobileSAM and YOLO segmentation/pose are useful candidates for assisted labeling, bottle masks, liquid-region masks, or keypoints, but they still need Afia-specific evaluation before runtime use: https://arxiv.org/abs/2304.02643, https://arxiv.org/abs/2306.14289, and https://docs.ultralytics.com/tasks/segment/
+
+Implementation implication: M007 should first create a candidate-line proposal and overlay-evaluation harness. New models are useful only after the team can see whether errors come from bottle detection, line proposal, height-to-volume calibration, low-quality capture, or LLM validation.
 
 ## Evaluation And Guardrails
 

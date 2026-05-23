@@ -87,6 +87,7 @@ describe("admin shell", () => {
     renderAdmin();
 
     expect(await screen.findByText(/900 ml remaining/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/detected oil level/i)).toHaveAttribute("data-red-line-ratio", "0.4200");
     fireEvent.change(screen.getByLabelText(/^token$/i), { target: { value: "secret" } });
     fireEvent.change(screen.getAllByLabelText(/^status$/i)[1], { target: { value: "manual_corrected" } });
     fireEvent.change(screen.getByLabelText(/^flag$/i), { target: { value: "too_big" } });
@@ -161,7 +162,7 @@ describe("admin shell", () => {
     expect(screen.getAllByText(/user_submitted_correction/i).length).toBeGreaterThan(0);
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        "/api/admin/dataset/export?limit=200",
+        "/api/admin/dataset/export?limit=200&offset=0",
         expect.objectContaining({ headers: expect.objectContaining({ authorization: "Bearer secret" }) }),
       );
     });

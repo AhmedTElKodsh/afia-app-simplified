@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   ADMIN_FLAGS,
+  BOTTLE_1_5L,
   CORRECTION_STATUSES,
   DEFAULT_BOTTLE_SIZE,
   type AdminFlag,
@@ -11,6 +12,8 @@ import {
 type Tab = "queue" | "upload" | "dataset";
 
 const ADMIN_TOKEN_KEY = "afia.adminToken";
+const REVIEW_PAGE_SIZE = 50;
+const EXPORT_PAGE_SIZE = 200;
 
 export function AdminShell() {
   const [tab, setTab] = useState<Tab>("queue");
@@ -76,32 +79,37 @@ function ReviewQueue({ token }: { token: string }) {
   const [records, setRecords] = useState<AnalysisRecord[]>([]);
   const [statusFilter, setStatusFilter] = useState<CorrectionStatus | "all">("pending_review");
   const [message, setMessage] = useState("Loading analyses...");
+  const [hasMore, setHasMore] = useState(false);
 
-  async function loadRecords() {
-    setMessage("Loading analyses...");
+  async function loadRecords(offset = 0) {
+    setMessage(offset === 0 ? "Loading analyses..." : "Loading more analyses...");
     try {
-      const res = await fetch("/api/admin/analyses?limit=100", { headers: adminHeaders(token) });
+      const params = new URLSearchParams({
+        limit: String(REVIEW_PAGE_SIZE),
+        offset: String(offset),
+      });
+      if (statusFilter !== "all") params.set("status", statusFilter);
+      const res = await fetch(`/api/admin/analyses?${params.toString()}`, { headers: adminHeaders(token) });
       if (!res.ok) {
         setRecords([]);
+        setHasMore(false);
         setMessage(adminFailureMessage(res.status, "load analyses"));
         return;
       }
-      const data = await res.json() as { analyses: AnalysisRecord[] };
-      setRecords(data.analyses);
+      const data = await res.json() as { analyses: AnalysisRecord[]; pagination?: { fetchedCount: number } };
+      setRecords((current) => offset === 0 ? data.analyses : [...current, ...data.analyses]);
+      setHasMore((data.pagination?.fetchedCount ?? data.analyses.length) === REVIEW_PAGE_SIZE);
       setMessage(data.analyses.length === 0 ? "No analyses found." : "");
     } catch {
+      if (offset === 0) setRecords([]);
+      setHasMore(false);
       setMessage("Could not load analyses.");
     }
   }
 
   useEffect(() => {
-    void loadRecords();
-  }, [token]);
-
-  const visibleRecords = useMemo(
-    () => records.filter((record) => statusFilter === "all" || record.correctionStatus === statusFilter),
-    [records, statusFilter],
-  );
+    void loadRecords(0);
+  }, [token, statusFilter]);
 
   async function saveCorrection(id: string, patch: CorrectionPatch) {
     const res = await fetch(`/api/admin/analyses/${id}`, {
@@ -111,7 +119,12 @@ function ReviewQueue({ token }: { token: string }) {
     });
     if (!res.ok) throw new Error(adminFailureMessage(res.status, "save correction"));
     const data = await res.json() as { analysis: AnalysisRecord };
-    setRecords((current) => current.map((record) => record.id === id ? data.analysis : record));
+    setRecords((current) => {
+      if (statusFilter !== "all" && data.analysis.correctionStatus !== statusFilter) {
+        return current.filter((record) => record.id !== id);
+      }
+      return current.map((record) => record.id === id ? data.analysis : record);
+    });
   }
 
   return (
@@ -128,17 +141,26 @@ function ReviewQueue({ token }: { token: string }) {
             {CORRECTION_STATUSES.map((status) => <option key={status} value={status}>{status}</option>)}
           </select>
         </label>
-        <button className="rounded-md bg-amber-300 px-4 py-2 font-semibold text-neutral-950" type="button" onClick={loadRecords}>
+        <button className="rounded-md bg-amber-300 px-4 py-2 font-semibold text-neutral-950" type="button" onClick={() => loadRecords(0)}>
           Refresh
         </button>
       </div>
 
       {message ? <p className="rounded-md border border-white/15 bg-white/8 p-4 text-sm text-neutral-300">{message}</p> : null}
       <div className="grid gap-4 lg:grid-cols-2">
-        {visibleRecords.map((record) => (
+        {records.map((record) => (
           <AnalysisCard key={record.id} record={record} onSave={saveCorrection} />
         ))}
       </div>
+      {hasMore ? (
+        <button
+          className="rounded-md border border-white/20 px-4 py-3 text-sm font-semibold text-white hover:bg-white/5"
+          type="button"
+          onClick={() => loadRecords(records.length)}
+        >
+          Load more
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -186,14 +208,7 @@ function AnalysisCard({
   return (
     <article className="rounded-md border border-white/15 bg-white/8 p-4">
       <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-4">
-        <div className="relative h-32 w-24 overflow-hidden rounded-md bg-black">
-          <img className="h-full w-full object-contain" src={record.imageUrl} alt={`Analysis ${record.id}`} />
-          <div
-            aria-label="Detected oil level"
-            className="pointer-events-none absolute left-0 right-0 h-0.5 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.75)]"
-            style={{ top: `${record.redLineYRatio * 100}%` }}
-          />
-        </div>
+        <AdminBottlePreview record={record} />
         <div>
           <p className="font-semibold">{record.remainingMl} ml remaining</p>
           <p className="mt-1 text-sm text-neutral-300">{record.consumedMl} ml consumed</p>
@@ -219,7 +234,7 @@ function AnalysisCard({
         </div>
         <label className="grid gap-1 text-sm text-neutral-300">
           Corrected ml
-          <input className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-white" min={0} max={1500} step={55} value={adminCorrectedMl} onChange={(event) => setAdminCorrectedMl(event.currentTarget.value)} type="number" />
+          <input className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-white" min={0} max={BOTTLE_1_5L.capacityMl} step={1} value={adminCorrectedMl} onChange={(event) => setAdminCorrectedMl(event.currentTarget.value)} type="number" />
         </label>
         <label className="grid gap-1 text-sm text-neutral-300">
           Note
@@ -231,6 +246,22 @@ function AnalysisCard({
         {message ? <p className="text-sm text-neutral-300">{message}</p> : null}
       </form>
     </article>
+  );
+}
+
+function AdminBottlePreview({ record }: { record: AnalysisRecord }) {
+  return (
+    <div className="flex h-32 w-24 items-center justify-center overflow-hidden rounded-md bg-black">
+      <div className="relative max-h-full max-w-full">
+        <img className="block max-h-32 max-w-24 object-contain" src={record.imageUrl} alt={`Analysis ${record.id}`} />
+        <div
+          aria-label="Detected oil level"
+          className="pointer-events-none absolute left-0 right-0 h-0.5 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.75)]"
+          data-red-line-ratio={record.redLineYRatio.toFixed(4)}
+          style={{ top: `${record.redLineYRatio * 100}%` }}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -283,7 +314,7 @@ function ManualUpload({ token }: { token: string }) {
       {imageBase64 ? <img className="max-h-72 w-fit rounded-md bg-black object-contain" src={imageBase64} alt="Manual upload preview" /> : null}
       <label className="grid gap-2 text-sm text-neutral-300">
         Ground truth remaining ml
-        <input className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-white" min={0} max={1500} step={55} value={remainingMl} onChange={(event) => setRemainingMl(event.currentTarget.value)} type="number" />
+        <input className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-white" min={0} max={BOTTLE_1_5L.capacityMl} step={1} value={remainingMl} onChange={(event) => setRemainingMl(event.currentTarget.value)} type="number" />
       </label>
       <label className="grid gap-2 text-sm text-neutral-300">
         Note
@@ -318,17 +349,38 @@ function DatasetExport({ token }: { token: string }) {
 
   async function loadExport() {
     setMessage("Loading dataset export...");
-    const suffix = includeDiagnostics ? "?limit=200&includeDiagnostics=true" : "?limit=200";
     try {
-      const res = await fetch(`/api/admin/dataset/export${suffix}`, { headers: adminHeaders(token) });
-      if (!res.ok) {
-        setManifest(null);
-        setMessage(adminFailureMessage(res.status, "load dataset export"));
-        return;
+      const allRows: DatasetExportResponse["rows"] = [];
+      let offset = 0;
+      let firstPage: DatasetExportResponse | null = null;
+      let fetchedCount = EXPORT_PAGE_SIZE;
+
+      while (fetchedCount === EXPORT_PAGE_SIZE) {
+        const params = new URLSearchParams({
+          limit: String(EXPORT_PAGE_SIZE),
+          offset: String(offset),
+        });
+        if (includeDiagnostics) params.set("includeDiagnostics", "true");
+        const res = await fetch(`/api/admin/dataset/export?${params.toString()}`, { headers: adminHeaders(token) });
+        if (!res.ok) {
+          setManifest(null);
+          setMessage(adminFailureMessage(res.status, "load dataset export"));
+          return;
+        }
+        const data = await res.json() as DatasetExportResponse & { pagination?: { fetchedCount: number } };
+        firstPage ??= data;
+        allRows.push(...data.rows);
+        fetchedCount = data.pagination?.fetchedCount ?? data.rows.length;
+        offset += EXPORT_PAGE_SIZE;
       }
-      const data = await res.json() as DatasetExportResponse;
-      setManifest(data);
-      setMessage(`${data.rows.length} records ready.`);
+
+      const data = firstPage ?? {
+        datasetVersion: new Date().toISOString().slice(0, 10),
+        trustedOnly: !includeDiagnostics,
+        rows: [],
+      };
+      setManifest({ ...data, rows: allRows });
+      setMessage(`${allRows.length} records ready.`);
     } catch {
       setManifest(null);
       setMessage("Could not load dataset export.");

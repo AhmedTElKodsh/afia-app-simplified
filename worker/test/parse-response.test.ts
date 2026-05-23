@@ -28,6 +28,52 @@ describe("parseAnalysisResponse", () => {
 });
 
 describe("parseEvidenceResponse", () => {
+  it("parses visual evidence coordinates and delegates ml math to the deterministic estimator", () => {
+    const r = parseEvidenceResponse(`{
+      "schemaVersion": "afia_visual_evidence_v1",
+      "bottleDetected": true,
+      "bottleType": "afia_1_5l",
+      "bottleTypeConfidence": 0.91,
+      "topVisible": true,
+      "bottomVisible": true,
+      "frontLabelVisible": true,
+      "liquidBoundaryVisible": true,
+      "bottleBox": { "yMin": 100, "xMin": 250, "yMax": 900, "xMax": 750 },
+      "liquidLine": {
+        "kind": "line",
+        "points": [{ "x": 300, "y": 500 }, { "x": 700, "y": 500 }]
+      },
+      "qualityFlags": ["mild_glare"],
+      "evidenceConfidence": 0.82,
+      "refusalReason": null
+    }`);
+
+    expect(r.remainingMl).toBe(711);
+    expect(r.consumedMl).toBe(789);
+    expect(r.fillPercent).toBe(47);
+    expect(r.redLineYRatio).toBe(0.5);
+    expect(r.confidence).toBe(0.82);
+    expect(r.status).toBe("measured");
+  });
+
+  it("rejects visual evidence that cannot safely be measured", () => {
+    expect(() => parseEvidenceResponse(`{
+      "schemaVersion": "afia_visual_evidence_v1",
+      "bottleDetected": true,
+      "bottleType": "afia_2_5l",
+      "bottleTypeConfidence": 0.91,
+      "topVisible": true,
+      "bottomVisible": true,
+      "frontLabelVisible": true,
+      "liquidBoundaryVisible": true,
+      "bottleBox": { "yMin": 100, "xMin": 250, "yMax": 900, "xMax": 750 },
+      "liquidLine": { "kind": "line", "points": [{ "x": 500, "y": 500 }] },
+      "qualityFlags": [],
+      "evidenceConfidence": 0.82,
+      "refusalReason": null
+    }`)).toThrow(/unsupported_product/);
+  });
+
   it("parses evidence fields and derives remaining/consumed ml from oilSurfaceYRatio", () => {
     const r = parseEvidenceResponse(`{
       "readingPossible": true,

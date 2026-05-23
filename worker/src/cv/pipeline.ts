@@ -10,6 +10,8 @@ import { isModelLoaded, loadOnnxModel, runOnnxInference } from "../onnx/loader.j
 import { MODEL_PATHS } from "../onnx/models.js";
 import { FusionScorer } from "../scoring/fusion-scorer.js";
 import type { Scorer, ScorerResult } from "../scoring/interface.js";
+import type { LiquidLineCandidate } from "./candidate-lines.js";
+import { contourFromLabeledMask, type LabeledMaskEvidence } from "./labeled-mask.js";
 import * as ort from "onnxruntime-web";
 
 export interface PipelineInput {
@@ -21,6 +23,7 @@ export interface PipelineInput {
   llmFillRatio?: number;
   llmConfidence?: number;
   llmScore?: number;
+  labeledMask?: LabeledMaskEvidence;
 }
 
 export interface PipelineOutput {
@@ -33,6 +36,10 @@ export interface PipelineOutput {
   diagnostics: {
     contourFound: boolean;
     meniscusY: number | null;
+    lineCandidates?: LiquidLineCandidate[];
+    bottleRect?: { x: number; y: number; w: number; h: number };
+    selectedLineSource?: "candidate" | "fusion" | "labeled_mask";
+    measurementState?: "measured" | "needs_review" | "failed";
     edgeStrength: number;
     stages: string[];
     missReason?: string;
@@ -97,7 +104,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
           message: bottleCheck.message ?? "Unsupported bottle size",
           recoverable: false,
         }],
-        diagnostics: { contourFound: false, meniscusY: null, edgeStrength: 0, stages, onnxLoadStatus },
+        diagnostics: { contourFound: false, meniscusY: null, lineCandidates: [], edgeStrength: 0, stages, onnxLoadStatus },
       };
     }
 
@@ -115,13 +122,15 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       return errorResult(errors, stages, { onnxLoadStatus });
     }
 
-    // Stage 3: Contour detection
-    stages.push("contour");
+    // Stage 3: labeled mask/keypoint evidence or contour detection
+    stages.push(input.labeledMask ? "labeled_mask" : "contour");
     const t2 = Date.now();
     let contourResult;
     try {
-      contourResult = await detectMeniscus(preprocessed);
-      logStage("contour", Date.now() - t2, Math.min(1, contourResult.edgeStrength / 2000), contourResult.found ? "found" : "not_found");
+      contourResult = input.labeledMask
+        ? contourFromLabeledMask(input.labeledMask, preprocessed.width, preprocessed.height, input.bottleSizeMl ?? 1500)
+        : await detectMeniscus(preprocessed, input.bottleSizeMl ?? 1500);
+      logStage(input.labeledMask ? "labeled_mask" : "contour", Date.now() - t2, Math.min(1, contourResult.edgeStrength / 2000), contourResult.found ? "found" : "not_found");
     } catch (e) {
       logStage("contour", Date.now() - t2, 0, "fail");
       errors.push(internalError(`Contour detection failed: ${(e as Error).message}`));
@@ -136,7 +145,18 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       return {
         success: false, fillRatio: null, category: null, confidence: 0, tier: "low",
         errors,
-        diagnostics: { contourFound: false, meniscusY: null, edgeStrength: 0, stages, missReason: contourResult.missReason || "contour_not_found", onnxLoadStatus },
+        diagnostics: {
+          contourFound: false,
+          meniscusY: null,
+          lineCandidates: contourResult.lineCandidates ?? [],
+          bottleRect: contourResult.bottleRect,
+          selectedLineSource: contourResult.selectedLineSource,
+          measurementState: contourResult.measurementState ?? "failed",
+          edgeStrength: 0,
+          stages,
+          missReason: contourResult.missReason || "contour_not_found",
+          onnxLoadStatus,
+        },
       };
     }
 
@@ -145,7 +165,18 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       return {
         success: false, fillRatio: null, category: null, confidence: 0, tier: "low",
         errors,
-        diagnostics: { contourFound: true, meniscusY: contourResult.meniscusY, edgeStrength: contourResult.edgeStrength, stages, missReason: "null_ratio", onnxLoadStatus },
+        diagnostics: {
+          contourFound: true,
+          meniscusY: contourResult.meniscusY,
+          lineCandidates: contourResult.lineCandidates ?? [],
+          bottleRect: contourResult.bottleRect,
+          selectedLineSource: contourResult.selectedLineSource,
+          measurementState: contourResult.measurementState ?? "failed",
+          edgeStrength: contourResult.edgeStrength,
+          stages,
+          missReason: "null_ratio",
+          onnxLoadStatus,
+        },
       };
     }
     if (contourResult.meniscusYRatio < -0.5 || contourResult.meniscusYRatio > 1.5) {
@@ -153,7 +184,18 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       return {
         success: false, fillRatio: null, category: null, confidence: 0, tier: "low",
         errors,
-        diagnostics: { contourFound: true, meniscusY: contourResult.meniscusY, edgeStrength: contourResult.edgeStrength, stages, missReason: "implausible_ratio", onnxLoadStatus },
+        diagnostics: {
+          contourFound: true,
+          meniscusY: contourResult.meniscusY,
+          lineCandidates: contourResult.lineCandidates ?? [],
+          bottleRect: contourResult.bottleRect,
+          selectedLineSource: contourResult.selectedLineSource,
+          measurementState: contourResult.measurementState ?? "failed",
+          edgeStrength: contourResult.edgeStrength,
+          stages,
+          missReason: "implausible_ratio",
+          onnxLoadStatus,
+        },
       };
     }
 
@@ -190,11 +232,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     const heuristicConfidence = scoreConfidence(contourResult);
     const bottleSizeMl = input.bottleSizeMl ?? 1500;
     const heuristicRemainingMl = contourResult.meniscusYRatio * bottleSizeMl;
+    const localSource = contourResult.selectedLineSource === "labeled_mask" ? "labeled_mask" : "heuristic";
 
-    const scorers: Scorer[] = [staticScorer("heuristic", {
+    const scorers: Scorer[] = [staticScorer(localSource, {
       remainingMl: heuristicRemainingMl,
       confidence: heuristicConfidence.score,
-      source: "heuristic",
+      source: localSource,
       features: {
         contourFillRatio: contourResult.meniscusYRatio,
         contourEdgeStrength: contourResult.edgeStrength,
@@ -239,6 +282,10 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       diagnostics: {
         contourFound: true,
         meniscusY: contourResult.meniscusY,
+        lineCandidates: contourResult.lineCandidates ?? [],
+        bottleRect: contourResult.bottleRect,
+        selectedLineSource: contourResult.selectedLineSource,
+        measurementState: contourResult.measurementState ?? "measured",
         edgeStrength: contourResult.edgeStrength,
         stages,
         onnxScore,
@@ -264,6 +311,7 @@ function errorResult(errors: PipelineError[], stages: string[], diagExtras: Part
     diagnostics: {
       contourFound: false,
       meniscusY: null,
+      lineCandidates: [],
       edgeStrength: 0,
       stages,
       ...diagExtras,

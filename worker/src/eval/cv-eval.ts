@@ -1,8 +1,10 @@
 #!/usr/bin/env tsx
 import { extname, join, resolve, dirname } from "node:path";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { access, readFile, writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { PipelineInput, PipelineOutput } from "../cv/pipeline.js";
+import type { LabeledMaskEvidence } from "../cv/labeled-mask.js";
+import { writeOverlayHarnessArtifacts } from "./overlay-harness.js";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY ?? "";
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -20,6 +22,11 @@ export interface CvEvalRow {
   fillRatio: number | null;
   contourFound: boolean;
   edgeStrength: number;
+  measurementState: string | null;
+  selectedLineSource: string | null;
+  lineCandidateCount: number;
+  bestLineCandidateY: number | null;
+  bestLineCandidateScore: number | null;
   stages: string[];
   missReason?: string;
   onnxScore?: number;
@@ -34,6 +41,7 @@ export interface CvEvalRow {
   fusionIgnoredReasons: Record<string, string[]>;
   onnxHeuristicDeltaMl: number | null;
   onnxLoadStatus?: string;
+  overlaySvgPath?: string | null;
 }
 
 export interface CvEvalSummary {
@@ -62,9 +70,16 @@ export interface CvEvalSummary {
     tierDistribution: Record<string, number>;
     onnxHeuristicDeltaMl: { count: number; avg: number | null; max: number | null };
   };
+  stageMetrics: {
+    stageCounts: Record<string, number>;
+    measurementStates: Record<string, number>;
+    selectedLineSources: Record<string, number>;
+    candidateCountBuckets: Record<string, number>;
+  };
 }
 
 type ManifestFixture = { imageId?: string; imagePath: string; groundTruthMl: number };
+type ManifestFixtureWithBottle = ManifestFixture & { bottleSizeMl?: number; labeledMask?: LabeledMaskEvidence };
 type Manifest = { name?: string; fixtures: ManifestFixture[] };
 
 type Runner = (input: PipelineInput) => Promise<PipelineOutput>;
@@ -72,17 +87,20 @@ type Runner = (input: PipelineInput) => Promise<PipelineOutput>;
 export async function runCvEval(options: {
   manifestPath: string;
   outPath?: string;
+  overlayDir?: string;
+  useLabeledMasks?: boolean;
   dryRun?: boolean;
   runner?: Runner;
   log?: Pick<Console, "log" | "error">;
 }): Promise<{ results: CvEvalRow[]; summary: CvEvalSummary; outPath: string }> {
   const log = options.log ?? console;
   const manifest = JSON.parse(await readFile(resolve(repoRoot, options.manifestPath), "utf8")) as Manifest;
-  const fixtures = manifest.fixtures;
+  const fixtures = manifest.fixtures as ManifestFixtureWithBottle[];
   const results: CvEvalRow[] = [];
   const latencies: number[] = [];
   const dryRun = options.dryRun ?? false;
   const runner = options.runner ?? (await import("../cv/pipeline.js")).runPipeline;
+  const useLabeledMasks = options.useLabeledMasks ?? true;
   const perImageDelayMs = Number(process.env.EVAL_DELAY_MS ?? process.env.RATE_LIMIT_DELAY_MS ?? 0);
   const shouldDelay = Number.isFinite(perImageDelayMs) && perImageDelayMs > 0;
 
@@ -95,8 +113,9 @@ export async function runCvEval(options: {
     if (dryRun && n >= 1) break;
     const t0 = Date.now();
     n++;
-    const imgPath = resolve(repoRoot, fx.imagePath);
+    const imgPath = await resolveFramePath(fx.imagePath);
     const groundTruthMl = fx.groundTruthMl;
+    const bottleSizeMl = fx.bottleSizeMl ?? 1500;
     const buf = await readFile(imgPath);
     const ext = extname(imgPath).toLowerCase();
     const mime = ext === ".png" ? "image/png" : ext === ".webp" ? "image/webp" : "image/jpeg";
@@ -106,9 +125,23 @@ export async function runCvEval(options: {
       imageData: buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength),
       imageBase64: dataUrl,
       geminiApiKey: GEMINI_API_KEY || undefined,
+      bottleSizeMl,
+      labeledMask: useLabeledMasks ? fx.labeledMask : undefined,
     });
 
-    const row = rowFromPipelineResult(fx.imageId ?? fx.imagePath, groundTruthMl, result);
+    const row = rowFromPipelineResult(fx.imageId ?? fx.imagePath, groundTruthMl, result, bottleSizeMl);
+    if (options.overlayDir) {
+      const overlay = await writeOverlayHarnessArtifacts({
+        outDir: resolve(repoRoot, options.overlayDir),
+        imageId: row.imageId,
+        imagePath: imgPath,
+        imageBytes: new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength),
+        groundTruthMl,
+        bottleSizeMl,
+        result,
+      });
+      row.overlaySvgPath = overlay.svgPath;
+    }
     if (row.exactBucketPass) exact++;
     if (row.closeBucketPass) close++;
     results.push(row);
@@ -128,8 +161,29 @@ export async function runCvEval(options: {
   return { results, summary, outPath };
 }
 
-export function rowFromPipelineResult(imageId: string, groundTruthMl: number, result: PipelineOutput): CvEvalRow {
-  const cvMl = result.fillRatio !== null ? Math.round(result.fillRatio * 1500) : null;
+export async function resolveFramePath(imagePath: string): Promise<string> {
+  const directPath = resolve(repoRoot, imagePath);
+  if (await exists(directPath)) return directPath;
+
+  if (imagePath.startsWith("oil-bottle-frames/")) {
+    const nestedPath = resolve(repoRoot, "oil-bottle-frames", imagePath);
+    if (await exists(nestedPath)) return nestedPath;
+  }
+
+  return directPath;
+}
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function rowFromPipelineResult(imageId: string, groundTruthMl: number, result: PipelineOutput, bottleSizeMl = 1500): CvEvalRow {
+  const cvMl = result.fillRatio !== null ? Math.round(result.fillRatio * bottleSizeMl) : null;
   const absErr = cvMl !== null ? Math.abs(cvMl - groundTruthMl) : null;
   const features = result.diagnostics.fusion?.features ?? {};
   const fusionRemainingMl = numericOrNull(result.diagnostics.fusion?.remainingMl);
@@ -147,6 +201,11 @@ export function rowFromPipelineResult(imageId: string, groundTruthMl: number, re
     fillRatio: result.fillRatio,
     contourFound: result.diagnostics.contourFound,
     edgeStrength: result.diagnostics.edgeStrength,
+    measurementState: result.diagnostics.measurementState ?? null,
+    selectedLineSource: result.diagnostics.selectedLineSource ?? null,
+    lineCandidateCount: result.diagnostics.lineCandidates?.length ?? 0,
+    bestLineCandidateY: numericOrNull(result.diagnostics.lineCandidates?.[0]?.y),
+    bestLineCandidateScore: numericOrNull(result.diagnostics.lineCandidates?.[0]?.score),
     stages: result.diagnostics.stages,
     missReason: result.diagnostics.missReason,
     onnxScore: result.diagnostics.onnxScore,
@@ -185,6 +244,12 @@ export function summarizeCvEval(results: CvEvalRow[], manifestCount = results.le
         avg: deltas.length ? round1(deltas.reduce((s, d) => s + d, 0) / deltas.length) : null,
         max: deltas.length ? round1(Math.max(...deltas)) : null,
       },
+    },
+    stageMetrics: {
+      stageCounts: countStages(results),
+      measurementStates: countBy(results, r => r.measurementState ?? "missing"),
+      selectedLineSources: countBy(results, r => r.selectedLineSource ?? "missing"),
+      candidateCountBuckets: countBy(results, r => candidateCountBucket(r.lineCandidateCount)),
     },
   };
 }
@@ -280,6 +345,21 @@ function countBy<T>(items: T[], keyFn: (item: T) => string): Record<string, numb
   return counts;
 }
 
+function countStages(results: CvEvalRow[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const row of results) {
+    for (const stage of row.stages) counts[stage] = (counts[stage] ?? 0) + 1;
+  }
+  return counts;
+}
+
+function candidateCountBucket(count: number): string {
+  if (count === 0) return "0";
+  if (count === 1) return "1";
+  if (count <= 3) return "2-3";
+  return "4+";
+}
+
 function numericOrNull(v: unknown): number | null {
   return typeof v === "number" && Number.isFinite(v) ? v : null;
 }
@@ -307,6 +387,7 @@ function printSummary(log: Pick<Console, "log">, results: CvEvalRow[], summary: 
   log.log(`Fusion tier distribution: ${JSON.stringify(summary.fusion.tierDistribution)}`);
   log.log(`ONNX vs heuristic delta: ${JSON.stringify(summary.fusion.onnxHeuristicDeltaMl)}`);
   log.log(`Quality diagnostics: ${JSON.stringify(summary.quality)}`);
+  log.log(`Stage metrics: ${JSON.stringify(summary.stageMetrics)}`);
 
   const worst = results.filter((r) => r.absErrorMl !== null).sort((a, b) => (b.absErrorMl ?? 0) - (a.absErrorMl ?? 0)).slice(0, 5);
   log.log(`\nWorst misses:`);
@@ -340,8 +421,14 @@ async function maybeCompareBaseline(log: Pick<Console, "log" | "error">, results
 const invokedPath = process.argv[1] ? fileURLToPath(pathToFileURL(resolve(process.argv[1]))) : "";
 if (invokedPath === fileURLToPath(import.meta.url)) {
   const manifestPathArg = process.argv.find(a => !a.startsWith("-") && a.endsWith(".json"));
+  const outArg = process.argv.find(a => a.startsWith("--out="))?.slice("--out=".length);
+  const overlayDirArg = process.argv.find(a => a.startsWith("--overlay-dir="))?.slice("--overlay-dir=".length);
+  const useLabeledMasks = !process.argv.includes("--ignore-labeled-mask") && !process.argv.includes("--raw-cv-only");
   await runCvEval({
     manifestPath: manifestPathArg ?? "worker/test/fixtures/cv-eval/manifest.json",
+    outPath: outArg,
+    overlayDir: overlayDirArg,
+    useLabeledMasks,
     dryRun: process.argv.includes("--dry-run"),
   });
 }

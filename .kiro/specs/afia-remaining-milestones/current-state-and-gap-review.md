@@ -73,7 +73,7 @@ Current test gate result:
 | 2. QR opens Cloudflare deployed link and prompts camera. | Cloudflare Worker route exists, SPA fallback exists, and previous live URL was `https://afia-stage1.savola.workers.dev`. `CaptureShell` requests environment-facing camera access. | The current dirty worktree and deployed runtime need a fresh phone smoke before claiming demo readiness. |
 | 3. Camera opens on bottle front side with outline guidance and auto-capture. | `CaptureShell` has front-side copy, environment camera, manual capture fallback, transparent 1.5L outline, live silhouette alignment, closer/farther/angle guidance, red/orange/green state, and auto-capture after a stable green lock. | Need real-phone tuning against floating controls, small screens, glare, labels, and varied backgrounds before calling this production-ready. |
 | 4. Basic quality detection for lighting/resolution/blur. | The user capture path rejects very low-resolution, very dark, overexposed, and very blurry/flat frames when browser canvas data is available. Shared warning taxonomy and CV diagnostics cover broader tags such as blur, glare, wrong side, partial bottle, poor framing, unsupported product, and uncertain label. | M006 still needs dataset/export rules so quality tags decide which records become training labels and which stay diagnostics only. |
-| 5. API analysis first, collect images/corrections, train local lightweight model, later local primary with API fallback. | `/api/analyze` calls Gemini with key rotation and Grok fallback, then persists to Supabase. `/api/cv-analyze` and ONNX/fusion diagnostics exist separately. Real and augmented image folders exist. | The primary user path is still API-first, while CV/ONNX is diagnostic and has a NO-GO accuracy verdict. A local model cannot become primary until dataset quality, retraining, and new sign-off metrics improve. |
+| 5. API analysis first, collect images/corrections, train local lightweight model, later local primary with API fallback. | `/api/analyze` calls Gemini with key rotation, can route to configured OpenRouter image-capable models, can fall back to Grok, then persists to Supabase. `/api/cv-analyze` and ONNX/fusion diagnostics exist separately. Real and augmented image folders exist. | The primary user path is still API-first, while CV/ONNX is diagnostic and has a NO-GO accuracy verdict. A local model cannot become primary until dataset quality, retraining, and new sign-off metrics improve. |
 | 6. Result shows actual scanned image with red line, remaining/consumed text, 55ml left slider, and cup counter. | `ResultShell` uses the actual camera raster image, fixed detected red line, left 55ml slider, cup counter, and explicit accept/submit correction action when an `analysisId` exists. `AdminShell` mirrors a red-line preview and supports manual corrected ml. | Admin correction exists but GSD still needs deployed/live validation before R002 is marked complete. |
 
 ## Main Gaps
@@ -107,12 +107,16 @@ The default local test gate is now reconciled with the intended runtime:
 
 The current model path is not ready for accurate claims. The project has strong diagnostic infrastructure, but the latest sign-off says the fused CV/ONNX path is a NO-GO.
 
+Conclusion, 2026-05-21: API-only is technically constrained now, but accuracy is still not good enough. The next best step is not more prompt-only work; it is using local/CV geometry to propose the liquid line, then asking the LLM to validate or explain evidence around that candidate. That means the LLM should stop being treated as the primary measuring instrument and should instead review candidate overlays, reject ambiguous images, and produce user-facing rationale when the local evidence is weak.
+
 Required before accuracy claims:
 
 - Better dataset labels and coverage.
 - Model retraining or replacement.
 - Repeated holdout sign-off that meets the 55ml primary tolerance.
 - Separate metrics by fill level, lighting, angle, distance, and capture quality.
+- Explicit reporting for cleaned natural images versus modified/augmented images, with no source-frame or augmented-variant leakage across train/validation/test splits.
+- Candidate-line overlays saved for every evaluated frame so reviewers can see whether the failure came from bottle detection, line proposal, calibration, or LLM validation.
 
 ### Admin And Dataset Loop
 

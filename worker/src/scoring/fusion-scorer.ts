@@ -17,11 +17,12 @@ const DEFAULT_CONFIG: FusionConfig = {
   nearZeroOnnxMl: 5,
   weakOnnxHeuristicMl: 40,
   disagreementMl: 50,
-  singleSignalConfidenceCap: 0.69,
+  singleSignalConfidenceCap: 0.29,
 };
 
 const SOURCE_BASE_WEIGHTS: Record<string, number> = {
   heuristic: 1,
+  labeled_mask: 1.2,
   onnx: 0.55,
   llm: 0.85,
 };
@@ -94,7 +95,7 @@ export class FusionScorer {
     const confidenceBoost = valid.length > 1 && disagreementPenalty === 0 ? 0.08 : 0;
     let confidence = clamp01(weightedConfidence + confidenceBoost - disagreementPenalty);
     let score = clamp01(weightedScore + confidenceBoost - disagreementPenalty);
-    if (valid.length === 1) {
+    if (valid.length === 1 && valid[0].source !== "labeled_mask") {
       features._fusionReason_singleValidSignal = 1;
       features._fusionSingleSignalConfidenceCap = this.config.singleSignalConfidenceCap;
       confidence = Math.min(confidence, this.config.singleSignalConfidenceCap);

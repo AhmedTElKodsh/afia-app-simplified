@@ -104,7 +104,22 @@ describe("admin routes", () => {
 
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toMatchObject({ analyses: [sampleRecord] });
-    expect(mocks.listAnalyses).toHaveBeenCalledWith({ limit: 20 });
+    expect(mocks.listAnalyses).toHaveBeenCalledWith({ limit: 20, offset: 0, status: undefined });
+  });
+
+  it("filters analyses by correction status for review", async () => {
+    const res = await app.request(
+      "/api/admin/analyses?limit=20&offset=40&status=manual_corrected",
+      { headers: { authorization: "Bearer secret" } },
+      { ADMIN_TOKEN: "secret" },
+    );
+
+    expect(res.status).toBe(200);
+    expect(mocks.listAnalyses).toHaveBeenCalledWith({
+      limit: 20,
+      offset: 40,
+      status: "manual_corrected",
+    });
   });
 
   it("exports only trusted training labels by default", async () => {
@@ -177,6 +192,35 @@ describe("admin routes", () => {
         labelSource: "user_submitted_correction",
         correctionSource: "user_submitted_correction",
         remainingMl: 715,
+        originalRemainingMl: 900,
+      }),
+    ]);
+  });
+
+  it("preserves accepted-estimate provenance in dataset exports", async () => {
+    mocks.listAnalyses.mockResolvedValueOnce([
+      {
+        ...sampleRecord,
+        id: "66666666-6666-4666-8666-666666666666",
+        correctionStatus: "manual_corrected",
+        adminCorrectedMl: 900,
+        adminNote: "User accepted estimate",
+      },
+    ]);
+
+    const res = await app.request(
+      "/api/admin/dataset/export?limit=100",
+      { headers: { authorization: "Bearer secret" } },
+      { ADMIN_TOKEN: "secret" },
+    );
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { rows: Array<{ labelSource: string; correctionSource: string; remainingMl: number; originalRemainingMl: number }> };
+    expect(body.rows).toEqual([
+      expect.objectContaining({
+        labelSource: "user_accepted_estimate",
+        correctionSource: "user_accepted_estimate",
+        remainingMl: 900,
         originalRemainingMl: 900,
       }),
     ]);
@@ -260,7 +304,78 @@ describe("admin routes", () => {
     expect(mocks.updateAnalysisCorrection).not.toHaveBeenCalled();
   });
 
+  it("accepts full-bottle admin corrections for dataset labels", async () => {
+    const res = await app.request(
+      "/api/admin/analyses/0d44aecc-8344-44c8-8b7f-201216f7c9f9",
+      {
+        method: "PATCH",
+        headers: { authorization: "Bearer secret", "content-type": "application/json" },
+        body: JSON.stringify({
+          correctionStatus: "manual_corrected",
+          adminFlag: "too_small",
+          adminCorrectedMl: 1500,
+          adminNote: "Full bottle ground truth",
+        }),
+      },
+      { ADMIN_TOKEN: "secret" },
+    );
+
+    expect(res.status).toBe(200);
+    expect(mocks.updateAnalysisCorrection).toHaveBeenCalledWith(
+      "0d44aecc-8344-44c8-8b7f-201216f7c9f9",
+      expect.objectContaining({ adminCorrectedMl: 1500 }),
+    );
+  });
+
   it("saves manual uploads for ground truth ingestion", async () => {
+    const res = await app.request(
+      "/api/admin/upload",
+      {
+        method: "POST",
+        headers: { authorization: "Bearer secret", "content-type": "application/json" },
+        body: JSON.stringify({
+          bottleSize: "1.5L",
+          imageBase64: "abc",
+          remainingMl: 770,
+          adminNote: "Ground truth",
+        }),
+      },
+      { ADMIN_TOKEN: "secret" },
+    );
+
+    expect(res.status).toBe(201);
+    expect(mocks.saveManualUpload).toHaveBeenCalledWith(expect.objectContaining({
+      bottleSize: "1.5L",
+      imageBase64: "abc",
+      remainingMl: 770,
+      adminNote: "Ground truth",
+    }));
+  });
+
+  it("saves full-bottle manual uploads for ground truth ingestion", async () => {
+    const res = await app.request(
+      "/api/admin/upload",
+      {
+        method: "POST",
+        headers: { authorization: "Bearer secret", "content-type": "application/json" },
+        body: JSON.stringify({
+          bottleSize: "1.5L",
+          imageBase64: "abc",
+          remainingMl: 1500,
+          adminNote: "Full bottle",
+        }),
+      },
+      { ADMIN_TOKEN: "secret" },
+    );
+
+    expect(res.status).toBe(201);
+    expect(mocks.saveManualUpload).toHaveBeenCalledWith(expect.objectContaining({
+      remainingMl: 1500,
+      adminNote: "Full bottle",
+    }));
+  });
+
+  it("rejects manual uploads outside the 55 ml correction scale", async () => {
     const res = await app.request(
       "/api/admin/upload",
       {
@@ -276,13 +391,8 @@ describe("admin routes", () => {
       { ADMIN_TOKEN: "secret" },
     );
 
-    expect(res.status).toBe(201);
-    expect(mocks.saveManualUpload).toHaveBeenCalledWith(expect.objectContaining({
-      bottleSize: "1.5L",
-      imageBase64: "abc",
-      remainingMl: 750,
-      adminNote: "Ground truth",
-    }));
+    expect(res.status).toBe(400);
+    expect(mocks.saveManualUpload).not.toHaveBeenCalled();
   });
 
   it("saves user slider corrections for admin review", async () => {

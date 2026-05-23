@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildGeminiKeyPool, selectGeminiKey } from "../src/llm/rotation.js";
+import { buildGeminiKeyPool, buildGrokKeyPool, buildOpenRouterKeyPool, selectGeminiKey } from "../src/llm/rotation.js";
 
 describe("Gemini key rotation", () => {
   it("builds a stable ordered pool from pooled and numbered env keys", () => {
@@ -31,5 +31,24 @@ describe("Gemini key rotation", () => {
     expect(selectGeminiKey(keys, 0)).toBe("a");
     expect(selectGeminiKey(keys, 1)).toBe("b");
     expect(selectGeminiKey(keys, 3)).toBe("a");
+  });
+
+  it("builds OpenRouter and Grok pools from pooled and numbered env keys", () => {
+    expect(buildOpenRouterKeyPool({
+      GEMINI_API_KEY: "unused",
+      MODEL_ID: "gemini-test",
+      OPENROUTER_API_KEYS: " or-a, or-b ",
+      OPENROUTER_API_KEY: "or-main",
+      OPENROUTER_API_KEY2: "or-b",
+      OPENROUTER_API_KEY3: "or-c",
+    })).toEqual(["or-a", "or-b", "or-main", "or-c"]);
+
+    expect(buildGrokKeyPool({
+      GEMINI_API_KEY: "unused",
+      MODEL_ID: "gemini-test",
+      GROK_API_KEYS: " grok-a, grok-b ",
+      GROK_API_KEY: "grok-main",
+      GROK_API_KEY2: "grok-b",
+    })).toEqual(["grok-a", "grok-b", "grok-main"]);
   });
 });

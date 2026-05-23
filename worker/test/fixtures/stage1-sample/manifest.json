@@ -1,0 +1,76 @@
+{
+  "name": "stage1-front-clear-sample",
+  "why": "Curated front-facing, clear 1.5L bottle frames that match the intended real capture scenario. Side views, cluttered frames, and confusing background bottles are excluded.",
+  "fixtures": [
+    {
+      "imageId": "front-clear-empty",
+      "imagePath": "oil-bottle-frames/empty/empty_t0022.52s_f0045.jpg",
+      "groundTruthMl": 0,
+      "source": "real",
+      "selectionReason": "front label visible, full bottle visible, clean table background",
+      "labeledMask": {
+        "schemaVersion": "afia_labeled_mask_v1",
+        "labelSource": "human_keypoint",
+        "bottleBox": { "xMin": 365, "yMin": 110, "xMax": 840, "yMax": 690 },
+        "liquidLineYRatioInBottle": 0.85,
+        "confidence": 0.95
+      }
+    },
+    {
+      "imageId": "front-clear-715ml",
+      "imagePath": "oil-bottle-frames/715ml/715ml_t0003.50s_f0007.jpg",
+      "groundTruthMl": 715,
+      "source": "real",
+      "selectionReason": "front label visible, bottle upright, oil line visible",
+      "labeledMask": {
+        "schemaVersion": "afia_labeled_mask_v1",
+        "labelSource": "human_keypoint",
+        "bottleBox": { "xMin": 350, "yMin": 120, "xMax": 795, "yMax": 700 },
+        "liquidLineYRatioInBottle": 0.497,
+        "confidence": 0.95
+      }
+    },
+    {
+      "imageId": "front-clear-825ml",
+      "imagePath": "oil-bottle-frames/825ml/825ml_t0024.52s_f0049.jpg",
+      "groundTruthMl": 825,
+      "source": "real",
+      "selectionReason": "front label visible, bottle upright, minimal side angle",
+      "labeledMask": {
+        "schemaVersion": "afia_labeled_mask_v1",
+        "labelSource": "human_keypoint",
+        "bottleBox": { "xMin": 405, "yMin": 155, "xMax": 805, "yMax": 680 },
+        "liquidLineYRatioInBottle": 0.45,
+        "confidence": 0.95
+      }
+    },
+    {
+      "imageId": "front-clear-1100ml",
+      "imagePath": "oil-bottle-frames/1100ml/1100ml_t0029.49s_f0059.jpg",
+      "groundTruthMl": 1100,
+      "source": "real",
+      "selectionReason": "front label visible, bottle upright, oil boundary visible",
+      "labeledMask": {
+        "schemaVersion": "afia_labeled_mask_v1",
+        "labelSource": "human_keypoint",
+        "bottleBox": { "xMin": 330, "yMin": 165, "xMax": 835, "yMax": 715 },
+        "liquidLineYRatioInBottle": 0.331,
+        "confidence": 0.95
+      }
+    },
+    {
+      "imageId": "front-clear-1500ml",
+      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0059.51s_f0119.jpg",
+      "groundTruthMl": 1500,
+      "source": "real",
+      "selectionReason": "front label visible, full bottle visible, clear full-fill state",
+      "labeledMask": {
+        "schemaVersion": "afia_labeled_mask_v1",
+        "labelSource": "human_keypoint",
+        "bottleBox": { "xMin": 330, "yMin": 150, "xMax": 835, "yMax": 720 },
+        "liquidLineYRatioInBottle": 0.15,
+        "confidence": 0.95
+      }
+    }
+  ]
+}

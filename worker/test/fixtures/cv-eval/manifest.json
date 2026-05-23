@@ -1,1389 +1,1389 @@
 {
   "name": "cv-eval-200",
   "why": "Stratified 200-image eval set for CV pipeline confidence calibration. Weights nonlinear measurement regions (shoulder, base) higher.",
-  "seed": 1778761862135,
+  "seed": 1779352077785,
   "fixtures": [
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0065.05s_f0130.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0005.00s_f0010.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0131.61s_f0263.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0005.50s_f0011.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0064.55s_f0129.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0082.57s_f0165.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0098.08s_f0196.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0211.17s_f0422.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0103.08s_f0206.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0002.50s_f0005.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0067.55s_f0135.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0017.51s_f0035.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0086.57s_f0173.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0212.17s_f0424.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0083.07s_f0166.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0238.19s_f0476.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/empty/empty_t0081.07s_f0162.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/empty/empty_t0237.69s_f0475.jpg",
       "groundTruthMl": 0,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0003.54s_f0007.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0020.21s_f0040.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0018.70s_f0037.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0010.11s_f0020.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0009.10s_f0018.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0023.25s_f0046.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0007.58s_f0015.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0011.12s_f0022.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0002.02s_f0004.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0009.60s_f0019.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0037.90s_f0075.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0029.31s_f0058.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0014.15s_f0028.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0021.73s_f0043.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0021.73s_f0043.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0012.13s_f0024.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/55ml/55ml_t0000.00s_f0000.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/55ml/55ml_t0002.02s_f0004.jpg",
       "groundTruthMl": 55,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0034.05s_f0068.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0023.53s_f0047.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0016.52s_f0033.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0002.50s_f0005.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0010.01s_f0020.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0030.04s_f0060.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0004.51s_f0009.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0013.52s_f0027.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0005.01s_f0010.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0054.08s_f0108.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0021.53s_f0043.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0002.00s_f0004.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0008.51s_f0017.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0050.07s_f0100.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0054.08s_f0108.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0049.57s_f0099.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/110ml/110ml_t0040.56s_f0081.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/110ml/110ml_t0033.55s_f0067.jpg",
       "groundTruthMl": 110,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0019.01s_f0038.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0019.51s_f0039.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0002.50s_f0005.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0011.01s_f0022.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0006.00s_f0012.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0020.52s_f0041.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0003.00s_f0006.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0019.51s_f0039.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0015.01s_f0030.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0000.00s_f0000.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0020.52s_f0041.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0006.50s_f0013.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0012.01s_f0024.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0023.02s_f0046.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0000.00s_f0000.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/165ml/165ml_t0004.00s_f0008.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/165ml/165ml_t0028.02s_f0056.jpg",
       "groundTruthMl": 165,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0004.50s_f0009.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0001.00s_f0002.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0022.00s_f0044.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0000.50s_f0001.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0031.00s_f0062.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0022.50s_f0045.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0015.00s_f0030.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0003.50s_f0007.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0030.00s_f0060.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0023.00s_f0046.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0018.50s_f0037.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0025.00s_f0050.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0004.00s_f0008.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0031.00s_f0062.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0022.50s_f0045.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0003.00s_f0006.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/220ml/220ml_t0003.50s_f0007.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/220ml/220ml_t0002.50s_f0005.jpg",
       "groundTruthMl": 220,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0026.00s_f0052.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0001.00s_f0002.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0039.50s_f0079.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0016.50s_f0033.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0037.00s_f0074.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0038.00s_f0076.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0012.00s_f0024.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0040.00s_f0080.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0018.00s_f0036.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0048.00s_f0096.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0026.50s_f0053.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0006.00s_f0012.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0027.00s_f0054.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0037.00s_f0074.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0002.50s_f0005.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0020.00s_f0040.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/275ml/275ml_t0053.50s_f0107.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/275ml/275ml_t0025.50s_f0051.jpg",
       "groundTruthMl": 275,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0000.00s_f0000.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0024.47s_f0049.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0003.00s_f0006.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0011.48s_f0023.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0016.98s_f0034.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0016.48s_f0033.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0023.97s_f0048.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0000.00s_f0000.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0003.99s_f0008.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0004.49s_f0009.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0000.50s_f0001.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0024.47s_f0049.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0001.00s_f0002.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0020.97s_f0042.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0021.97s_f0044.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/330ml/330ml_t0022.47s_f0045.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/330ml/330ml_t0022.47s_f0045.jpg",
       "groundTruthMl": 330,
       "source": "real",
       "fillBucket": "empty-low",
       "stratum": "real:empty-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/385ml/385ml_t0003.01s_f0006.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/385ml/385ml_t0002.01s_f0004.jpg",
       "groundTruthMl": 385,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/385ml/385ml_t0020.57s_f0041.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/385ml/385ml_t0000.50s_f0001.jpg",
       "groundTruthMl": 385,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/385ml/385ml_t0016.56s_f0033.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/385ml/385ml_t0010.54s_f0021.jpg",
       "groundTruthMl": 385,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/385ml/385ml_t0015.55s_f0031.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/385ml/385ml_t0000.00s_f0000.jpg",
       "groundTruthMl": 385,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/385ml/385ml_t0017.06s_f0034.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/385ml/385ml_t0015.55s_f0031.jpg",
       "groundTruthMl": 385,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/385ml/385ml_t0014.55s_f0029.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/385ml/385ml_t0015.05s_f0030.jpg",
       "groundTruthMl": 385,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/440ml/440ml_t0000.00s_f0000.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/440ml/440ml_t0012.02s_f0024.jpg",
       "groundTruthMl": 440,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/440ml/440ml_t0019.03s_f0038.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/440ml/440ml_t0002.00s_f0004.jpg",
       "groundTruthMl": 440,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/440ml/440ml_t0008.01s_f0016.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/440ml/440ml_t0033.05s_f0066.jpg",
       "groundTruthMl": 440,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/440ml/440ml_t0024.04s_f0048.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/440ml/440ml_t0024.54s_f0049.jpg",
       "groundTruthMl": 440,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/495ml/495ml_t0027.04s_f0054.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/495ml/495ml_t0019.03s_f0038.jpg",
       "groundTruthMl": 495,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/495ml/495ml_t0011.52s_f0023.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/495ml/495ml_t0045.06s_f0090.jpg",
       "groundTruthMl": 495,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/495ml/495ml_t0010.01s_f0020.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/495ml/495ml_t0032.55s_f0065.jpg",
       "groundTruthMl": 495,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/495ml/495ml_t0016.52s_f0033.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/495ml/495ml_t0047.57s_f0095.jpg",
       "groundTruthMl": 495,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/550ml/550ml_t0001.00s_f0002.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/550ml/550ml_t0002.50s_f0005.jpg",
       "groundTruthMl": 550,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/550ml/550ml_t0000.00s_f0000.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/550ml/550ml_t0008.51s_f0017.jpg",
       "groundTruthMl": 550,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/550ml/550ml_t0003.00s_f0006.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/550ml/550ml_t0020.03s_f0040.jpg",
       "groundTruthMl": 550,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/550ml/550ml_t0008.51s_f0017.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/550ml/550ml_t0002.00s_f0004.jpg",
       "groundTruthMl": 550,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/605ml/605ml_t0013.51s_f0027.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/605ml/605ml_t0019.51s_f0039.jpg",
       "groundTruthMl": 605,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/605ml/605ml_t0004.50s_f0009.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/605ml/605ml_t0003.50s_f0007.jpg",
       "groundTruthMl": 605,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/605ml/605ml_t0023.02s_f0046.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/605ml/605ml_t0018.51s_f0037.jpg",
       "groundTruthMl": 605,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/605ml/605ml_t0008.51s_f0017.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/605ml/605ml_t0021.52s_f0043.jpg",
       "groundTruthMl": 605,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/660ml/660ml_t0006.50s_f0013.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/660ml/660ml_t0027.49s_f0055.jpg",
       "groundTruthMl": 660,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/660ml/660ml_t0008.50s_f0017.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/660ml/660ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 660,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/660ml/660ml_t0011.50s_f0023.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/660ml/660ml_t0015.00s_f0030.jpg",
       "groundTruthMl": 660,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/660ml/660ml_t0023.99s_f0048.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/660ml/660ml_t0022.49s_f0045.jpg",
       "groundTruthMl": 660,
       "source": "real",
       "fillBucket": "mid-low",
       "stratum": "real:mid-low:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/715ml/715ml_t0002.50s_f0005.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/715ml/715ml_t0004.00s_f0008.jpg",
       "groundTruthMl": 715,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/715ml/715ml_t0003.00s_f0006.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/715ml/715ml_t0003.00s_f0006.jpg",
       "groundTruthMl": 715,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/715ml/715ml_t0004.50s_f0009.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/715ml/715ml_t0011.00s_f0022.jpg",
       "groundTruthMl": 715,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/715ml/715ml_t0007.00s_f0014.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/715ml/715ml_t0003.50s_f0007.jpg",
       "groundTruthMl": 715,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/770ml/770ml_t0014.52s_f0029.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/770ml/770ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 770,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/770ml/770ml_t0010.01s_f0020.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/770ml/770ml_t0001.00s_f0002.jpg",
       "groundTruthMl": 770,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/770ml/770ml_t0028.03s_f0056.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/770ml/770ml_t0027.03s_f0054.jpg",
       "groundTruthMl": 770,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/770ml/770ml_t0020.02s_f0040.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/770ml/770ml_t0010.51s_f0021.jpg",
       "groundTruthMl": 770,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/825ml/825ml_t0002.50s_f0005.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/825ml/825ml_t0002.50s_f0005.jpg",
       "groundTruthMl": 825,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/825ml/825ml_t0018.51s_f0037.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/825ml/825ml_t0032.02s_f0064.jpg",
       "groundTruthMl": 825,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/825ml/825ml_t0013.51s_f0027.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/825ml/825ml_t0027.02s_f0054.jpg",
       "groundTruthMl": 825,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/825ml/825ml_t0012.51s_f0025.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/825ml/825ml_t0025.02s_f0050.jpg",
       "groundTruthMl": 825,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/880ml/880ml_t0015.52s_f0031.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/880ml/880ml_t0022.02s_f0044.jpg",
       "groundTruthMl": 880,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/880ml/880ml_t0032.53s_f0065.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/880ml/880ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 880,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/880ml/880ml_t0000.00s_f0000.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/880ml/880ml_t0002.50s_f0005.jpg",
       "groundTruthMl": 880,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/880ml/880ml_t0038.54s_f0077.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/880ml/880ml_t0025.53s_f0051.jpg",
       "groundTruthMl": 880,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/935ml/935ml_t0005.01s_f0010.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/935ml/935ml_t0024.05s_f0048.jpg",
       "groundTruthMl": 935,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/935ml/935ml_t0014.03s_f0028.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/935ml/935ml_t0000.00s_f0000.jpg",
       "groundTruthMl": 935,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/935ml/935ml_t0002.00s_f0004.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/935ml/935ml_t0012.03s_f0024.jpg",
       "groundTruthMl": 935,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/935ml/935ml_t0007.01s_f0014.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/935ml/935ml_t0035.07s_f0070.jpg",
       "groundTruthMl": 935,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/935ml/935ml_t0009.02s_f0018.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/935ml/935ml_t0016.53s_f0033.jpg",
       "groundTruthMl": 935,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/935ml/935ml_t0015.03s_f0030.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/935ml/935ml_t0046.60s_f0093.jpg",
       "groundTruthMl": 935,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/990ml/990ml_t0041.06s_f0082.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/990ml/990ml_t0033.55s_f0067.jpg",
       "groundTruthMl": 990,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/990ml/990ml_t0047.07s_f0094.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/990ml/990ml_t0020.53s_f0041.jpg",
       "groundTruthMl": 990,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/990ml/990ml_t0058.58s_f0117.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/990ml/990ml_t0014.02s_f0028.jpg",
       "groundTruthMl": 990,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/990ml/990ml_t0006.01s_f0012.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/990ml/990ml_t0003.51s_f0007.jpg",
       "groundTruthMl": 990,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/990ml/990ml_t0026.54s_f0053.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/990ml/990ml_t0014.52s_f0029.jpg",
       "groundTruthMl": 990,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/990ml/990ml_t0018.53s_f0037.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/990ml/990ml_t0023.53s_f0047.jpg",
       "groundTruthMl": 990,
       "source": "real",
       "fillBucket": "mid-high",
       "stratum": "real:mid-high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1045ml/1045ml_t0049.02s_f0098.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1045ml/1045ml_t0023.51s_f0047.jpg",
       "groundTruthMl": 1045,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1045ml/1045ml_t0003.00s_f0006.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1045ml/1045ml_t0031.51s_f0063.jpg",
       "groundTruthMl": 1045,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1045ml/1045ml_t0007.50s_f0015.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1045ml/1045ml_t0012.50s_f0025.jpg",
       "groundTruthMl": 1045,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1045ml/1045ml_t0025.01s_f0050.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1045ml/1045ml_t0048.52s_f0097.jpg",
       "groundTruthMl": 1045,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1045ml/1045ml_t0034.51s_f0069.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1045ml/1045ml_t0010.00s_f0020.jpg",
       "groundTruthMl": 1045,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1045ml/1045ml_t0047.52s_f0095.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1045ml/1045ml_t0036.01s_f0072.jpg",
       "groundTruthMl": 1045,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1100ml/1100ml_t0004.00s_f0008.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1100ml/1100ml_t0031.99s_f0064.jpg",
       "groundTruthMl": 1100,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1100ml/1100ml_t0003.00s_f0006.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1100ml/1100ml_t0023.50s_f0047.jpg",
       "groundTruthMl": 1100,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1100ml/1100ml_t0040.99s_f0082.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1100ml/1100ml_t0040.99s_f0082.jpg",
       "groundTruthMl": 1100,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1100ml/1100ml_t0009.00s_f0018.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1100ml/1100ml_t0022.00s_f0044.jpg",
       "groundTruthMl": 1100,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1100ml/1100ml_t0004.50s_f0009.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1100ml/1100ml_t0029.99s_f0060.jpg",
       "groundTruthMl": 1100,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1100ml/1100ml_t0022.00s_f0044.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1100ml/1100ml_t0019.50s_f0039.jpg",
       "groundTruthMl": 1100,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1155ml/1155ml_t0005.51s_f0011.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1155ml/1155ml_t0011.51s_f0023.jpg",
       "groundTruthMl": 1155,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1155ml/1155ml_t0036.05s_f0072.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1155ml/1155ml_t0048.06s_f0096.jpg",
       "groundTruthMl": 1155,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1155ml/1155ml_t0002.00s_f0004.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1155ml/1155ml_t0016.02s_f0032.jpg",
       "groundTruthMl": 1155,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1155ml/1155ml_t0045.06s_f0090.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1155ml/1155ml_t0028.54s_f0057.jpg",
       "groundTruthMl": 1155,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1155ml/1155ml_t0026.03s_f0052.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1155ml/1155ml_t0000.00s_f0000.jpg",
       "groundTruthMl": 1155,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1155ml/1155ml_t0081.10s_f0162.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1155ml/1155ml_t0002.00s_f0004.jpg",
       "groundTruthMl": 1155,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0029.52s_f0059.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0023.02s_f0046.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0018.02s_f0036.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0038.03s_f0076.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0024.02s_f0048.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0055.05s_f0110.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0000.00s_f0000.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0047.04s_f0094.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0003.50s_f0007.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0037.03s_f0074.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0037.53s_f0075.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0031.53s_f0063.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0033.53s_f0067.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0023.52s_f0047.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0040.53s_f0081.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0016.51s_f0033.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1210ml/1210ml_t0047.54s_f0095.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1210ml/1210ml_t0024.02s_f0048.jpg",
       "groundTruthMl": 1210,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0034.56s_f0069.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0042.07s_f0084.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0019.53s_f0039.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0040.57s_f0081.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0002.50s_f0005.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0023.04s_f0046.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0045.58s_f0091.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0044.07s_f0088.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0019.03s_f0038.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0012.02s_f0024.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0016.03s_f0032.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0022.54s_f0045.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0052.59s_f0105.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0025.04s_f0050.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0005.01s_f0010.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0024.54s_f0049.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1265ml/1265ml_t0005.51s_f0011.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1265ml/1265ml_t0048.58s_f0097.jpg",
       "groundTruthMl": 1265,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0034.02s_f0068.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0000.50s_f0001.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0001.50s_f0003.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0021.52s_f0043.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0004.50s_f0009.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0004.00s_f0008.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0012.01s_f0024.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0015.51s_f0031.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0005.50s_f0011.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0016.01s_f0032.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0009.51s_f0019.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0025.02s_f0050.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0014.51s_f0029.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0041.53s_f0083.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0015.51s_f0031.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0044.03s_f0088.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1320ml/1320ml_t0007.51s_f0015.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1320ml/1320ml_t0007.01s_f0014.jpg",
       "groundTruthMl": 1320,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0066.10s_f0132.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0037.56s_f0075.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0081.63s_f0163.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0043.07s_f0086.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0060.59s_f0121.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0003.00s_f0006.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0045.07s_f0090.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0009.51s_f0019.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0041.06s_f0082.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0065.60s_f0131.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0040.56s_f0081.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0014.02s_f0028.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0068.61s_f0137.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0050.58s_f0101.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0077.12s_f0154.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0052.08s_f0104.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1375ml/1375ml_t0042.06s_f0084.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1375ml/1375ml_t0008.51s_f0017.jpg",
       "groundTruthMl": 1375,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0008.51s_f0017.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0013.51s_f0027.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0045.53s_f0091.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0047.04s_f0094.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0070.05s_f0140.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0043.03s_f0086.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0012.51s_f0025.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0040.03s_f0080.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0022.02s_f0044.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0021.02s_f0042.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0023.02s_f0046.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0020.02s_f0040.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0070.55s_f0141.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0061.55s_f0123.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0003.50s_f0007.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0007.01s_f0014.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1430ml/1430ml_t0001.00s_f0002.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1430ml/1430ml_t0030.52s_f0061.jpg",
       "groundTruthMl": 1430,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0116.75s_f0233.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0088.19s_f0176.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0096.71s_f0193.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0111.24s_f0222.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0000.50s_f0001.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0036.08s_f0072.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0029.06s_f0058.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0061.13s_f0122.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0005.01s_f0010.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0083.18s_f0166.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0018.54s_f0037.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0012.53s_f0025.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0028.56s_f0057.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0065.64s_f0131.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0029.56s_f0059.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1485ml/1485ml_t0073.16s_f0146.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1485ml/1485ml_t0044.09s_f0088.jpg",
       "groundTruthMl": 1485,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0018.50s_f0037.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0051.01s_f0102.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0001.50s_f0003.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0045.51s_f0091.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0041.01s_f0082.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0019.00s_f0038.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0022.00s_f0044.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0038.01s_f0076.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0031.51s_f0063.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0001.50s_f0003.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0068.01s_f0136.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0004.50s_f0009.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0062.51s_f0125.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0035.51s_f0071.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0035.51s_f0071.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0044.01s_f0088.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",
       "stratum": "real:high:frame"
     },
     {
-      "imagePath": "oil-bottle-frames/1500ml/1500ml_t0006.50s_f0013.jpg",
+      "imagePath": "oil-bottle-frames/oil-bottle-frames/1500ml/1500ml_t0052.51s_f0105.jpg",
       "groundTruthMl": 1500,
       "source": "real",
       "fillBucket": "high",

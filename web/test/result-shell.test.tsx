@@ -5,11 +5,11 @@ import App from "../src/App";
 import { I18nProvider } from "../src/i18n";
 import { ThemeProvider } from "../src/theme";
 
-function renderResult() {
+function renderResult(route = "/result?size=1.5L") {
   return render(
     <I18nProvider>
       <ThemeProvider>
-        <MemoryRouter initialEntries={["/result?size=1.5L"]}>
+        <MemoryRouter initialEntries={[route]}>
           <App />
         </MemoryRouter>
       </ThemeProvider>
@@ -21,6 +21,7 @@ describe("result shell", () => {
   beforeEach(() => {
     sessionStorage.clear();
     sessionStorage.setItem("afia.capture", "data:image/jpeg;base64,captured-frame");
+    sessionStorage.setItem("afia.captureSource", "camera");
   });
 
   afterEach(() => {
@@ -87,6 +88,28 @@ describe("result shell", () => {
       "href",
       "/scan?size=1.5L",
     );
+  });
+
+  it("blocks unsupported result sizes instead of relabeling 1.5L math", () => {
+    setStoredAnalysis();
+
+    renderResult("/result?size=2.5L");
+
+    expect(screen.getByText(/unsupported bottle size/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /return to 1\.5l scan/i })).toHaveAttribute(
+      "href",
+      "/scan?size=1.5L",
+    );
+    expect(screen.queryByRole("slider", { name: /oil level/i })).not.toBeInTheDocument();
+  });
+
+  it("does not trust non-camera legacy captures", () => {
+    setStoredAnalysis();
+    sessionStorage.removeItem("afia.captureSource");
+
+    renderResult();
+
+    expect(screen.getByText(/no analyzed camera capture found/i)).toBeInTheDocument();
   });
 });
 

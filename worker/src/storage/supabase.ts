@@ -36,6 +36,8 @@ interface CreateRecordInput {
 
 interface ListAnalysesInput {
   limit: number;
+  offset?: number;
+  status?: CorrectionStatus;
 }
 
 interface UpdateCorrectionInput {
@@ -67,11 +69,15 @@ export function createAnalysisStorage(env: Env, clientFactory: SupabaseClientFac
 
   return {
     async listAnalyses(input: ListAnalysesInput): Promise<AnalysisRecord[]> {
-      const { data, error } = await client
+      let query = client
         .from(ANALYSES_TABLE)
         .select("*")
-        .order("created_at", { ascending: false })
-        .limit(input.limit);
+        .order("created_at", { ascending: false });
+      if (input.status) {
+        query = query.eq("correction_status", input.status);
+      }
+      const offset = input.offset ?? 0;
+      const { data, error } = await query.range(offset, offset + input.limit - 1);
       if (error) throw new Error(`Supabase analysis list failed: ${error.message}`);
 
       return (data ?? []).map((record) => fromSupabaseAnalysisRecord(SupabaseAnalysisRecordSchema.parse(record)));
@@ -140,7 +146,10 @@ export function createAnalysisStorage(env: Env, clientFactory: SupabaseClientFac
         .insert(insertRecord)
         .select()
         .single();
-      if (error) throw new Error(`Supabase analysis insert failed: ${error.message}`);
+      if (error) {
+        await storage.remove([uploadResult.data.path]).catch(() => undefined);
+        throw new Error(`Supabase analysis insert failed: ${error.message}`);
+      }
 
       return fromSupabaseAnalysisRecord(SupabaseAnalysisRecordSchema.parse(data));
     },
@@ -183,7 +192,10 @@ export function createAnalysisStorage(env: Env, clientFactory: SupabaseClientFac
         .insert(insertRecord)
         .select()
         .single();
-      if (error) throw new Error(`Supabase manual analysis insert failed: ${error.message}`);
+      if (error) {
+        await storage.remove([uploadResult.data.path]).catch(() => undefined);
+        throw new Error(`Supabase manual analysis insert failed: ${error.message}`);
+      }
 
       return fromSupabaseAnalysisRecord(SupabaseAnalysisRecordSchema.parse(data));
     },

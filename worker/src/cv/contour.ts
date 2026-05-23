@@ -3,6 +3,9 @@ export const CONTOUR_CONFIG = {
   minContourArea: 100,
   // Max bottle contour area as fraction of frame: reject > this ratio.
   maxBottleAreaRatio: 0.45,
+  // Reject tiny local patches before they can masquerade as bottle ROIs.
+  minBottleRoiHeightPx: 60,
+  minBottleRoiHeightRatio: 0.18,
 };
 
 import { cv, ensureCv } from "./index.js";
@@ -11,6 +14,8 @@ import { getBottleGeometry, calibrateFillRatio, isSupportedBottle } from "./geom
 import type { BottleGeometry } from "./geometry.js";
 import { scoreContours, scoreContoursTopN } from "./scoring.js";
 import type { ContourRect } from "./scoring.js";
+import { fitRansacHorizontalEvidence, proposeLiquidLineCandidates, selectBestLiquidLineCandidate } from "./candidate-lines.js";
+import type { LiquidLineCandidate } from "./candidate-lines.js";
 
 // Fusion config: set to true to enable multi-contour fusion
 export const FUSION_CONFIG = {
@@ -30,6 +35,10 @@ export interface ContourResult {
   edgeStrength: number;
   contourCount: number;
   geometry: BottleGeometry;
+  lineCandidates?: LiquidLineCandidate[];
+  bottleRect?: { x: number; y: number; w: number; h: number };
+  selectedLineSource?: "candidate" | "fusion" | "labeled_mask";
+  measurementState?: "measured" | "needs_review" | "failed";
   missReason?: string;
 }
 
@@ -96,6 +105,8 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
         edgeStrength: 0,
         contourCount: 0,
         geometry,
+        lineCandidates: [],
+        measurementState: "failed",
         missReason: fallbackRegion ? "fallback_no_contours" : "canny_no_contours",
       };
     }
@@ -125,13 +136,46 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
       edgeStrength: 0,
       contourCount: contours.size(),
       geometry,
+      lineCandidates: [],
+      measurementState: "failed" as const,
       missReason,
     });
 
     const detectFromRect = (rect: { x: number; y: number; w: number; h: number }) => {
+      const roiProblem = validateBottleRect(rect, width, height);
+      if (roiProblem) {
+        return {
+          found: false as const,
+          meniscusY: null,
+          meniscusYRatio: null,
+          bottleTopY: rect.y,
+          bottleBottomY: rect.y + rect.h,
+          edgeStrength: 0,
+          contourCount: contours.size(),
+          geometry,
+          lineCandidates: [],
+          bottleRect: rect,
+          measurementState: "failed" as const,
+          missReason: roiProblem,
+        };
+      }
+
       const roi = equalized.roi(new cv.Rect(rect.x, rect.y, rect.w, rect.h));
-      const horizontalGradients = findHorizontalEdges(roi);
+      const sobelEdges = findHorizontalEdges(roi);
+      const houghEdges = findHoughHorizontalEdges(roi);
       roi.delete();
+      const ransacEdge = fitRansacHorizontalEvidence([...sobelEdges, ...houghEdges]);
+      const horizontalGradients = [
+        ...(ransacEdge ? [ransacEdge] : []),
+        ...houghEdges,
+        ...sobelEdges,
+      ];
+      const lineCandidates = proposeLiquidLineCandidates({
+        bottleRect: rect,
+        edges: horizontalGradients,
+        imageWidth: width,
+        imageHeight: height,
+      });
 
       if (horizontalGradients.length === 0) {
         return {
@@ -143,17 +187,32 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
           edgeStrength: 0,
           contourCount: contours.size(),
           geometry,
+          lineCandidates,
+          bottleRect: rect,
+          measurementState: "failed" as const,
           missReason: `no_meniscus_edge(roi=${rect.w}x${rect.h})`,
         };
       }
 
-      const midY = rect.h / 2;
-      const best = horizontalGradients.reduce((a, b) => {
-        const posBonusA = 1 - Math.abs(a.y - midY) / midY;
-        const posBonusB = 1 - Math.abs(b.y - midY) / midY;
-        return (a.strength * (0.3 + 0.7 * posBonusA)) > (b.strength * (0.3 + 0.7 * posBonusB)) ? a : b;
-      });
-      const meniscusY = rect.y + best.y;
+      const bestCandidate = selectBestLiquidLineCandidate(lineCandidates);
+      if (!bestCandidate) {
+        return {
+          found: false as const,
+          meniscusY: null,
+          meniscusYRatio: null,
+          bottleTopY: rect.y,
+          bottleBottomY: rect.y + rect.h,
+          edgeStrength: horizontalGradients[0]?.strength ?? 0,
+          contourCount: contours.size(),
+          geometry,
+          lineCandidates,
+          bottleRect: rect,
+          measurementState: "needs_review" as const,
+          missReason: "no_valid_liquid_line_candidate",
+        };
+      }
+
+      const meniscusY = bestCandidate.y;
       const rawRatio = (meniscusY - rect.y) / rect.h;
       const fillRatio = calibrateFillRatio(rawRatio, geometry);
 
@@ -163,9 +222,13 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
         meniscusYRatio: fillRatio,
         bottleTopY: rect.y,
         bottleBottomY: rect.y + rect.h,
-        edgeStrength: best.strength,
+        edgeStrength: bestCandidate.edgeStrength,
         contourCount: contours.size(),
         geometry,
+        lineCandidates,
+        bottleRect: rect,
+        selectedLineSource: "candidate" as const,
+        measurementState: "measured" as const,
       };
     };
 
@@ -189,6 +252,22 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
       }
 
       return detectFromRect({ x: cr.x, y: cr.y, w: cr.width, h: cr.height });
+    };
+
+    const processScoredCandidates = (scored: Array<{ idx: number; score: number }>): ContourResult => {
+      let firstFailure: ContourResult | null = null;
+      for (const candidate of scored) {
+        const result = processSingle(candidate);
+        if (result.found || result.measurementState === "needs_review") return result;
+        firstFailure ??= result;
+        if (!result.missReason?.startsWith("bottle_roi_too_small") && !result.missReason?.startsWith("area_outlier")) {
+          return result;
+        }
+      }
+
+      const fallback = detectFromRect(centerBottleRegion(width, height));
+      if (fallback.found || fallback.measurementState === "needs_review") return fallback;
+      return firstFailure ?? fallback;
     };
 
     const processFusion = (
@@ -250,6 +329,24 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
         edgeStrength: Math.round(fusedEdgeStrength),
         contourCount: contours.size(),
         geometry,
+        bottleRect: primaryRect,
+        selectedLineSource: "fusion" as const,
+        measurementState: "measured" as const,
+        lineCandidates: candidates
+          .sort((a, b) => b.weight - a.weight)
+          .slice(0, FUSION_CONFIG.topN)
+          .map((candidate, index) => ({
+            id: `fusion-line-${index}`,
+            y: Math.round(candidate.meniscusY),
+            yRatioInBottle: primaryRect ? Math.max(0, Math.min(1, (candidate.meniscusY - primaryRect.y) / primaryRect.h)) : 0,
+            score: Math.max(0, Math.min(1, candidate.weight)),
+            edgeStrength: candidate.edgeStrength,
+            horizontalCoverage: 1,
+            source: "unknown" as const,
+            angleDeg: null,
+            inlierCount: null,
+            reason: "fusion_candidate",
+          })),
       };
     };
 
@@ -265,11 +362,11 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
       }
       return processFusion(scored);
     } else {
-      const scored = scoreContours(contourRects, width, height);
-      if (scored === null) {
+      const scored = scoreContoursTopN(contourRects, width, height, 8);
+      if (scored.best === null || scored.all.length === 0) {
         return fallbackResult("heuristic_rejected(no_valid_contours)");
       }
-      return processSingle(scored);
+      return processScoredCandidates(scored.all);
     }
   } finally {
     contours.delete();
@@ -277,9 +374,23 @@ export async function detectMeniscus(preprocessed: PreprocessedImage, bottleSize
   }
 }
 
+function centerBottleRegion(width: number, height: number): { x: number; y: number; w: number; h: number } {
+  return {
+    x: Math.round(width * 0.24),
+    y: Math.round(height * 0.04),
+    w: Math.round(width * 0.52),
+    h: Math.round(height * 0.9),
+  };
+}
+
 interface HorizontalEdge {
   y: number;
   strength: number;
+  source?: "sobel_row" | "hough_segment" | "ransac_cluster";
+  xStart?: number;
+  xEnd?: number;
+  angleDeg?: number;
+  inlierCount?: number;
 }
 
 function findHorizontalEdges(roi: any): HorizontalEdge[] {
@@ -302,14 +413,106 @@ function findHorizontalEdges(roi: any): HorizontalEdge[] {
     for (let y = 0; y < rows; y++) {
       const strength = rowSums.intAt(y, 0);
       if (strength > 100) {
-        edges.push({ y, strength });
+        edges.push({ y, strength, source: "sobel_row", ...findRowRun(absGradY, y, strength) });
       }
     }
 
-    return edges.sort((a, b) => b.strength - a.strength).slice(0, 5);
+    return selectSeparatedEdges(edges, Math.max(4, Math.round(rows * 0.035)), 12);
   } finally {
     gradY.delete();
     absGradY.delete();
     rowSums.delete();
   }
+}
+
+function findHoughHorizontalEdges(roi: any): HorizontalEdge[] {
+  const canny = new cv.Mat();
+  const lines = new cv.Mat();
+
+  try {
+    cv.Canny(roi, canny, 50, 150, 3, false);
+    const minLineLength = Math.max(12, Math.round(roi.cols * 0.22));
+    const maxLineGap = Math.max(4, Math.round(roi.cols * 0.04));
+    const threshold = Math.max(10, Math.round(roi.cols * 0.08));
+    cv.HoughLinesP(canny, lines, 1, Math.PI / 180, threshold, minLineLength, maxLineGap);
+
+    const out: HorizontalEdge[] = [];
+    const data = lines.data32S;
+    for (let i = 0; i < data.length; i += 4) {
+      const x1 = data[i];
+      const y1 = data[i + 1];
+      const x2 = data[i + 2];
+      const y2 = data[i + 3];
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angleDeg = Math.atan2(dy, dx) * 180 / Math.PI;
+      const horizontalAngle = Math.abs(normalizeHorizontalAngle(angleDeg));
+      if (length < minLineLength || horizontalAngle > 10) continue;
+      out.push({
+        y: (y1 + y2) / 2,
+        strength: Math.round(length * 50 + (10 - horizontalAngle) * 25),
+        source: "hough_segment",
+        xStart: Math.min(x1, x2),
+        xEnd: Math.max(x1, x2),
+        angleDeg: round1(horizontalAngle),
+        inlierCount: 1,
+      });
+    }
+
+    return selectSeparatedEdges(out, Math.max(4, Math.round(roi.rows * 0.035)), 8);
+  } finally {
+    canny.delete();
+    lines.delete();
+  }
+}
+
+function selectSeparatedEdges(edges: HorizontalEdge[], minSeparationPx: number, limit: number): HorizontalEdge[] {
+  const selected: HorizontalEdge[] = [];
+  for (const edge of edges.sort((a, b) => b.strength - a.strength)) {
+    if (selected.some((item) => Math.abs(item.y - edge.y) < minSeparationPx)) continue;
+    selected.push(edge);
+    if (selected.length >= limit) break;
+  }
+  return selected;
+}
+
+function normalizeHorizontalAngle(angleDeg: number): number {
+  let angle = angleDeg;
+  while (angle <= -90) angle += 180;
+  while (angle > 90) angle -= 180;
+  return angle;
+}
+
+function validateBottleRect(rect: { w: number; h: number }, imageWidth: number, imageHeight: number): string | null {
+  const minHeight = Math.max(CONTOUR_CONFIG.minBottleRoiHeightPx, imageHeight * CONTOUR_CONFIG.minBottleRoiHeightRatio);
+  if (rect.h < minHeight) {
+    return `bottle_roi_too_small(h=${rect.h},min=${Math.round(minHeight)})`;
+  }
+
+  if (rect.w <= 0 || rect.h <= 0 || imageWidth <= 0 || imageHeight <= 0) {
+    return "bottle_roi_invalid_geometry";
+  }
+
+  return null;
+}
+
+function findRowRun(absGradY: any, y: number, strength: number): Pick<HorizontalEdge, "xStart" | "xEnd"> {
+  const width = absGradY.cols;
+  const threshold = Math.max(8, Math.round((strength / Math.max(1, width)) * 1.25));
+  let xStart: number | undefined;
+  let xEnd: number | undefined;
+
+  for (let x = 0; x < width; x++) {
+    if (absGradY.ucharAt(y, x) >= threshold) {
+      xStart ??= x;
+      xEnd = x;
+    }
+  }
+
+  return xStart === undefined || xEnd === undefined ? {} : { xStart, xEnd };
+}
+
+function round1(n: number): number {
+  return Math.round(n * 10) / 10;
 }

@@ -1,5 +1,6 @@
-import { BOTTLE_1_5L } from "@afia/shared";
+import { BOTTLE_1_5L, VisualEvidenceSchema } from "@afia/shared";
 import { z } from "zod";
+import { estimateFillFromEvidence } from "../analysis/fill-estimator.js";
 
 const Schema = z.object({
   remainingMl: z.number(),
@@ -31,6 +32,30 @@ export function parseAnalysisResponse(raw: string) {
 
 export function parseEvidenceResponse(raw: string) {
   const parsed = parseJson(raw);
+  if (isVisualEvidence(parsed)) {
+    const evidence = VisualEvidenceSchema.parse(parsed);
+    const estimate = estimateFillFromEvidence({ bottleSize: "1.5L", evidence });
+    if (estimate.status !== "measured" || estimate.remainingMl === null || estimate.consumedMl === null || estimate.redLineYRatio === null) {
+      throw new Error(`LLM visual evidence requires review: ${estimate.refusalReason ?? "needs_review"}`);
+    }
+
+    return {
+      schemaVersion: evidence.schemaVersion,
+      status: estimate.status,
+      readingPossible: true,
+      meniscusVisible: "yes" as const,
+      oilSurfaceYRatio: estimate.redLineYRatio,
+      nearestReferenceMl: estimate.remainingMl,
+      fillPercent: estimate.fillPercent ?? 0,
+      qualityFlags: estimate.warnings,
+      confidence: estimate.confidence,
+      remainingMl: estimate.remainingMl,
+      consumedMl: estimate.consumedMl,
+      redLineYRatio: estimate.redLineYRatio,
+      provenance: estimate.provenance,
+    };
+  }
+
   const v = EvidenceSchema.parse(parsed);
   const oilSurfaceYRatio = clamp(v.oilSurfaceYRatio, 0, 1);
   const normalizedFill = ratioFromOilSurface(oilSurfaceYRatio);
@@ -55,6 +80,13 @@ function ratioFromOilSurface(oilSurfaceYRatio: number): number {
   const span = BOTTLE_1_5L.fillBottomY - BOTTLE_1_5L.fillTopY;
   if (span <= 0) return 0;
   return clamp((BOTTLE_1_5L.fillBottomY - oilSurfaceYRatio) / span, 0, 1);
+}
+
+function isVisualEvidence(value: unknown): boolean {
+  return typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    (value as { schemaVersion?: unknown }).schemaVersion === "afia_visual_evidence_v1";
 }
 
 function parseJson(raw: string) {

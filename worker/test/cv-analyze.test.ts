@@ -20,7 +20,8 @@ function validateSize(base64: string): boolean {
 }
 
 function coerceBottleSizeMl(value: unknown): number | null {
-  const n = Number(value) || 1500;
+  if (value === undefined) return 1500;
+  const n = Number(value);
   if (!Number.isFinite(n) || n <= 0) return null;
   return n;
 }
@@ -73,14 +74,14 @@ describe("cv-analyze input validation", () => {
     it("coerces string number", () => {
       expect(coerceBottleSizeMl("1500")).toBe(1500);
     });
-    it("defaults 0 to 1500 (Number(0) is falsy)", () => {
-      expect(coerceBottleSizeMl(0)).toBe(1500);
+    it("rejects zero instead of silently defaulting it", () => {
+      expect(coerceBottleSizeMl(0)).toBeNull();
     });
     it("rejects negative", () => {
       expect(coerceBottleSizeMl(-1)).toBeNull();
     });
-    it("rejects non-numeric string (defaults to 1500)", () => {
-      expect(coerceBottleSizeMl("abc")).toBe(1500);
+    it("rejects non-numeric strings instead of silently defaulting them", () => {
+      expect(coerceBottleSizeMl("abc")).toBeNull();
     });
   });
 });

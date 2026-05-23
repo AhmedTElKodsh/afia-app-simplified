@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { runPipeline } from "../src/cv/pipeline.js";
 import * as loader from "../src/onnx/loader.js";
+import * as contour from "../src/cv/contour.js";
 
 vi.mock("../src/onnx/loader.js", () => ({
   isModelLoaded: vi.fn(() => false),
@@ -48,7 +49,7 @@ describe("CV pipeline fusion", () => {
     expect(result.success).toBe(true);
     expect(result.fillRatio).toBeCloseTo(0.5, 2);
     expect(result.confidence).toBeLessThan(0.7);
-    expect(result.tier).toBe("medium");
+    expect(result.tier).toBe("low");
     expect(result.diagnostics.stages).toContain("fusion");
     expect(result.diagnostics.fusion?.features._fusionIgnored_onnx_nearZeroEstimate).toBe(1);
     expect(result.diagnostics.fusion?.features._fusionSignal_onnx_weight).toBe(0);
@@ -91,5 +92,33 @@ describe("CV pipeline fusion", () => {
     expect(result.diagnostics.onnxLoadStatus).toContain("fail:");
     expect(result.diagnostics.fusion?.features._fusionValidSignalCount).toBe(1);
     expect(result.diagnostics.fusion?.features._fusionSignal_heuristic_weight).toBeGreaterThan(0);
+  });
+
+  it("passes the requested bottle size to contour detection", async () => {
+    await runPipeline({ imageData: new ArrayBuffer(0), bottleSizeMl: 1500 });
+
+    expect(contour.detectMeniscus).toHaveBeenCalledWith(expect.anything(), 1500);
+  });
+
+  it("uses labeled mask evidence before raw contour detection when supplied", async () => {
+    const result = await runPipeline({
+      imageData: new ArrayBuffer(0),
+      bottleSizeMl: 1500,
+      labeledMask: {
+        schemaVersion: "afia_labeled_mask_v1",
+        labelSource: "human_keypoint",
+        bottleBox: { xMin: 250, yMin: 100, xMax: 750, yMax: 900 },
+        liquidLineYRatioInBottle: 0.5,
+        confidence: 0.95,
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.tier).toBe("high");
+    expect(result.diagnostics.fusion?.source).toBe("labeled_mask");
+    expect(result.diagnostics.stages).toContain("labeled_mask");
+    expect(result.diagnostics.selectedLineSource).toBe("labeled_mask");
+    expect(result.diagnostics.lineCandidates?.[0]?.source).toBe("labeled_mask");
+    expect(contour.detectMeniscus).not.toHaveBeenCalled();
   });
 });

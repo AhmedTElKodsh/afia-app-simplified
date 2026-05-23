@@ -18,7 +18,7 @@ The roadmap is organized around one user/admin workflow:
 2. The product link opens the deployed Cloudflare scan page and requests the phone camera.
 3. The capture page asks for the front side of the bottle, shows a non-blocking 1.5L outline, gives closer/farther/alignment/angle guidance, turns red/orange/green, and can auto-capture only after a stable green lock. Manual capture remains a fallback.
 4. The user path rejects or flags obviously bad captures such as low-resolution, very dark, overexposed, or very blurry/flat frames.
-5. Stage 1 sends the image to API models first: Gemini with key rotation, then Grok fallback on provider failure or low confidence. Supabase stores images, results, corrections, manual uploads, and review metadata for later training.
+5. Stage 1 sends the image to API models first: Gemini with key rotation, then optional OpenRouter image-capable routing, then Grok fallback on provider failure or low confidence. Supabase stores images, results, corrections, manual uploads, and review metadata for later training.
 6. The result shows the actual captured image, a fixed detected red line, remaining/consumed ml, a left 55ml-step correction slider, and a quarter-cup counter.
 7. Stage 2 can promote a local browser/mobile model only after the dataset and accuracy gates pass; the API path remains fallback and audit support.
 

@@ -1,6 +1,6 @@
 import { BOTTLE_1_5L, ML_PER_CUP_QUARTER, SUPPORTED_BOTTLE_SIZES, type BottleSize } from "./bottle.js";
 
-export const PROVIDERS = ["gemini", "grok", "cv", "cv_llm", "manual"] as const;
+export const PROVIDERS = ["gemini", "openrouter", "grok", "cv", "cv_llm", "manual"] as const;
 export const SCAN_WARNINGS = [
   "blur",
   "glare",
@@ -43,6 +43,41 @@ export interface ProviderEvidence {
   nearestReferenceMl: number;
   qualityFlags: string[];
   confidence: number;
+}
+
+export type VisualBottleType = "afia_1_5l" | "afia_2_5l" | "unknown";
+
+export interface VisualEvidencePoint {
+  x: number;
+  y: number;
+}
+
+export interface VisualEvidenceBox {
+  yMin: number;
+  xMin: number;
+  yMax: number;
+  xMax: number;
+}
+
+export interface VisualEvidenceLine {
+  kind: "line";
+  points: VisualEvidencePoint[];
+}
+
+export interface VisualEvidence {
+  schemaVersion: "afia_visual_evidence_v1";
+  bottleDetected: boolean;
+  bottleType: VisualBottleType;
+  bottleTypeConfidence: number;
+  topVisible: boolean;
+  bottomVisible: boolean;
+  frontLabelVisible: boolean;
+  liquidBoundaryVisible: boolean;
+  bottleBox: VisualEvidenceBox | null;
+  liquidLine: VisualEvidenceLine | null;
+  qualityFlags: string[];
+  evidenceConfidence: number;
+  refusalReason: string | null;
 }
 
 export interface AnalysisResultContract {
@@ -151,6 +186,27 @@ export const ProviderEvidenceSchema: Schema<ProviderEvidence> = {
       nearestReferenceMl: numberAtLeast(record.nearestReferenceMl, 0, "nearestReferenceMl"),
       qualityFlags: stringArray(record.qualityFlags, "qualityFlags"),
       confidence: ratioValue(record.confidence, "confidence"),
+    };
+  },
+};
+
+export const VisualEvidenceSchema: Schema<VisualEvidence> = {
+  parse(value) {
+    const record = objectValue(value, "visualEvidence");
+    return {
+      schemaVersion: enumValue(record.schemaVersion, ["afia_visual_evidence_v1"] as const, "schemaVersion"),
+      bottleDetected: booleanValue(record.bottleDetected, "bottleDetected"),
+      bottleType: enumValue(record.bottleType, ["afia_1_5l", "afia_2_5l", "unknown"] as const, "bottleType"),
+      bottleTypeConfidence: ratioValue(record.bottleTypeConfidence, "bottleTypeConfidence"),
+      topVisible: booleanValue(record.topVisible, "topVisible"),
+      bottomVisible: booleanValue(record.bottomVisible, "bottomVisible"),
+      frontLabelVisible: booleanValue(record.frontLabelVisible, "frontLabelVisible"),
+      liquidBoundaryVisible: booleanValue(record.liquidBoundaryVisible, "liquidBoundaryVisible"),
+      bottleBox: nullable(record.bottleBox, parseVisualEvidenceBox, "bottleBox"),
+      liquidLine: nullable(record.liquidLine, parseVisualEvidenceLine, "liquidLine"),
+      qualityFlags: stringArray(record.qualityFlags ?? [], "qualityFlags"),
+      evidenceConfidence: ratioValue(record.evidenceConfidence, "evidenceConfidence"),
+      refusalReason: nullable(record.refusalReason, (v) => stringValue(v, "refusalReason"), "refusalReason"),
     };
   },
 };
@@ -323,6 +379,44 @@ function correctionMlValue(value: unknown, label: string): number {
 function stringArray(value: unknown, label: string): string[] {
   if (Array.isArray(value) && value.every((item) => typeof item === "string")) return value;
   throw new Error(`${label} must be an array of strings`);
+}
+
+function parseVisualEvidenceBox(value: unknown): VisualEvidenceBox {
+  const record = objectValue(value, "bottleBox");
+  const box = {
+    yMin: normalizedCoordinate(record.yMin, "bottleBox.yMin"),
+    xMin: normalizedCoordinate(record.xMin, "bottleBox.xMin"),
+    yMax: normalizedCoordinate(record.yMax, "bottleBox.yMax"),
+    xMax: normalizedCoordinate(record.xMax, "bottleBox.xMax"),
+  };
+  if (box.yMax <= box.yMin) throw new Error("bottleBox.yMax must be greater than bottleBox.yMin");
+  if (box.xMax <= box.xMin) throw new Error("bottleBox.xMax must be greater than bottleBox.xMin");
+  return box;
+}
+
+function parseVisualEvidenceLine(value: unknown): VisualEvidenceLine {
+  const record = objectValue(value, "liquidLine");
+  const kind = enumValue(record.kind, ["line"] as const, "liquidLine.kind");
+  const pointsValue = record.points;
+  if (!Array.isArray(pointsValue) || pointsValue.length === 0) {
+    throw new Error("liquidLine.points must be a non-empty array");
+  }
+  return {
+    kind,
+    points: pointsValue.map((point, index) => parseVisualEvidencePoint(point, `liquidLine.points.${index}`)),
+  };
+}
+
+function parseVisualEvidencePoint(value: unknown, label: string): VisualEvidencePoint {
+  const record = objectValue(value, label);
+  return {
+    x: normalizedCoordinate(record.x, `${label}.x`),
+    y: normalizedCoordinate(record.y, `${label}.y`),
+  };
+}
+
+function normalizedCoordinate(value: unknown, label: string): number {
+  return numberInRange(value, 0, 1000, label);
 }
 
 function uuidValue(value: unknown, label: string): string {

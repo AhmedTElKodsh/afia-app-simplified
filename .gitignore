@@ -41,6 +41,7 @@ runs/ablation/
 runs/coverage-gap/
 runs/heuristic-tuning/
 runs/onnx-benchmark/
+runs/stage1-sample/
 
 # Local image/model datasets are too large for GitHub.
 # Keep small hand-authored assets tracked explicitly when needed.
